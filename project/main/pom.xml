@@ -22,6 +22,13 @@
             <version>42.5.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>eu.senla</groupId>
+            <artifactId>di</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -41,6 +48,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>17</source>
+                    <target>17</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
