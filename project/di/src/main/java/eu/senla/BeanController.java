@@ -41,13 +41,11 @@ public class BeanController {
             iterations++;
             Class<?> klass = componentClassQueue.poll();
 
-            Constructor<?> annotatedConstructor = Finder.findAnnotatedConstructor(klass);
-            Method annotatedMethod = Finder.findAnnotatedMethod(klass);
-            Field autowiredAnnotatedField = Finder.findAnnotatedField(klass);
-            Field valueAnnotatedField = Finder.findValueAnnotatedField(klass);
 
             Class<?> classType;
             Object newInstance = null;
+
+            Constructor<?> annotatedConstructor = Finder.findAnnotatedConstructor(klass);
             if (annotatedConstructor != null) {
                 classType = annotatedConstructor.getParameterTypes()[0];
                 if (beanExists(classType, reflections)) {
@@ -55,7 +53,10 @@ public class BeanController {
                 } else {
                     componentClassQueue.add(klass);
                 }
-            } else if (annotatedMethod != null) {
+            }
+
+            Method annotatedMethod = Finder.findAnnotatedMethod(klass);
+            if (annotatedMethod != null) {
                 classType = annotatedMethod.getParameterTypes()[0];
                 if (beanExists(classType, reflections)) {
                     newInstance = createInstance(klass.getConstructor());
@@ -64,7 +65,10 @@ public class BeanController {
                     componentClassQueue.add(klass);
                 }
 
-            } else if (autowiredAnnotatedField != null) {
+            }
+
+            Field autowiredAnnotatedField = Finder.findAnnotatedField(klass);
+            if (autowiredAnnotatedField != null) {
                 classType = autowiredAnnotatedField.getType();
                 if (beanExists(classType, reflections)) {
                     newInstance = createInstance(klass.getConstructor());
@@ -72,20 +76,30 @@ public class BeanController {
                 } else {
                     componentClassQueue.add(klass);
                 }
-            } else if (valueAnnotatedField != null) {
+            }
+
+            Field valueAnnotatedField = Finder.findValueAnnotatedField(klass);
+            if (valueAnnotatedField != null) {
                 newInstance = createInstance(klass.getConstructor());
                 valueAnnotationHandler(newInstance, valueAnnotatedField);
-            } else {
+            }
+
+            if (noAnnotationsFound(annotatedConstructor, annotatedMethod, autowiredAnnotatedField, valueAnnotatedField)) {
                 newInstance = createInstance(klass.getConstructor());
             }
+
             if (newInstance != null) {
                 objectMap.put(klass, newInstance);
             }
         }
+
         if (iterations == 50) {
             throw new InstantiationException("Beans cannot be instantiated");
         }
+    }
 
+    private boolean noAnnotationsFound(Constructor<?> constructor, Method method, Field autowiredField, Field valueField) {
+        return (constructor != null && method != null && autowiredField != null && valueField != null);
     }
 
     private boolean beanExists(Class<?> klass, Reflections reflections) {
