@@ -87,7 +87,7 @@ public class Application {
         System.out.println("Read credentials #2");
         System.out.println(credentialsController.getById(credentials2));
         System.out.println("Update credentials #2");
-        System.out.println(credentialsController.update(credentials2, "+375"));
+        System.out.println(credentialsController.update(credentials2, "brandNewPassword"));
         System.out.println("Delete credentials #1");
         credentialsController.delete(credentials1);
         System.out.println("Read all credentials");
@@ -100,7 +100,7 @@ public class Application {
         String item1 = "{\"id\":1,\"category\":{\"id\":1,\"name\":\"clothes\"}," +
                 "\"name\":\"Mallory's pants\",\"price\":10000000,\"quantity\":3}";
         String item2 = "{\"id\":2,\"category\":{\"id\":1,\"name\":\"footwear\"}," +
-                "\"name\":\"Mallory's boots\",\"price\":10000,\"quantity\":1}";
+                "\"name\":\"Mallory's boots\",\"price\":3252,\"quantity\":1}";
         System.out.println("Item Demo");
         System.out.println("Create Item #1");
         System.out.println(itemController.create(item1));
@@ -132,9 +132,9 @@ public class Application {
                 "\"phone\":\"1234567\",\"email\":\"@mail.ru\",\"credentials\":{\"id\":11,\"username\":\"jim\"," +
                 "\"password\":\"jimspassword\"}},\"worker\":{\"id\":21,\"firstName\":\"Mozie\",\"secondName\":\"Brasthle\"," +
                 "\"phone\":\"8803535\",\"email\":\"@gmail.com\",\"credentials\":{\"id\":21,\"username\":\"mozie\"," +
-                "\"password\":\"moziespassword\"}},\"itemList\":[{\"id\":5,\"category\":{\"id\":10,\"name\":\"toys\"}," +
-                "\"name\":\"Donkey Kong\",\"price\":123,\"quantity\":10},{\"id\":6,\"category\":{\"id\":15," +
-                "\"name\":\"furniture\"},\"name\":\"sofa\",\"price\":2500,\"quantity\":3}]," +
+                "\"password\":\"moziespassword\"}},\"itemList\":[{\"id\":6,\"category\":{\"id\":11,\"name\":\"industrial goods\"}," +
+                "\"name\":\"excavator\",\"price\":12300,\"quantity\":1},{\"id\":7,\"category\":{\"id\":12," +
+                "\"name\":\"houses\"},\"name\":\"3-bedroom aps\",\"price\":250000,\"quantity\":1}]," +
                 "\"startDateTime\":23424124114341,\"endDateTime\":20492382343243244,\"totalPrice\":262300}";
         System.out.println("order Demo");
         System.out.println("Create order #1");
@@ -144,7 +144,7 @@ public class Application {
         System.out.println("Read order #2");
         System.out.println(orderController.getById(order2));
         System.out.println("Update order #2");
-        System.out.println(orderController.update(order2, new BigDecimal(525225)));
+        System.out.println(orderController.update(order2, new BigDecimal(0)));
         System.out.println("Delete order #1");
         orderController.delete(order1);
         System.out.println("Read all orders");
