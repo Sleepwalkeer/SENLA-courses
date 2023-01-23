@@ -1,54 +1,18 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Account;
-import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
 import java.util.List;
 
-@Component
-public class AccountDao {
-    private final List<Account> accounts = new LinkedList<>();
+public interface AccountDao {
 
-    public List<Account> getAccounts() {
-        return accounts;
-    }
+    List<Account> getAll();
 
-    public List<Account> getAll() {
-        return getAccounts();
-    }
+    Account getById(Account passedAccount);
 
-    public Account getById(Account passedAccount) {
-        for (Account account : accounts) {
-            if (passedAccount.getId() == account.getId()) {
-                return account;
-            }
-        }
-        return null;
-    }
+    Account update(Account passedAccount, String phoneCode);
 
-    public Account update(Account passedAccount, String phoneCode) {
-        for (Account account : accounts) {
-            if (passedAccount.getId() == account.getId()) {
-                String newPhone = phoneCode + account.getPhone();
-                account.setPhone(newPhone);
-                return account;
-            }
-        }
-        return null;
-    }
+    Account create(Account passedAccount);
 
-    public Account create(Account passedAccount) {
-        accounts.add(passedAccount);
-        return passedAccount;
-    }
-
-    public void delete(Account passedAccount) {
-        for (int i = 0; i < accounts.size(); i++) {
-            if (passedAccount.getId() == accounts.get(i).getId()) {
-                accounts.remove(i);
-                return;
-            }
-        }
-    }
+    void delete(Account passedAccount);
 }
