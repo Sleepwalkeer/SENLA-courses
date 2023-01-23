@@ -1,0 +1,1 @@
+CREATE index  index_worker_id on rent_order (worker_id);

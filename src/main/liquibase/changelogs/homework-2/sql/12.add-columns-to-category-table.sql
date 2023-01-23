@@ -1,0 +1,2 @@
+ALTER TABLE category
+ADD COLUMN name varchar(50) UNIQUE NOT NULL;
