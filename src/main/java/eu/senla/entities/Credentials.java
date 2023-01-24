@@ -8,9 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Credentials {
 
+    @EqualsAndHashCode.Include
     private int id;
     private String username;
     private String password;

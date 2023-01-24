@@ -8,9 +8,10 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemDto {
 
+    @EqualsAndHashCode.Include
     private int id;
     private CategoryDto category;
     private String name;

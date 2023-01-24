@@ -5,9 +5,10 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AccountDto {
 
+    @EqualsAndHashCode.Include
     private int id;
     private String firstName;
     private String secondName;

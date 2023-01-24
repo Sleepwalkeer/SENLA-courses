@@ -11,9 +11,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Order {
 
+    @EqualsAndHashCode.Include
     private int id;
     private Account customer;
     private Account worker;

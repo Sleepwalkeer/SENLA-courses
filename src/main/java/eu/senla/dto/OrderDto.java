@@ -8,9 +8,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderDto {
 
+    @EqualsAndHashCode.Include
     private int id;
     private AccountDto customer;
     private AccountDto worker;

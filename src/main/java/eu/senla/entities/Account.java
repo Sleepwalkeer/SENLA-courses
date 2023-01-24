@@ -8,9 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Account {
 
+    @EqualsAndHashCode.Include
     private int id;
     private String firstName;
     private String secondName;

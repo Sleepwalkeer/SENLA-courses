@@ -3,6 +3,7 @@ package eu.senla;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.senla.configuration.Config;
 import eu.senla.controllers.*;
+import eu.senla.entities.Order;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -28,7 +29,6 @@ public class Application {
 
         OrderController orderController = context.getBean(OrderController.class);
         orderDemo(orderController);
-
 
     }
 
