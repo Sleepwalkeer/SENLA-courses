@@ -3,3 +3,5 @@
 *.ims
 *.jar
 .target
+/target/
+*/target/**
