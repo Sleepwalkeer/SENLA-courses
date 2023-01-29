@@ -23,9 +23,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Transaction
     public OrderDto transactionTest() {
-        Order order3 = new Order();
-        order3.setId(3);
-        return modelMapper.map(orderDao.getById(order3), OrderDto.class);
+        Order order = new Order();
+        order.setId(1);
+        return modelMapper.map(orderDao.getById(order), OrderDto.class);
     }
 
     public List<OrderDto> getAll() {

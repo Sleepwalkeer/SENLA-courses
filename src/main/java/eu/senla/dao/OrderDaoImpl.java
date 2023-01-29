@@ -94,8 +94,8 @@ public class OrderDaoImpl implements OrderDao {
                 order.setWorker(worker);
                 order.setItemList(new ArrayList<>());
                 orderList.add(order);
-
             }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

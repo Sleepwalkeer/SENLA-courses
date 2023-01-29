@@ -15,10 +15,7 @@ public class Application {
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         OrderController orderController = context.getBean(OrderController.class);
 //        orderDemo(orderController);
-        List<String> orders= orderController.getAll();
-        for (String order : orders) {
-            System.out.println(order);
-        }
+
         transactionDemo(orderController);
 
 
@@ -170,6 +167,11 @@ public class Application {
         System.out.println("Delete order #3");
         orderController.delete(order3);
         System.out.println("Read all orders");
+        List<String> orders= orderController.getAll();
+        for (String order : orders) {
+            System.out.println(order);
+        }
+        System.out.println("___________________________________________________________________________________");
 
     }
 
