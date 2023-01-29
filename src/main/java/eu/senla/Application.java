@@ -13,6 +13,7 @@ public class Application {
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         OrderController orderController = context.getBean(OrderController.class);
         System.out.println(orderController.transactionTest());
+        orderController.transactionTest();
 
 
     }

@@ -69,4 +69,8 @@
         <sqlFile encoding="utf8" path="./sql/15.add-index-on-rent_order.customer_id.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="homework-5-add-on-delete-cascade-to-order_item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/16.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog> 

@@ -18,15 +18,16 @@ public class ConnectionHolder {
         this.dataSource = dataSource;
     }
 
-    public Connection getConnection(){
+    public Connection getConnection() {
         String currentThreadName = Thread.currentThread().getName();
         if (connectionMap.containsKey(currentThreadName)) {
             Connection connection = connectionMap.get(currentThreadName);
             try {
                 if (!connection.isClosed()) {
-                    System.out.println("Это коннект для потока" + currentThreadName);
+                    System.out.println("Это коннект из мапы для потока " + currentThreadName);
                     return connection;
                 } else {
+                    System.out.println("Коннект для потока " + currentThreadName + "  был закрыт, нужен новый");
                     connectionMap.remove(currentThreadName);
                 }
             } catch (SQLException e) {
@@ -34,12 +35,12 @@ public class ConnectionHolder {
             }
         }
         Connection newConnection = createConnection();
-        connectionMap.put(currentThreadName,newConnection);
-        System.out.println("Это новый коннект для потока" + currentThreadName);
+        connectionMap.put(currentThreadName, newConnection);
+        System.out.println("Создан новый коннект для потока " + currentThreadName);
         return newConnection;
     }
 
-    private Connection createConnection(){
+    private Connection createConnection() {
         try {
             return dataSource.getConnection();
         } catch (SQLException e) {

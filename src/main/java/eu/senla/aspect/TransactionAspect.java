@@ -4,12 +4,14 @@ import eu.senla.utils.ConnectionHolder;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 @Aspect
 @Component
 public class TransactionAspect {
     private final ConnectionHolder connectionHolder;
+    private Connection connection;
 
     public TransactionAspect(ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
@@ -22,8 +24,8 @@ public class TransactionAspect {
     @Before("transactionPointCut()")
     void getConnection() {
         try {
-            connectionHolder.getConnection().setAutoCommit(false);
-            System.out.println("Коннект для потока" + Thread.currentThread().getName() + "был открыт в транзакции");
+            connection = connectionHolder.getConnection();
+            connection.setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -32,8 +34,7 @@ public class TransactionAspect {
     @After("transactionPointCut()")
     void closeConnection() {
         try {
-            connectionHolder.getConnection().close();
-            System.out.println("Коннект для потока" + Thread.currentThread().getName() + "был закрыт");
+            connection.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -42,8 +43,7 @@ public class TransactionAspect {
     @AfterReturning("transactionPointCut()")
     void commit() {
         try {
-            connectionHolder.getConnection().commit();
-            System.out.println("Коннект для потока" + Thread.currentThread().getName() + "был закомичен");
+            connection.commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -52,8 +52,7 @@ public class TransactionAspect {
     @AfterThrowing(pointcut = "transactionPointCut()", throwing = "exception")
     void rollback(RuntimeException exception) {
         try {
-            connectionHolder.getConnection().rollback();
-            System.out.println("Коннект для потока" + Thread.currentThread().getName() + "был откачен");
+            connection.rollback();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
