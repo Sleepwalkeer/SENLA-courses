@@ -11,7 +11,6 @@ import java.sql.SQLException;
 @Component
 public class TransactionAspect {
     private final ConnectionHolder connectionHolder;
-    private Connection connection;
 
     public TransactionAspect(ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
@@ -24,8 +23,7 @@ public class TransactionAspect {
     @Before("transactionPointCut()")
     void getConnection() {
         try {
-            connection = connectionHolder.getConnection();
-            connection.setAutoCommit(false);
+        connectionHolder.getConnection().setAutoCommit(false);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -34,7 +32,7 @@ public class TransactionAspect {
     @After("transactionPointCut()")
     void closeConnection() {
         try {
-            connection.close();
+            connectionHolder.getConnection().close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -43,7 +41,7 @@ public class TransactionAspect {
     @AfterReturning("transactionPointCut()")
     void commit() {
         try {
-            connection.commit();
+            connectionHolder.getConnection().commit();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -52,7 +50,7 @@ public class TransactionAspect {
     @AfterThrowing(pointcut = "transactionPointCut()", throwing = "exception")
     void rollback(RuntimeException exception) {
         try {
-            connection.rollback();
+            connectionHolder.getConnection().rollback();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

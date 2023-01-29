@@ -21,9 +21,16 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
     }
 
+    @Transaction
+    public OrderDto transactionTest() {
+        Order order3 = new Order();
+        order3.setId(3);
+        return modelMapper.map(orderDao.getById(order3), OrderDto.class);
+    }
+
     public List<OrderDto> getAll() {
-        List<OrderDto> orderDtoList = new ArrayList<>();
         List<Order> orders = orderDao.getAll();
+        List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orders) {
             orderDtoList.add(modelMapper.map(order, OrderDto.class));
@@ -47,10 +54,4 @@ public class OrderServiceImpl implements OrderService {
         orderDao.delete(modelMapper.map(orderDto, Order.class));
     }
 
-    @Transaction
-    public OrderDto transactionTest() {
-        Order order3 = new Order();
-        order3.setId(3);
-        return modelMapper.map(orderDao.getById(order3), OrderDto.class);
-    }
 }
