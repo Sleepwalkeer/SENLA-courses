@@ -15,20 +15,6 @@ public class Application {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 
-        AccountController accountController = context.getBean(AccountController.class);
-        accountDemo(accountController);
-
-        CategoryController categoryController = context.getBean(CategoryController.class);
-        categoryDemo(categoryController);
-
-        CredentialsController credentialsController = context.getBean(CredentialsController.class);
-        credentialsDemo(credentialsController);
-
-        ItemController itemController = context.getBean(ItemController.class);
-        itemDemo(itemController);
-
-        OrderController orderController = context.getBean(OrderController.class);
-        orderDemo(orderController);
 
     }
 
