@@ -2,7 +2,6 @@ package eu.senla.dao;
 
 import eu.senla.entities.Order;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderDao {
@@ -10,7 +9,7 @@ public interface OrderDao {
 
     Order getById(Order passedOrder);
 
-    Order update(Order passedOrder,  BigDecimal newTotalPrice);
+    Order update(Order passedOrder);
 
     Order create(Order passedOrder);
 

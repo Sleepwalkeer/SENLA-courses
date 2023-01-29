@@ -1,5 +1,6 @@
 package eu.senla.services;
 
+import eu.senla.annotation.Transaction;
 import eu.senla.dao.OrderDao;
 import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class OrderServiceImpl  implements OrderService{
+public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
 
@@ -38,11 +39,18 @@ public class OrderServiceImpl  implements OrderService{
         return modelMapper.map(orderDao.create(modelMapper.map(orderDto, Order.class)), OrderDto.class);
     }
 
-    public OrderDto update(OrderDto orderDto, BigDecimal newTotalPrice) {
-        return modelMapper.map(orderDao.update(modelMapper.map(orderDto, Order.class), newTotalPrice), OrderDto.class);
+    public OrderDto update(OrderDto orderDto) {
+        return modelMapper.map(orderDao.update(modelMapper.map(orderDto, Order.class)), OrderDto.class);
     }
 
     public void delete(OrderDto orderDto) {
         orderDao.delete(modelMapper.map(orderDto, Order.class));
+    }
+
+    @Transaction
+    public OrderDto transactionTest() {
+        Order order3 = new Order();
+        order3.setId(3);
+        return modelMapper.map(orderDao.getById(order3), OrderDto.class);
     }
 }

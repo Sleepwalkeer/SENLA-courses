@@ -33,8 +33,8 @@ public class OrderController {
         return fromDtoToJson(orderService.getById(fromJsonToDto(orderData)));
     }
 
-    public String update(String orderData, BigDecimal newTotalPrice) throws JsonProcessingException {
-        return fromDtoToJson(orderService.update(fromJsonToDto(orderData), newTotalPrice));
+    public String update(String orderData) throws JsonProcessingException {
+        return fromDtoToJson(orderService.update(fromJsonToDto(orderData)));
     }
 
     public String create(String orderData) throws JsonProcessingException {
@@ -43,6 +43,11 @@ public class OrderController {
 
     public void delete(String orderData) throws JsonProcessingException {
         orderService.delete(fromJsonToDto(orderData));
+    }
+
+    public String transactionTest() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(orderService.transactionTest());
+
     }
 
     private OrderDto fromJsonToDto(String orderJson) throws JsonProcessingException {

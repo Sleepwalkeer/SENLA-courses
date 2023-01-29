@@ -3,17 +3,16 @@ package eu.senla;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.senla.configuration.Config;
 import eu.senla.controllers.*;
-import eu.senla.entities.Order;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.math.BigDecimal;
 
 
 public class Application {
     public static void main(String[] args) throws JsonProcessingException {
 
         ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        OrderController orderController = context.getBean(OrderController.class);
+        System.out.println(orderController.transactionTest());
 
 
     }
@@ -105,23 +104,23 @@ public class Application {
     }
 
     public static void orderDemo(OrderController orderController) throws JsonProcessingException {
-        String order1 = "{\"id\":1,\"customer\":{\"id\":10,\"firstName\":\"Peter\",\"secondName\":\"Stumps\"," +
+        String order1 = "{\"id\":1,\"customer\":{\"id\":3,\"firstName\":\"Peter\",\"secondName\":\"Stumps\"," +
                 "\"phone\":\"7221220\",\"email\":\"peters@gmail.com\",\"credentials\":{\"id\":10," +
-                "\"username\":\"peter\",\"password\":\"peterspassword\"}},\"worker\":{\"id\":20,\"firstName\":\"Hannah\"," +
+                "\"username\":\"peter\",\"password\":\"peterspassword\"}},\"worker\":{\"id\":2,\"firstName\":\"Hannah\"," +
                 "\"secondName\":\"Montana\",\"phone\":\"88005553535\",\"email\":\"hannahs@gmail.com\"," +
                 "\"credentials\":{\"id\":20,\"username\":\"hannah\",\"password\":\"hannahspassword\"}}," +
-                "\"itemList\":[{\"id\":5,\"category\":{\"id\":10,\"name\":\"toys\"},\"name\":\"Donkey Kong\"," +
-                "\"price\":123,\"quantity\":10},{\"id\":6,\"category\":{\"id\":15,\"name\":\"furniture\"}," +
-                "\"name\":\"sofa\",\"price\":2500,\"quantity\":3}],\"startDateTime\":12124124114341," +
-                "\"endDateTime\":2002492382343243244,\"totalPrice\":2623}";
-        String order2 = "{\"id\":2,\"customer\":{\"id\":11,\"firstName\":\"Jim\",\"secondName\":\"Carver\"," +
+                "\"itemList\":[{\"id\":3,\"category\":{\"id\":10,\"name\":\"toys\"},\"name\":\"Donkey Kong\"," +
+                "\"price\":123,\"quantity\":10},{\"id\":2,\"category\":{\"id\":15,\"name\":\"furniture\"}," +
+                "\"name\":\"sofa\",\"price\":2500,\"quantity\":3}],\"startDateTime\":1674745816000," +
+                "\"endDateTime\":1674918622000,\"totalPrice\":2623}";
+        String order2 = "{\"id\":2,\"customer\":{\"id\":1,\"firstName\":\"Jim\",\"secondName\":\"Carver\"," +
                 "\"phone\":\"1234567\",\"email\":\"@mail.ru\",\"credentials\":{\"id\":11,\"username\":\"jim\"," +
-                "\"password\":\"jimspassword\"}},\"worker\":{\"id\":21,\"firstName\":\"Mozie\",\"secondName\":\"Brasthle\"," +
+                "\"password\":\"jimspassword\"}},\"worker\":{\"id\":2,\"firstName\":\"Mozie\",\"secondName\":\"Brasthle\"," +
                 "\"phone\":\"8803535\",\"email\":\"@gmail.com\",\"credentials\":{\"id\":21,\"username\":\"mozie\"," +
-                "\"password\":\"moziespassword\"}},\"itemList\":[{\"id\":6,\"category\":{\"id\":11,\"name\":\"industrial goods\"}," +
-                "\"name\":\"excavator\",\"price\":12300,\"quantity\":1},{\"id\":7,\"category\":{\"id\":12," +
+                "\"password\":\"moziespassword\"}},\"itemList\":[{\"id\":1,\"category\":{\"id\":11,\"name\":\"industrial goods\"}," +
+                "\"name\":\"excavator\",\"price\":12300,\"quantity\":1},{\"id\":2,\"category\":{\"id\":12," +
                 "\"name\":\"houses\"},\"name\":\"3-bedroom aps\",\"price\":250000,\"quantity\":1}]," +
-                "\"startDateTime\":23424124114341,\"endDateTime\":20492382343243244,\"totalPrice\":262300}";
+                "\"startDateTime\":1674745816000,\"endDateTime\":1674918622000,\"totalPrice\":262300}";
         System.out.println("order Demo");
         System.out.println("Create order #1");
         System.out.println(orderController.create(order1));
@@ -130,7 +129,7 @@ public class Application {
         System.out.println("Read order #2");
         System.out.println(orderController.getById(order2));
         System.out.println("Update order #2");
-        System.out.println(orderController.update(order2, new BigDecimal(0)));
+        System.out.println(orderController.update(order2));
         System.out.println("Delete order #1");
         orderController.delete(order1);
         System.out.println("Read all orders");
