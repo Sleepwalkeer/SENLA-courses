@@ -3,7 +3,7 @@ package eu.senla;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import eu.senla.configuration.Config;
 import eu.senla.controllers.*;
-import org.springframework.context.ApplicationContext;
+import eu.senla.utils.ConnectionHolder;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.List;
 public class Application {
     public static void main(String[] args) throws JsonProcessingException {
 
-        ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
         OrderController orderController = context.getBean(OrderController.class);
 //        orderDemo(orderController);
+        ConnectionHolder connectionHolder = context.getBean(ConnectionHolder.class);
 
-        transactionDemo(orderController);
+       // transactionDemo(orderController);
 
-
-
+        context.close();
     }
 
     public static void accountDemo(AccountController accountController) throws JsonProcessingException {
