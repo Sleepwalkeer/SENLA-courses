@@ -1,11 +1,12 @@
 package eu.senla.aspect;
 
 import eu.senla.utils.ConnectionHolder;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 @Aspect
 @Component
@@ -17,32 +18,19 @@ public class TransactionAspect {
         this.connectionHolder = connectionHolder;
     }
 
-    @Pointcut("@annotation(eu.senla.annotation.Transaction)")
-    public void transactionPointCut() {
-    }
-
-    @Before("transactionPointCut()")
-    void getConnection() {
+    @Around("@annotation(eu.senla.annotation.Transaction)")
+    private Object executeTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
+        Object returnValue = null;
         try {
-             connection = connectionHolder.getTransactionConnection();
-            connection.setAutoCommit(false);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @After("transactionPointCut()")
-    void freeConnection() {
-            connectionHolder.freeTransactionConnection();
-    }
-
-    @AfterReturning("transactionPointCut()")
-    void commit() {
+            connection = connectionHolder.getTransactionConnection();
+            returnValue = joinPoint.proceed();
             connectionHolder.commit(connection);
+        } catch (RuntimeException e) {
+            connectionHolder.rollback(connection);
+        } finally {
+            connectionHolder.freeTransactionConnection();
+        }
+        return returnValue;
     }
 
-    @AfterThrowing(pointcut = "transactionPointCut()", throwing = "exception")
-    void rollback(RuntimeException exception) {
-            connectionHolder.rollback(connection);
-    }
 }

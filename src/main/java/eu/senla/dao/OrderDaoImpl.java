@@ -1,5 +1,6 @@
 package eu.senla.dao;
 
+import eu.senla.exceptions.DatabaseQueryExecutionException;
 import eu.senla.utils.ConnectionHolder;
 import eu.senla.entities.*;
 import org.springframework.stereotype.Component;
@@ -118,7 +119,7 @@ public class OrderDaoImpl implements OrderDao {
                 }
             }
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new DatabaseQueryExecutionException("Couldn't fetch data from database");
         }
         return orderList;
     }
@@ -165,7 +166,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.setItemList(new ArrayList<>());
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseQueryExecutionException("Couldn't fetch data from database");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ORDERID_ITEMS_CATEGORIES)) {
             preparedStatement.setInt(1, order.getId());
@@ -183,7 +184,7 @@ public class OrderDaoImpl implements OrderDao {
                 order.getItemList().add(item);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseQueryExecutionException("Couldn't fetch data from database");
         }
         return order;
     }
@@ -194,7 +195,7 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setInt(1, passedOrder.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new DatabaseQueryExecutionException("Couldn't update row");
         }
         getById(passedOrder);
         return passedOrder;
@@ -212,7 +213,7 @@ public class OrderDaoImpl implements OrderDao {
             preparedStatement.setBigDecimal(5, passedOrder.getTotalPrice());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            throw new RuntimeException(ex);
+            throw new DatabaseQueryExecutionException("Couldn't create row");
         }
         try (PreparedStatement createOrderItems = connection.prepareStatement(CREATE_ORDER_ITEM)) {
             for (Item item : passedOrder.getItemList()) {
@@ -221,7 +222,7 @@ public class OrderDaoImpl implements OrderDao {
                 createOrderItems.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseQueryExecutionException("Couldn't create row");
         }
         return passedOrder;
     }
@@ -233,7 +234,7 @@ public class OrderDaoImpl implements OrderDao {
                 preparedStatement.setInt(1, passedOrder.getId());
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DatabaseQueryExecutionException("Couldn't delete row");
             }
         }
     }

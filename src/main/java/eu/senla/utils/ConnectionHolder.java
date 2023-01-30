@@ -1,5 +1,9 @@
 package eu.senla.utils;
 
+import eu.senla.exceptions.DatabaseAccessException;
+import eu.senla.exceptions.DatabaseCommitChangesException;
+import eu.senla.exceptions.DatabaseConnectionException;
+import eu.senla.exceptions.DatabaseRollbackChangesException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -24,10 +28,16 @@ public class ConnectionHolder {
 
     public Connection getTransactionConnection() {
         String currentThreadName = Thread.currentThread().getName();
+        System.out.println(currentThreadName);
         if (transactionConnectionMap.containsKey(currentThreadName)) {
             return transactionConnectionMap.get(currentThreadName);
         } else {
             Connection newConnection = createConnection();
+            try {
+                newConnection.setAutoCommit(false);
+            } catch (SQLException e) {
+                throw new DatabaseAccessException("Database access error occurred. Couldn't set auto commit to false.");
+            }
             transactionConnectionMap.put(currentThreadName, newConnection);
             return newConnection;
         }
@@ -59,7 +69,7 @@ public class ConnectionHolder {
             connectionList.add(connection);
             return connection;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseConnectionException("Couldn't obtain a connection from the data source");
         }
     }
 
@@ -67,7 +77,7 @@ public class ConnectionHolder {
         try {
             connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseCommitChangesException("Couldn't commit changes");
         }
     }
 
@@ -75,19 +85,19 @@ public class ConnectionHolder {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseRollbackChangesException("Couldn't rollback changes");
         }
     }
 
     @PreDestroy
-    public void onDestroy() {
+    private void onDestroy() {
         for (Connection connection : connectionList) {
             try {
                 if (!connection.isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DatabaseAccessException("Database access error occured");
             }
         }
     }

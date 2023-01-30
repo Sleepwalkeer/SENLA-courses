@@ -31,7 +31,7 @@ public class Config {
     private String changelog;
 
     @Bean
-    DataSource dataSource() {
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(url);
