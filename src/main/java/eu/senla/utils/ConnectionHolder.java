@@ -25,11 +25,9 @@ public class ConnectionHolder {
     public Connection getTransactionConnection() {
         String currentThreadName = Thread.currentThread().getName();
         if (transactionConnectionMap.containsKey(currentThreadName)) {
-            System.out.println("такой траназкшн коннект уже есть для потока, отдаем" + Thread.currentThread().getName());
             return transactionConnectionMap.get(currentThreadName);
         } else {
             Connection newConnection = createConnection();
-            System.out.println("для этого потока нет транзакшн коннекта, создаем" + Thread.currentThread().getName());
             transactionConnectionMap.put(currentThreadName, newConnection);
             return newConnection;
         }
@@ -38,23 +36,19 @@ public class ConnectionHolder {
     public Connection getConnection() {
         String currentThreadName = Thread.currentThread().getName();
         if (transactionConnectionMap.containsKey(currentThreadName)) {
-            System.out.println("отдаем потоку его же коннект, он есть в транзакции" + Thread.currentThread().getName());
             return transactionConnectionMap.get(currentThreadName);
         } else {
             for (Connection connection : connectionList) {
                 if (!transactionConnectionMap.containsValue(connection)) {
-                    System.out.println("отдаем любой не транзакционный поток из списка" + Thread.currentThread().getName());
                     return connection;
                 }
             }
-            System.out.println("ни одного открытого потока нет, создаем новый");
             return createConnection();
         }
     }
 
     public void freeTransactionConnection() {
         String currentThreadName = Thread.currentThread().getName();
-        System.out.println("транзакция отработала, разрешаем поток брать всем");
         transactionConnectionMap.remove(currentThreadName);
 
     }

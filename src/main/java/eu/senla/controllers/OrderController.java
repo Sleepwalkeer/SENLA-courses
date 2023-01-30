@@ -6,7 +6,6 @@ import eu.senla.dto.OrderDto;
 import eu.senla.services.OrderService;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
