@@ -1,9 +1,6 @@
 package eu.senla.utils;
 
-import eu.senla.exceptions.DatabaseAccessException;
-import eu.senla.exceptions.DatabaseCommitChangesException;
-import eu.senla.exceptions.DatabaseConnectionException;
-import eu.senla.exceptions.DatabaseRollbackChangesException;
+import eu.senla.exceptions.*;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -30,16 +27,21 @@ public class ConnectionHolder {
         String currentThreadName = Thread.currentThread().getName();
         System.out.println(currentThreadName);
         if (transactionConnectionMap.containsKey(currentThreadName)) {
-            return transactionConnectionMap.get(currentThreadName);
-        } else {
-            Connection newConnection = createConnection();
-            try {
-                newConnection.setAutoCommit(false);
-            } catch (SQLException e) {
-                throw new DatabaseAccessException("Database access error occurred. Couldn't set auto commit to false.");
+            Connection connection = transactionConnectionMap.get(currentThreadName);
+            if (isOpen(connection)) {
+                return connection;
+            } else {
+                throw new DatabaseTransactionException("Couldn't validate connection to database. Transaction will be rollbacked");
             }
-            transactionConnectionMap.put(currentThreadName, newConnection);
-            return newConnection;
+        } else {
+            try {
+                Connection newConnection = createConnection();
+                newConnection.setAutoCommit(false);
+                transactionConnectionMap.put(currentThreadName, newConnection);
+                return newConnection;
+            } catch (SQLException e) {
+                throw new DatabaseTransactionException("Database access error occurred. Couldn't set auto commit to false.");
+            }
         }
     }
 
@@ -50,7 +52,9 @@ public class ConnectionHolder {
         } else {
             for (Connection connection : connectionList) {
                 if (!transactionConnectionMap.containsValue(connection)) {
-                    return connection;
+                    if (isOpen(connection)) {
+                        return connection;
+                    }
                 }
             }
             return createConnection();
@@ -61,6 +65,16 @@ public class ConnectionHolder {
         String currentThreadName = Thread.currentThread().getName();
         transactionConnectionMap.remove(currentThreadName);
 
+    }
+
+    private boolean isOpen(Connection connection) {
+        try {
+            if (connection.isClosed()) {
+                return false;
+            } else return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Connection createConnection() {
