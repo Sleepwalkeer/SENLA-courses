@@ -1,6 +1,7 @@
 package eu.senla.aspect;
 
 import eu.senla.utils.ConnectionHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 
+@Slf4j
 @Aspect
 @Component
 public class TransactionAspect {
@@ -31,7 +33,8 @@ public class TransactionAspect {
             throw e;
         } catch (Exception e) {
             connectionHolder.commit(connection);
-            return null;
+            log.error("Non-SQL exception encountered during transaction execution");
+            throw new RuntimeException("Non-SQL exception encountered during transaction execution");
         } finally {
             connectionHolder.freeTransactionConnection();
         }
