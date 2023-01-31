@@ -119,7 +119,7 @@ where rent_order.id = ?;""";
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DatabaseQueryExecutionException("Couldn't fetch data from database");
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_BY_ORDERID_ITEMS_CATEGORIES)) {
 
