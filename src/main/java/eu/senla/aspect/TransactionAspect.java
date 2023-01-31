@@ -1,6 +1,5 @@
 package eu.senla.aspect;
 
-import eu.senla.exceptions.DatabaseRollbackChangesException;
 import eu.senla.utils.ConnectionHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -21,21 +20,21 @@ public class TransactionAspect {
 
     @Around("@annotation(eu.senla.annotation.Transaction)")
     private Object executeTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
-        Object returnValue = null;
+
         try {
             connection = connectionHolder.getTransactionConnection();
-            returnValue = joinPoint.proceed();
+            Object returnValue = joinPoint.proceed();
             connectionHolder.commit(connection);
+            return returnValue;
         } catch (RuntimeException e) {
             connectionHolder.rollback(connection);
             throw e;
-        }catch (Exception e){
+        } catch (Exception e) {
             connectionHolder.commit(connection);
-        }
-        finally {
+            return null;
+        } finally {
             connectionHolder.freeTransactionConnection();
         }
-        return returnValue;
     }
 
 }
