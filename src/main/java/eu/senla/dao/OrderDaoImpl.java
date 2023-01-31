@@ -25,14 +25,26 @@ public class OrderDaoImpl implements OrderDao {
                    cCreds.id as cci, cCreds.username as ccu, cCreds.password as ccp,
                    wrkr.id as wi, wrkr.first_name AS wfn, wrkr.second_name as wsn, wrkr.phone as wp, wrkr.email as we,
                    wCreds.id as wci, wCreds.username as wcu, wCreds.password as wcp
-            from rent_order,account as cstm, account as wrkr,credentials as cCreds, credentials as wCreds
-            where rent_order.customer_id = cstm.id AND rent_order.worker_id = wrkr.id AND cstm.id = cCreds.id
-            AND wrkr.id = wCreds.id;""";
+            from rent_order
+               inner join account cstm on rent_order.customer_id = cstm.id
+               inner join credentials cCreds on cstm.id = cCreds.id
+               inner join account wrkr on wrkr.id = rent_order.worker_id
+               inner join credentials wCreds on wrkr.id = wCreds.id;
+            """;
 
     private final static String SELECT_BY_ORDERID_ITEMS_CATEGORIES = """
-            select rent_order.id, item.id as ii, item.name as iname, item.price as ip, item.quantity as iq, category.id as ci, category.name as cn
-            from rent_order,item,category, order_item
-            where   rent_order.id = ? AND rent_order.id = order_item.order_id AND order_item.item_id = item.id AND item.id = category.id;""";
+            select rent_order.id,
+       item.id       as ii,
+       item.name     as iname,
+       item.price    as ip,
+       item.quantity as iq,
+       category.id   as ci,
+       category.name as cn
+from rent_order
+         inner join order_item ON rent_order.id = order_item.order_id
+         inner join item ON order_item.item_id = item.id
+         inner join category on category.id = item.category_id
+where rent_order.id = ?;""";
 
     private final static String SELECT_BY_ORDERID_ORDER_CUSTOMER_WORKER_CREDS = """
             select rent_order.id, rent_order.start_datetime, rent_order.end_datetime, rent_order.total_price,
@@ -40,14 +52,23 @@ public class OrderDaoImpl implements OrderDao {
                    cCreds.id as cci, cCreds.username as ccu, cCreds.password as ccp,
                    wrkr.id as wi, wrkr.first_name AS wfn, wrkr.second_name as wsn, wrkr.phone as wp, wrkr.email as we,
                    wCreds.id as wci, wCreds.username as wcu, wCreds.password as wcp
-            from rent_order,account as cstm, account as wrkr,credentials as cCreds, credentials as wCreds
-            where rent_order.id = ? AND rent_order.customer_id = cstm.id AND rent_order.worker_id = wrkr.id AND cstm.id = cCreds.id
-            AND wrkr.id = wCreds.id;""";
+            from rent_order
+                     inner join account cstm on rent_order.customer_id = cstm.id
+                     inner join credentials cCreds on cstm.id = cCreds.id
+                     inner join account wrkr on wrkr.id = rent_order.worker_id
+                     inner join credentials wCreds on wrkr.id = wCreds.id
+            where rent_order.id = ?;""";
 
     private final static String DELETE_BY_ID = "delete from rent_order  where rent_order.id = ? ";
 
-    private final static String UPDATE_TOTAL_PRICE = "UPDATE rent_order set total_price = (select sum(item.price) from order_item,item where rent_order.id = order_item.order_id AND order_item.item_id=item.id)\n" +
-            "where id = ?;";
+    private final static String UPDATE_TOTAL_PRICE = """
+            UPDATE rent_order
+            set total_price = (select sum(item.price)
+                               from order_item,
+                                    item
+                               where rent_order.id = order_item.order_id
+                                 AND order_item.item_id = item.id)
+            where id = ?;""";
 
     public OrderDaoImpl(ConnectionHolder connectionHolder) {
         this.connectionHolder = connectionHolder;
