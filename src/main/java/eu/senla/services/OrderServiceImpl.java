@@ -1,6 +1,5 @@
 package eu.senla.services;
 
-import eu.senla.annotation.Transaction;
 import eu.senla.dao.OrderDao;
 import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
@@ -20,7 +19,6 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
     }
 
-    @Transaction
     public OrderDto transactionTest() {
         Order order = new Order();
         order.setId(1);
