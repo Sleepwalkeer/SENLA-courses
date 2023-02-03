@@ -6,8 +6,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @EnableAspectJAutoProxy
 @Configuration
@@ -42,10 +47,42 @@ public class Config {
     }
 
     @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactory.setDataSource(dataSource());
+        entityManagerFactory.setPackagesToScan("eu.senla.entities");
+        entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManagerFactory.setJpaProperties(additionalProperties());
+
+        return entityManagerFactory;
+    }
+
+
+    @Bean
+    public PlatformTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+
+        return transactionManager;
+    }
+
+
+    @Bean
+    Properties additionalProperties() {
+        Properties properties = new Properties();
+        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
+        properties.setProperty("hibernate.show_sql", "true");
+
+        return properties;
+    }
+
+    @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setDataSource(dataSource());
         liquibase.setChangeLog(changelog);
+
         return liquibase;
     }
 
