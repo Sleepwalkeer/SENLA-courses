@@ -36,8 +36,8 @@ public class OrderController {
         return fromDtoToJson(orderService.update(fromJsonToDto(orderData)));
     }
 
-    public String create(String orderData) throws JsonProcessingException {
-        return fromDtoToJson(orderService.create(fromJsonToDto(orderData)));
+    public void create(String orderData) throws JsonProcessingException {
+        orderService.create(fromJsonToDto(orderData));
     }
 
     public void delete(String orderData) throws JsonProcessingException {

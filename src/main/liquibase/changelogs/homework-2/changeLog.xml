@@ -73,4 +73,8 @@
         <sqlFile encoding="utf8" path="./sql/16.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="homework-6-drop-unique-name-constraint-in-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/17.drop-unique-name-constraint-in-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog> 

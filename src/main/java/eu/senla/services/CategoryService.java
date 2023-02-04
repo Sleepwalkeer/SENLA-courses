@@ -9,9 +9,9 @@ public interface CategoryService {
 
     CategoryDto getById(CategoryDto accountDto);
 
-    CategoryDto create(CategoryDto accountDto);
+    void create(CategoryDto accountDto);
 
-    CategoryDto update(CategoryDto accountDto, String newName);
+    CategoryDto update(CategoryDto accountDto);
 
     void delete(CategoryDto accountDto);
 }

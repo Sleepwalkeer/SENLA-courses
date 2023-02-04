@@ -32,12 +32,12 @@ public class ItemController {
         return fromDtoToJson(itemService.getById(fromJsonToDto(itemData)));
     }
 
-    public String update(String itemData, int newQuantity) throws JsonProcessingException {
-        return fromDtoToJson(itemService.update(fromJsonToDto(itemData), newQuantity));
+    public String update(String itemData) throws JsonProcessingException {
+        return fromDtoToJson(itemService.update(fromJsonToDto(itemData)));
     }
 
-    public String create(String itemData) throws JsonProcessingException {
-        return fromDtoToJson(itemService.create(fromJsonToDto(itemData)));
+    public void create(String itemData) throws JsonProcessingException {
+        itemService.create(fromJsonToDto(itemData));
     }
 
     public void delete(String itemData) throws JsonProcessingException {

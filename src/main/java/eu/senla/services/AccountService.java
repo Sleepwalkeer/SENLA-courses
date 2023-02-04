@@ -8,9 +8,9 @@ public interface AccountService {
 
     AccountDto getById(AccountDto accountDto);
 
-    AccountDto create(AccountDto accountDto);
+    void create(AccountDto accountDto);
 
-    AccountDto update(AccountDto accountDto, String phoneCode);
+    AccountDto update(AccountDto accountDto);
 
     void delete(AccountDto accountDto);
 }

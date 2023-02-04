@@ -1,17 +1,18 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Category;
+import eu.senla.entities.Category;
 
 import java.util.List;
 
 public interface CategoryDao {
-    List<Category> getAll();
+    List<Category> findAll();
 
-    Category getById(Category passedCategory);
+    Category findById(Integer id);
 
-    Category update(Category passedCategory, String newName);
+    Category update(Category category);
 
-    Category create(Category passedCategory);
+    void save(Category category);
 
-    void delete(Category passedCategory);
+    void delete(Category category);
 }

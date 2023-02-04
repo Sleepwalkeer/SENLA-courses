@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
 
     public List<ItemDto> getAll() {
         List<ItemDto> itemDtoList = new ArrayList<>();
-        List<Item> items = itemDao.getAll();
+        List<Item> items = itemDao.findAll();
 
         for (Item item : items) {
             itemDtoList.add(modelMapper.map(item, ItemDto.class));
@@ -30,15 +30,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public ItemDto getById(ItemDto itemDto) {
-        return modelMapper.map(itemDao.getById(modelMapper.map(itemDto, Item.class)), ItemDto.class);
+        return modelMapper.map(itemDao.findById(itemDto.getId()), ItemDto.class);
     }
 
-    public ItemDto create(ItemDto itemDto) {
-        return modelMapper.map(itemDao.create(modelMapper.map(itemDto, Item.class)), ItemDto.class);
+    public void create(ItemDto itemDto) {
+        itemDao.save(modelMapper.map(itemDto, Item.class));
     }
 
-    public ItemDto update(ItemDto itemDto, int newQuantity) {
-        return modelMapper.map(itemDao.update(modelMapper.map(itemDto, Item.class), newQuantity), ItemDto.class);
+    public ItemDto update(ItemDto itemDto) {
+        return modelMapper.map(itemDao.update(modelMapper.map(itemDto, Item.class)), ItemDto.class);
     }
 
     public void delete(ItemDto itemDto) {

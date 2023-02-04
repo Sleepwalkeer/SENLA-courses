@@ -1,17 +1,18 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Item;
+import eu.senla.entities.Item;
 
 import java.util.List;
 
 public interface ItemDao {
-    List<Item> getAll();
+    List<Item> findAll();
 
-    Item getById(Item passedItem);
+    Item findById(Integer id);
 
-    Item update(Item passedItem, int newQuantity);
+    Item update(Item item);
 
-    Item create(Item passedItem);
+    void save(Item item);
 
-    void delete(Item passedItem);
+    void delete(Item item);
 }

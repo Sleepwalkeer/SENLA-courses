@@ -18,9 +18,10 @@ public class CredentialsServiceImpl implements CredentialsService {
         this.credentialsDao = credentialsDao;
         this.modelMapper = modelMapper;
     }
+
     public List<CredentialsDto> getAll() {
         List<CredentialsDto> credentialsDtoList = new ArrayList<>();
-        List<Credentials> credentialsList = credentialsDao.getAll();
+        List<Credentials> credentialsList = credentialsDao.findAll();
 
         for (Credentials credentials : credentialsList) {
             credentialsDtoList.add(modelMapper.map(credentials, CredentialsDto.class));
@@ -29,14 +30,15 @@ public class CredentialsServiceImpl implements CredentialsService {
     }
 
     public CredentialsDto getById(CredentialsDto credentialsDto) {
-        return modelMapper.map(credentialsDao.getById(modelMapper.map(credentialsDto, Credentials.class)), CredentialsDto.class);
-    }
-    public CredentialsDto create(CredentialsDto credentialsDto) {
-        return modelMapper.map(credentialsDao.create(modelMapper.map(credentialsDto, Credentials.class)), CredentialsDto.class);
+        return modelMapper.map(credentialsDao.findById(credentialsDto.getId()), CredentialsDto.class);
     }
 
-    public CredentialsDto update(CredentialsDto credentialsDto, String newPassword) {
-        return modelMapper.map(credentialsDao.update(modelMapper.map(credentialsDto, Credentials.class), newPassword), CredentialsDto.class);
+    public void create(CredentialsDto credentialsDto) {
+        credentialsDao.save(modelMapper.map(credentialsDto, Credentials.class));
+    }
+
+    public CredentialsDto update(CredentialsDto credentialsDto) {
+        return modelMapper.map(credentialsDao.update(modelMapper.map(credentialsDto, Credentials.class)), CredentialsDto.class);
     }
 
 

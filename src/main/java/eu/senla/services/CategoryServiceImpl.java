@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CategoryServiceImpl implements CategoryService  {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryDao categoryDao;
     private final ModelMapper modelMapper;
 
@@ -18,9 +18,10 @@ public class CategoryServiceImpl implements CategoryService  {
         this.categoryDao = categoryDao;
         this.modelMapper = modelMapper;
     }
+
     public List<CategoryDto> getAll() {
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        List<Category> categories = categoryDao.getAll();
+        List<Category> categories = categoryDao.findAll();
 
         for (Category category : categories) {
             categoryDtoList.add(modelMapper.map(category, CategoryDto.class));
@@ -29,15 +30,15 @@ public class CategoryServiceImpl implements CategoryService  {
     }
 
     public CategoryDto getById(CategoryDto categoryDto) {
-        return modelMapper.map(categoryDao.getById(modelMapper.map(categoryDto, Category.class)), CategoryDto.class);
+        return modelMapper.map(categoryDao.findById(categoryDto.getId()), CategoryDto.class);
     }
 
-    public CategoryDto update(CategoryDto categoryDto, String newName) {
-        return modelMapper.map(categoryDao.update(modelMapper.map(categoryDto, Category.class), newName), CategoryDto.class);
+    public CategoryDto update(CategoryDto categoryDto) {
+        return modelMapper.map(categoryDao.update(modelMapper.map(categoryDto, Category.class)), CategoryDto.class);
     }
 
-    public CategoryDto create(CategoryDto categoryDto) {
-        return modelMapper.map(categoryDao.create(modelMapper.map(categoryDto, Category.class)), CategoryDto.class);
+    public void create(CategoryDto categoryDto) {
+        categoryDao.save(modelMapper.map(categoryDto, Category.class));
     }
 
     public void delete(CategoryDto categoryDto) {

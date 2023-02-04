@@ -1,9 +1,7 @@
 package eu.senla.services;
 
 import eu.senla.dto.OrderDto;
-import eu.senla.entities.Order;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface OrderService {
@@ -11,7 +9,7 @@ public interface OrderService {
 
     OrderDto getById(OrderDto accountDto);
 
-    OrderDto create(OrderDto accountDto);
+    void create(OrderDto accountDto);
 
     OrderDto update(OrderDto accountDto);
 

@@ -9,9 +9,9 @@ public interface ItemService {
 
     ItemDto getById(ItemDto accountDto);
 
-    ItemDto create(ItemDto accountDto);
+    void create(ItemDto accountDto);
 
-    ItemDto update(ItemDto accountDto, int newQuantity);
+    ItemDto update(ItemDto accountDto);
 
     void delete(ItemDto accountDto);
 }

@@ -5,13 +5,13 @@ import eu.senla.entities.Order;
 import java.util.List;
 
 public interface OrderDao {
-    List<Order> getAll();
+    List<Order> findAll();
 
-    Order getById(Order passedOrder);
+    Order findById(Integer id);
 
     Order update(Order passedOrder);
 
-    Order create(Order passedOrder);
+    void save(Order passedOrder);
 
     void delete(Order passedOrder);
 }

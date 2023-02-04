@@ -22,7 +22,7 @@ public class AccountServiceImpl implements AccountService {
 
     public List<AccountDto> getAll() {
         List<AccountDto> accountDtoList = new ArrayList<>();
-        List<Account> accounts = accountDao.getAll();
+        List<Account> accounts = accountDao.findAll();
 
         for (Account account : accounts) {
             accountDtoList.add(modelMapper.map(account, AccountDto.class));
@@ -31,14 +31,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public AccountDto getById(AccountDto accountDto) {
-        return modelMapper.map(accountDao.getById(modelMapper.map(accountDto, Account.class)), AccountDto.class);
-    }
-    public AccountDto create(AccountDto accountDto) {
-        return modelMapper.map(accountDao.create(modelMapper.map(accountDto, Account.class)), AccountDto.class);
+        return modelMapper.map(accountDao.findById(accountDto.getId()), AccountDto.class);
     }
 
-    public AccountDto update(AccountDto accountDto, String phoneCode) {
-        return modelMapper.map(accountDao.update(modelMapper.map(accountDto, Account.class), phoneCode), AccountDto.class);
+    public void create(AccountDto accountDto) {
+        accountDao.save(modelMapper.map(accountDto, Account.class));
+    }
+
+    public AccountDto update(AccountDto accountDto) {
+        return modelMapper.map(accountDao.update(modelMapper.map(accountDto, Account.class)), AccountDto.class);
     }
 
     public void delete(AccountDto accountDto) {

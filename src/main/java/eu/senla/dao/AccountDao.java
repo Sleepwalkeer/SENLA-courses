@@ -1,18 +1,19 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Account;
+import eu.senla.entities.Account;
 
 import java.util.List;
 
 public interface AccountDao {
 
-    List<Account> getAll();
+    List<Account> findAll();
 
-    Account getById(Account passedAccount);
+    Account findById(Integer id);
 
-    Account update(Account passedAccount, String phoneCode);
+    Account update(Account account);
 
-    Account create(Account passedAccount);
+    void save(Account account);
 
-    void delete(Account passedAccount);
+    void delete(Account account);
 }
