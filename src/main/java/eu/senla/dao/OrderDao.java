@@ -11,7 +11,7 @@ public interface OrderDao {
 
     Order update(Order passedOrder);
 
-    void save(Order passedOrder);
+    Order save(Order passedOrder);
 
     void delete(Order passedOrder);
 }

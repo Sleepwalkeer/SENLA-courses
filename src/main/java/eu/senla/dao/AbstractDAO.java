@@ -5,17 +5,19 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public abstract class AbstractDAO<K, T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
 
-    public void save(T entity) {
-        entityManager.persist(entity);
+    public T save(T entity) {
+       return entityManager.merge(entity);
     }
 
     public T update(T entity) {

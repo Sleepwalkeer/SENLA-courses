@@ -12,7 +12,7 @@ public interface CredentialsDao {
 
     Credentials update(Credentials credentials);
 
-    void save(Credentials credentials);
+    Credentials save(Credentials credentials);
 
     void delete(Credentials credentials);
 }

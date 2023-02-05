@@ -13,7 +13,7 @@ public interface AccountDao {
 
     Account update(Account account);
 
-    void save(Account account);
+    Account save(Account account);
 
     void delete(Account account);
 }

@@ -12,7 +12,7 @@ public interface CategoryDao {
 
     Category update(Category category);
 
-    void save(Category category);
+    Category save(Category category);
 
     void delete(Category category);
 }

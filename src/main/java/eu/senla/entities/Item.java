@@ -27,15 +27,12 @@ public class Item {
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
 
-    @Column(name = "email", length = 50, nullable = false, unique = true)
+    @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "price", nullable = false)
+    @Column(name = "quantity", nullable = false)
     private int quantity;
-
-    @ManyToMany (mappedBy = "items", fetch = FetchType.LAZY)
-    private Set<Order> orders;
 }
