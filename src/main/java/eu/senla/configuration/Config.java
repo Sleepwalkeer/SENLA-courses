@@ -54,7 +54,7 @@ public class Config {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource());
-        entityManagerFactory.setPackagesToScan("eu.senla.entities");
+        entityManagerFactory.setPackagesToScan("eu.senla.dto");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         entityManagerFactory.setJpaProperties(additionalProperties());
 

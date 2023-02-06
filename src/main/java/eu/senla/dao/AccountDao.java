@@ -16,4 +16,6 @@ public interface AccountDao {
     Account save(Account account);
 
     void delete(Account account);
+
+    void deleteById(Integer id);
 }

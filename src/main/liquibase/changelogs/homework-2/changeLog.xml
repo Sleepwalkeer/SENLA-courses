@@ -73,8 +73,40 @@
         <sqlFile encoding="utf8" path="./sql/16.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-6-drop-unique-name-constraint-in-account-table" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/17.drop-unique-name-constraint-in-account-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-6-on-delete-cascade-to-item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/17.add-on-delete-cascade-to-item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-drop-credentials-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/18.drop-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-drop-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/19.drop-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-credentials-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/20.create-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/21.create-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-columns-to-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/22.add-columns-to-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-columns-to-credentials-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/23.add-columns-to-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-constraint-to-order_item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/24.add-item-constraint-to-order_item-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-constraint-to-rent_order" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/25.add-constraint-to-rent_order-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
 </databaseChangeLog> 

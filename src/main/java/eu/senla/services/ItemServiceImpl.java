@@ -5,11 +5,13 @@ import eu.senla.dto.ItemDto;
 import eu.senla.entities.Item;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@Transactional
 public class ItemServiceImpl implements ItemService {
     private final ItemDao itemDao;
     private final ModelMapper modelMapper;

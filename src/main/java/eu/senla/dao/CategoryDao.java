@@ -15,4 +15,6 @@ public interface CategoryDao {
     Category save(Category category);
 
     void delete(Category category);
+
+    void deleteById(Integer id);
 }

@@ -15,4 +15,6 @@ public interface CredentialsDao {
     Credentials save(Credentials credentials);
 
     void delete(Credentials credentials);
+
+    void deleteById(Integer id);
 }

@@ -2,13 +2,13 @@ package eu.senla.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 @Transactional
 public abstract class AbstractDAO<K, T> {
 
@@ -25,7 +25,14 @@ public abstract class AbstractDAO<K, T> {
     }
 
     public void delete(T entity) {
-        entityManager.remove(entity);
+        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
+    }
+
+    public void deleteById(K id) {
+        T entity = entityManager.find(getEntityClass(), id);
+        if (entity != null) {
+            entityManager.remove(entity);
+        }
     }
 
     public List<T> findAll() {

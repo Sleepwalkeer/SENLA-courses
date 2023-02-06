@@ -1,5 +1,6 @@
 package eu.senla.dao;
 
+import eu.senla.entities.Category;
 import eu.senla.entities.Item;
 import eu.senla.entities.Item;
 
@@ -15,4 +16,6 @@ public interface ItemDao {
     Item save(Item item);
 
     void delete(Item item);
+
+    void deleteById(Integer id);
 }

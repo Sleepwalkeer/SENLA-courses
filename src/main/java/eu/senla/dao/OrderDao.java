@@ -14,4 +14,6 @@ public interface OrderDao {
     Order save(Order passedOrder);
 
     void delete(Order passedOrder);
+
+    void deleteById(Integer id);
 }
