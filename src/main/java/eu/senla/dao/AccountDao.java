@@ -11,6 +11,8 @@ public interface AccountDao {
 
     Account findById(Integer id);
 
+    Account findByIdEager(Integer id);
+
     Account update(Account account);
 
     Account save(Account account);

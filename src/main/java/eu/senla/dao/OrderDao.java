@@ -9,6 +9,8 @@ public interface OrderDao {
 
     Order findById(Integer id);
 
+    Order findByIdEager(Integer id);
+
     Order update(Order passedOrder);
 
     Order save(Order passedOrder);
@@ -16,4 +18,6 @@ public interface OrderDao {
     void delete(Order passedOrder);
 
     void deleteById(Integer id);
+
+    List<Order> getOrdersWithMoreItemsThan(int itemCount);
 }

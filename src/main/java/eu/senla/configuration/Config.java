@@ -54,7 +54,7 @@ public class Config {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource());
-        entityManagerFactory.setPackagesToScan("eu.senla.dto");
+        entityManagerFactory.setPackagesToScan("eu.senla.entities");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         entityManagerFactory.setJpaProperties(additionalProperties());
 
@@ -75,6 +75,7 @@ public class Config {
         properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
+        properties.setProperty("hibernate.format_sql","true");
 
         return properties;
     }
