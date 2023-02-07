@@ -3,7 +3,7 @@ package eu.senla.dao;
 import eu.senla.dto.ItemDto;
 import eu.senla.entities.Category;
 import eu.senla.entities.Item;
-import eu.senla.entities.Item_;
+//import eu.senla.entities.Item_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceContextType;

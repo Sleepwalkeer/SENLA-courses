@@ -13,9 +13,6 @@
         <sqlFile encoding="utf8" path="./sql/01.create-account-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-table-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/02.add-columns-to-account-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
 
     <changeSet id="homework-2-credentials" author="Vladislav Krot">
         <sqlFile encoding="utf8" path="./sql/03.create-credentials-table.sql" relativeToChangelogFile="true"/>
@@ -37,24 +34,25 @@
         <sqlFile encoding="utf8" path="./sql/07.create-category-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-add-credentials-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/08.add-columns-to-credentials-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
 
     <changeSet id="homework-2-order_item-add-constraints" author="Vladislav Krot">
         <sqlFile encoding="utf8" path="./sql/09.add-constraints-to-order_item-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="09_2" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/09_2.add-constraints-to-order_item-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-rent_order-add-columns" author="Vladislav Krot">
         <sqlFile encoding="utf8" path="./sql/10.add-columns-to-rent_order-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-item-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/11.add-constraint-to-item.sql" relativeToChangelogFile="true"/>
+    <changeSet id="10_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/10_02.add-columns-to-rent_order-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-category-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/12.add-columns-to-category-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="homework-2-item-add-constraint" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/11.add-constraint-to-item.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-create-index-on-item.category_id" author="Vladislav Krot">
@@ -73,8 +71,16 @@
         <sqlFile encoding="utf8" path="./sql/16.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="16_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/16_02.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
     <changeSet id="homework-6-on-delete-cascade-to-item" author="Vladislav Krot">
         <sqlFile encoding="utf8" path="./sql/17.add-on-delete-cascade-to-item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="17_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/17_02.add-on-delete-cascade-to-item.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-6-drop-credentials-table" author="Vladislav Krot">
@@ -93,16 +99,13 @@
         <sqlFile encoding="utf8" path="./sql/21.create-account-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-6-columns-to-account-table" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/22.add-columns-to-account-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-6-columns-to-credentials-table" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/23.add-columns-to-credentials-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
 
     <changeSet id="homework-6-constraint-to-order_item" author="Vladislav Krot">
         <sqlFile encoding="utf8" path="./sql/24.add-item-constraint-to-order_item-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="24_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sql/24_02.add-item-constraint-to-order_item-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-6-constraint-to-rent_order" author="Vladislav Krot">

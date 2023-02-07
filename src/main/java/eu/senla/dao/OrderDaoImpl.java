@@ -2,7 +2,7 @@ package eu.senla.dao;
 
 import eu.senla.entities.Account;
 import eu.senla.entities.Order;
-import eu.senla.entities.Order_;
+//import eu.senla.entities.Order_;
 import jakarta.persistence.*;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
