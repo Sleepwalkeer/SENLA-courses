@@ -36,6 +36,7 @@ public class Account {
     @Column(name = "email", length = 64, nullable = false, unique = true)
     private String email;
 
+
     @OneToOne( fetch=FetchType.LAZY,cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "id")

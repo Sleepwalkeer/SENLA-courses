@@ -50,7 +50,7 @@
     </changeSet>
 
     <changeSet id="homework-2-item-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/11.add-constraint-to-item.sql" relativeToChangelogFile="true"/>
+        <sqlFile encoding="utf8" path="./sql/11.add-columns-to-item-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
     <changeSet id="homework-2-category-add-columns" author="Vladislav Krot">

@@ -49,23 +49,26 @@ public class Application {
 //        itemDao.save(angle_grinder);
 //        itemDao.save(item);
 //        itemDao.save(lamborghini);
-//
-//        Account account = new Account("Mallory",
-//                "Kay","+375298201846","malory.kay.p@gmail.com",
-//                new Credentials("MalloryKayP","kz25bj2jk23r"));
-//
-//        Account account3 = new Account("bla",
-//                "blya","+375323924","@gmail.com",
-//                new Credentials("esculap","ngfdspds453q2f"));
-//        accountDao.save(account3);
-//        accountDao.deleteById(3);
 
-Account account = accountDao.findByIdEager(1);
-      System.out.println(account);
-//        Item item = itemDao.findByIdEager(1);
-        List<Order>  test = orderDao.getOrdersWithMoreItemsThan(4);
-//        System.out.println(item);
+        Account account = new Account("Mallory",
+                "Kay","+375298201846","malory.kay.p@gmail.com",
+                new Credentials("MalloryKayP","kz25bj2jk23r"));
+        accountDao.save(account);
+
+        Account account3 = new Account("bla",
+                "blya","+375323924","@gmail.com",
+                new Credentials("esculap","ngfdspds453q2f"));
+
+
+        List<Item>  itemList = itemDao.findAll();
+
+        Order order1 = new Order(new Account(1),new Account(2), itemList,
+                new Timestamp(1675681474095L),new Timestamp(1675711474095L),new BigDecimal(50));
+        orderDao.save(order1);
+
         Order order = orderDao.findByIdEager(1);
+       List<Item>  test = order.getItems();
+        System.out.println(test);
  //       System.out.println(orderDao.findByIdEager(1));
 //        List<Item> itemList = itemDao.findAll();
 //        Set<Item> itemSet  = new HashSet<>();
@@ -78,9 +81,6 @@ Account account = accountDao.findByIdEager(1);
 //
 //        List<Account> accountList = accountDao.findAll();
 
-//        Order order1 = new Order(accountList.get(0),accountList.get(1),itemSet,
-//                new Timestamp(1675681474095L),new Timestamp(1675711474095L),new BigDecimal(50));
-//        orderDao.save(order1);
 //
 //        Order order2  = new Order(accountList.get(0),accountList.get(1),itemSet2,
 //                new Timestamp(1675661474095L),new Timestamp(1675710474095L),new BigDecimal(50));

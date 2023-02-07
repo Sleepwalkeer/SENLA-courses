@@ -126,6 +126,7 @@
             <resource>
                 <directory>src/test/resources</directory>
             </resource>
+            <resource><directory>src/test/liquibaseTest</directory></resource>
         </resources>
         <plugins>
             <plugin>

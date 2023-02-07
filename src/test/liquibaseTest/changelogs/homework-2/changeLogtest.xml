@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro 
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd"
+        logicalFilePath="homework-2">
+
+    <changeSet id="homework-2-account" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/01.create-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+
+    <changeSet id="homework-2-credentials" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/03.create-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-order_item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/04.create-order_item-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-order" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/05.create-order-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/06.create-item-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-user-category" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/07.create-category-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+
+    <changeSet id="homework-2-order_item-add-constraints" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/09.add-constraints-to-order_item-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="09_2" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/09_2.add-constraints-to-order_item-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-rent_order-add-columns" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/10.add-columns-to-rent_order-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="10_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/10_02.add-columns-to-rent_order-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-item-add-constraint" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/11.add-constraint-to-item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-create-index-on-item.category_id" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/13.add-index-on-item.category_id.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-create-index-on-rent_order.worker_id" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/14.add-index-on-rent_order.worker_id.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-2-create-index-on-item.customer_id" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/15.add-index-on-rent_order.customer_id.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-5-add-on-delete-cascade-to-order_item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/16.add-on-delete-cascade-to-order_item.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="16_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/16_02.add-on-delete-cascade-to-order_item.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-on-delete-cascade-to-item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/17.add-on-delete-cascade-to-item.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="17_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/17_02.add-on-delete-cascade-to-item.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-drop-credentials-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/18.drop-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-drop-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/19.drop-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-credentials-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/20.create-credentials-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-account-table" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/21.create-account-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+
+    <changeSet id="homework-6-constraint-to-order_item" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/24.add-item-constraint-to-order_item-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="24_02" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/24_02.add-item-constraint-to-order_item-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="homework-6-constraint-to-rent_order" author="Vladislav Krot">
+        <sqlFile encoding="utf8" path="./sqlTest/25.add-constraint-to-rent_order-table.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+</databaseChangeLog> 
