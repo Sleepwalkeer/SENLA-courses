@@ -1,6 +1,6 @@
 ALTER TABLE account
-    ADD COLUMN first_name VARCHAR(25) NOT NULL,
-ADD COLUMN second_name VARCHAR(25) NOT NULL,
-ADD COLUMN phone VARCHAR(15) NOT NULL UNIQUE,
-ADD COLUMN email VARCHAR(64) NOT NULL UNIQUE,
-ADD CONSTRAINT unique_name UNIQUE (first_name, second_name);
+    ADD COLUMN first_name varchar(25) NOT NULL,
+ADD COLUMN second_name varchar(25) NOT NULL,
+ADD COLUMN phone varchar(15) UNIQUE NOT NULL,
+ADD COLUMN email varchar(64)  UNIQUE NOT NULL,
+ADD CONSTRAINT unique_name   UNIQUE(first_name,second_name);
