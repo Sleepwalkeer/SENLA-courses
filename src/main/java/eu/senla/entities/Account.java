@@ -2,14 +2,10 @@ package eu.senla.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -37,35 +33,9 @@ public class Account {
     private String email;
 
 
-    @OneToOne( fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @MapsId
     @JoinColumn(name = "id")
     private Credentials credentials;
 
-
-    public Account( String firstName, String secondName, String phone, String email, Credentials credentials) {
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.phone = phone;
-        this.email = email;
-        this.credentials = credentials;
-    }
-    public Account( String firstName, String secondName, String phone, String email) {
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.phone = phone;
-        this.email = email;
-    }
-
-    public Account(int id) {
-        this.id = id;
-    }
-
-    public Account(int id, String firstName, String secondName, String phone, String email) {
-        this.id = id;
-        this.firstName = firstName;
-        this.secondName = secondName;
-        this.phone = phone;
-        this.email = email;
-    }
 }

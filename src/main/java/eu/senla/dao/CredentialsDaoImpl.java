@@ -1,6 +1,5 @@
 package eu.senla.dao;
 
-import eu.senla.entities.Category;
 import eu.senla.entities.Credentials;
 import org.springframework.stereotype.Component;
 

@@ -4,10 +4,9 @@ package eu.senla.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -23,8 +22,4 @@ public class Category {
 
     @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
-
-    public Category(String name) {
-        this.name = name;
-    }
 }

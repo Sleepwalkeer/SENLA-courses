@@ -1,7 +1,6 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Account;
-import eu.senla.entities.Account;
 
 import java.util.List;
 

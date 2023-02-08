@@ -21,7 +21,6 @@ public class AccountDaoImpl extends AbstractDAO<Integer, Account> implements Acc
         Query query = entityManager.createQuery
                 ("Select acc from Account acc JOIN FETCH acc.credentials creds WHERE acc.id = :id");
         query.setParameter("id",id);
-        Account account = (Account) query.getSingleResult();
-        return account;
+        return (Account) query.getSingleResult();
     }
 }

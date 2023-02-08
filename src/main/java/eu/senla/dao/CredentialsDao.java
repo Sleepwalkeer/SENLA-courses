@@ -1,7 +1,6 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Credentials;
-import eu.senla.entities.Credentials;
 
 import java.util.List;
 

@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -15,7 +15,6 @@ import java.util.Set;
 @Entity
 @Table(name = "item")
 public class Item {
-
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,14 +33,4 @@ public class Item {
     @Column(name = "quantity", nullable = false)
     private int quantity;
 
-    public Item(Category category, String name, BigDecimal price, int quantity) {
-        this.category = category;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-    }
-
-    public Item(int id) {
-        this.id = id;
-    }
 }

@@ -6,18 +6,26 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @NamedEntityGraph(name = "graph.Order.itemsCategory",
-attributeNodes = @NamedAttributeNode( value = "items", subgraph = "subgraph.category"),
-subgraphs = @NamedSubgraph(name = "subgraph.category", attributeNodes = @NamedAttributeNode(value = "category")))
+        attributeNodes = {
+                @NamedAttributeNode(value = "items", subgraph = "subgraph.category"),
+                @NamedAttributeNode(value = "customer", subgraph = "subgraph.credentials"),
+                @NamedAttributeNode(value = "worker", subgraph = "subgraph.credentials")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "subgraph.category",
+                        attributeNodes = @NamedAttributeNode(value = "category")),
+                @NamedSubgraph(name = "subgraph.credentials",
+                        attributeNodes = @NamedAttributeNode(value = "credentials"))})
 @Table(name = "rent_order")
 public class Order {
 
@@ -27,11 +35,11 @@ public class Order {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="customer_id", nullable=false)
+    @JoinColumn(name = "customer_id", nullable = false)
     private Account customer;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="worker_id", nullable=false)
+    @JoinColumn(name = "worker_id", nullable = false)
     private Account worker;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -51,20 +59,4 @@ public class Order {
     @Column(name = "total_price", nullable = false)
     private BigDecimal totalPrice;
 
-    public Order(Account customer, Account worker, List<Item> items, Timestamp startDateTime, Timestamp endDateTime, BigDecimal totalPrice) {
-        this.customer = customer;
-        this.worker = worker;
-        this.items = items;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-        this.totalPrice = totalPrice;
-    }
-
-    public Order(Account customer, Account worker, List<Item> items, Timestamp startDateTime, Timestamp endDateTime) {
-        this.customer = customer;
-        this.worker = worker;
-        this.items = items;
-        this.startDateTime = startDateTime;
-        this.endDateTime = endDateTime;
-    }
 }

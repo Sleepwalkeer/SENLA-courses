@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,11 +20,6 @@ public class Credentials {
     @Column(name = "id")
     private int id;
 
-
-    public Credentials(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 
     @Column(name = "username", length = 30, nullable = false, unique = true)
     private String username;

@@ -1,12 +1,10 @@
 package eu.senla.dao;
 
-import eu.senla.entities.Account;
 import eu.senla.entities.Order;
-//import eu.senla.entities.Order_;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -25,11 +23,10 @@ public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDa
 
     @Override
     public Order findByIdEager(Integer id) {
-        EntityGraph itemsGraph = entityManager.getEntityGraph("graph.Order.itemsCategory");
+        EntityGraph<?> itemsGraph = entityManager.getEntityGraph("graph.Order.itemsCategory");
         Map hints= new HashMap();
         hints.put("javax.persistence.fetchgraph",itemsGraph);
-        Order order = entityManager.find(Order.class, id, hints);
-        return order;
+        return entityManager.find(Order.class, id, hints);
     }
 
     public List<Order> getOrdersWithMoreItemsThan(int itemCount) {
