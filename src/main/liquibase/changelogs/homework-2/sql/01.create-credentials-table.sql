@@ -1,3 +1,3 @@
 CREATE TABLE credentials (
-     id serial primary key
+    id serial primary key
 );
