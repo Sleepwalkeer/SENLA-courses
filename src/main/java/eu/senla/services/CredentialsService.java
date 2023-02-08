@@ -9,9 +9,9 @@ public interface CredentialsService {
 
     CredentialsDto getById(CredentialsDto credentialsDto);
 
-    CredentialsDto create(CredentialsDto accountDto);
+    void create(CredentialsDto accountDto);
 
-    CredentialsDto update(CredentialsDto accountDto, String newPassword);
+    CredentialsDto update(CredentialsDto accountDto);
 
     void delete(CredentialsDto accountDto);
 }

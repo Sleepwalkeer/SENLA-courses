@@ -5,13 +5,15 @@ import eu.senla.entities.Credentials;
 import java.util.List;
 
 public interface CredentialsDao {
-    List<Credentials> getAll();
+    List<Credentials> findAll();
 
-    Credentials getById(Credentials passedCredentials);
+    Credentials findById(Integer id);
 
-    Credentials update(Credentials passedCredentials, String newPassword);
+    Credentials update(Credentials credentials);
 
-    Credentials create(Credentials passedCredentials);
+    Credentials save(Credentials credentials);
 
-    void delete(Credentials passedCredentials);
+    void delete(Credentials credentials);
+
+    void deleteById(Integer id);
 }

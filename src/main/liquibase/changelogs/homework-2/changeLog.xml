@@ -1,76 +1,299 @@
-<?xml version="1.0" encoding="UTF-8"?>   
+<?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
-   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
       http://www.liquibase.org/xml/ns/pro 
       http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd"
-      logicalFilePath="homework-2">  
-    
- <changeSet id="homework-2-account" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/01.create-account-table.sql" relativeToChangelogFile="true"/>
+        logicalFilePath="homework-2">
+
+    <changeSet id="credentials-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="credentials"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/01.create-credentials-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-table-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/02.add-columns-to-account-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-    
-    <changeSet id="homework-2-credentials" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/03.create-credentials-table.sql" relativeToChangelogFile="true"/>
-    </changeSet>
-
-    <changeSet id="homework-2-order_item" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/04.create-order_item-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="account-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="account"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/02.create-account-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-order" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/05.create-order-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="account-first_name" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="first_name"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/03.account-add-first_name.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-item" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/06.create-item-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="account-second_name" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="second_name"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/04.account-add-second_name.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-user-category" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/07.create-category-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="account-phone" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="phone"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/05.account-add-phone.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-add-credentials-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/08.add-columns-to-credentials-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="account-email" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="email"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/06.account-add-email.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-order_item-add-constraints" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/09.add-constraints-to-order_item-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="order_item-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="order_item"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/07.create-order_item-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-rent_order-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/10.add-columns-to-rent_order-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="rent_order-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="rent_order"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/08.create-rent_order-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-item-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/11.add-columns-to-item-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="item-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="item"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/09.create-item-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-category-add-columns" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/12.add-columns-to-category-table.sql" relativeToChangelogFile="true"/>
+    <changeSet id="category-table" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="category"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/10.create-category-table.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-create-index-on-item.category_id" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/13.add-index-on-item.category_id.sql" relativeToChangelogFile="true"/>
+    <changeSet id="credentials-username" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="credentials"
+                              columnName="username"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/11.credentials-add-username.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-2-create-index-on-rent_order.worker_id" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/14.add-index-on-rent_order.worker_id.sql" relativeToChangelogFile="true"/>
+    <changeSet id="credentials-password" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="credentials"
+                              columnName="password"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/12.credentials-add-password.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-     <changeSet id="homework-2-create-index-on-item.customer_id" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/15.add-index-on-rent_order.customer_id.sql" relativeToChangelogFile="true"/>
+    <changeSet id="order_item-cnstr-fk_order_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_order_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/13.order_item-add-cnstr-fk_order_id.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
-    <changeSet id="homework-5-add-on-delete-cascade-to-order_item" author="Vladislav Krot">
-        <sqlFile encoding="utf8" path="./sql/16.add-on-delete-cascade-to-order_item.sql" relativeToChangelogFile="true"/>
+    <changeSet id="order_item-cnstr-fk_item_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_item_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/14.order_item-add-cnstr-fk_item_id.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="rent_order-customer_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="rent_order"
+                              columnName="customer_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/15.rent_order-add-customer_id.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-worker_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="rent_order"
+                              columnName="worker_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/16.rent_order-add-worker_id.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-start_datetime" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="rent_order"
+                              columnName="start_datetime"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/17.rent_order-add-start_datetime.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-end_datetime" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="rent_order"
+                              columnName="end_datetime"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/18.rent_order-add-end_datetime.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-total_price" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="rent_order"
+                              columnName="total_price"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/19.rent_order-add-total_price.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-cnstr_fk_customer" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_customer"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/20.rent_order-add-cnstr-fk_customer.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-cnstr_fk_worker" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_worker"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/21.rent_order-add-cnstr-fk_worker.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-category_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="category_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/22.item-add-category_id.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-name" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="name"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/23.item-add-name.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-price" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="price"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/24.item-add-price.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-quantity" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="quantity"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/25.item-add-quantity.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-cnstr-fk_category" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_category"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/26.item-add-cnstr-fk_category.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="category-name" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="category"
+                              columnName="name"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/27.category-add-name.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-index-index_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="index_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/28.item-add-index-index_id.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-index-index_worker_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="index_worker_id "/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/29.rent_order-add-index-index_worker_id.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="rent_order-index-index_customer_id" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="index_customer_id"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/30.rent_order-add-index-index_customer_id.sql"
+                 relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog> 

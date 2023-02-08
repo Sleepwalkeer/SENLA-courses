@@ -33,12 +33,12 @@ public class CategoryController {
         return fromDtoToJson(categoryService.getById(fromJsonToDto(categoryData)));
     }
 
-    public String update(String categoryData, String newName) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.update(fromJsonToDto(categoryData), newName));
+    public String update(String categoryData) throws JsonProcessingException {
+        return fromDtoToJson(categoryService.update(fromJsonToDto(categoryData)));
     }
 
-    public String create(String categoryData) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.create(fromJsonToDto(categoryData)));
+    public void create(String categoryData) throws JsonProcessingException {
+        categoryService.create(fromJsonToDto(categoryData));
     }
 
     public void delete(String categoryData) throws JsonProcessingException {

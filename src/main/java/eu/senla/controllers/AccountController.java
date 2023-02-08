@@ -33,12 +33,12 @@ public class AccountController {
         return fromDtoToJson(accountService.getById(fromJsonToDto(accountData)));
     }
 
-    public String update(String accountData, String phoneCode) throws JsonProcessingException {
-        return fromDtoToJson(accountService.update(fromJsonToDto(accountData), phoneCode));
+    public String update(String accountData) throws JsonProcessingException {
+        return fromDtoToJson(accountService.update(fromJsonToDto(accountData)));
     }
 
-    public String create(String accountData) throws JsonProcessingException {
-        return fromDtoToJson(accountService.create(fromJsonToDto(accountData)));
+    public void create(String accountData) throws JsonProcessingException {
+         accountService.create(fromJsonToDto(accountData));
     }
 
     public void delete(String accountData) throws JsonProcessingException {

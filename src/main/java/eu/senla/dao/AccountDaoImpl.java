@@ -1,54 +1,26 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Account;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
-import java.util.List;
-
 @Component
-public class AccountDaoImpl implements AccountDao {
-    private final List<Account> accounts = new LinkedList<>();
+public class AccountDaoImpl extends AbstractDAO<Integer, Account> implements AccountDao {
 
-    public List<Account> getAccounts() {
-        return accounts;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Override
+    Class<Account> getEntityClass() {
+        return Account.class;
     }
 
-    public List<Account> getAll() {
-        return getAccounts();
-    }
-
-    public Account getById(Account passedAccount) {
-        for (Account account : accounts) {
-            if (passedAccount.getId() == account.getId()) {
-                return account;
-            }
-        }
-        return null;
-    }
-
-    public Account update(Account passedAccount, String phoneCode) {
-        for (Account account : accounts) {
-            if (passedAccount.getId() == account.getId()) {
-                String newPhone = phoneCode + account.getPhone();
-                account.setPhone(newPhone);
-                return account;
-            }
-        }
-        return null;
-    }
-
-    public Account create(Account passedAccount) {
-        accounts.add(passedAccount);
-        return passedAccount;
-    }
-
-    public void delete(Account passedAccount) {
-        for (int i = 0; i < accounts.size(); i++) {
-            if (passedAccount.getId() == accounts.get(i).getId()) {
-                accounts.remove(i);
-                return;
-            }
-        }
+    @Override
+    public Account findByIdEager(Integer id) {
+        Query query = entityManager.createQuery
+                ("Select acc from Account acc JOIN FETCH acc.credentials creds WHERE acc.id = :id");
+        query.setParameter("id",id);
+        return (Account) query.getSingleResult();
     }
 }

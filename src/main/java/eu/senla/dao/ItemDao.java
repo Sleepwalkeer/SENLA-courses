@@ -2,16 +2,22 @@ package eu.senla.dao;
 
 import eu.senla.entities.Item;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface ItemDao {
-    List<Item> getAll();
+    List<Item> findAll();
 
-    Item getById(Item passedItem);
+    Item findById(Integer id);
 
-    Item update(Item passedItem, int newQuantity);
+    Item findByIdEager(Integer id);
 
-    Item create(Item passedItem);
+    Item update(Item item);
 
-    void delete(Item passedItem);
+    Item save(Item item);
+
+    void delete(Item item);
+
+    void deleteById(Integer id);
+    List<Item> GetItemsMoreExpensiveThan(BigDecimal bigDecimal);
 }

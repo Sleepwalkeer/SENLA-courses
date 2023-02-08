@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemDto {

@@ -1,17 +1,17 @@
 package eu.senla.services;
 
 import eu.senla.dto.OrderDto;
-import eu.senla.entities.Order;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+@Transactional
 public interface OrderService {
     List<OrderDto> getAll();
 
     OrderDto getById(OrderDto accountDto);
 
-    OrderDto create(OrderDto accountDto);
+    void create(OrderDto accountDto);
 
     OrderDto update(OrderDto accountDto);
 

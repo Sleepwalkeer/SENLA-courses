@@ -6,13 +6,17 @@ import java.util.List;
 
 public interface AccountDao {
 
-    List<Account> getAll();
+    List<Account> findAll();
 
-    Account getById(Account passedAccount);
+    Account findById(Integer id);
 
-    Account update(Account passedAccount, String phoneCode);
+    Account findByIdEager(Integer id);
 
-    Account create(Account passedAccount);
+    Account update(Account account);
 
-    void delete(Account passedAccount);
+    Account save(Account account);
+
+    void delete(Account account);
+
+    void deleteById(Integer id);
 }

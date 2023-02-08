@@ -1,12 +1,15 @@
 package eu.senla.services;
 
-import eu.senla.annotation.Transaction;
 import eu.senla.dao.OrderDao;
+import eu.senla.dto.ItemDto;
 import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +23,15 @@ public class OrderServiceImpl implements OrderService {
         this.modelMapper = modelMapper;
     }
 
-    @Transaction
+    @Transactional
     public OrderDto transactionTest() {
         Order order = new Order();
         order.setId(1);
-        return modelMapper.map(orderDao.getById(order), OrderDto.class);
+        return modelMapper.map(orderDao.findById(order.getId()), OrderDto.class);
     }
 
     public List<OrderDto> getAll() {
-        List<Order> orders = orderDao.getAll();
+        List<Order> orders = orderDao.findAll();
         List<OrderDto> orderDtoList = new ArrayList<>();
 
         for (Order order : orders) {
@@ -38,11 +41,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public OrderDto getById(OrderDto orderDto) {
-        return modelMapper.map(orderDao.getById(modelMapper.map(orderDto, Order.class)), OrderDto.class);
+        Order order = orderDao.findById(orderDto.getId());
+        Type listType = new TypeToken<List<ItemDto>>(){}.getType();
+        List<ItemDto> postDtoList = modelMapper.map(order.getItems(),listType);
+        OrderDto orderDto1 = modelMapper.map(order, OrderDto.class);
+        orderDto1.setItemList(postDtoList);
+        return orderDto1;
+      //  return modelMapper.map(orderDao.findById(orderDto.getId()), OrderDto.class);
     }
 
-    public OrderDto create(OrderDto orderDto) {
-        return modelMapper.map(orderDao.create(modelMapper.map(orderDto, Order.class)), OrderDto.class);
+    public void create(OrderDto orderDto) {
+        orderDao.save(modelMapper.map(orderDto, Order.class));
     }
 
     public OrderDto update(OrderDto orderDto) {

@@ -32,12 +32,12 @@ public class CredentialsController {
         return fromDtoToJson(credentialsService.getById(fromJsonToDto(credentialsData)));
     }
 
-    public String update(String credentialsData, String newPassword) throws JsonProcessingException {
-        return fromDtoToJson(credentialsService.update(fromJsonToDto(credentialsData), newPassword));
+    public String update(String credentialsData) throws JsonProcessingException {
+        return fromDtoToJson(credentialsService.update(fromJsonToDto(credentialsData)));
     }
 
-    public String create(String credentialsData) throws JsonProcessingException {
-        return fromDtoToJson(credentialsService.create(fromJsonToDto(credentialsData)));
+    public void create(String credentialsData) throws JsonProcessingException {
+        credentialsService.create(fromJsonToDto(credentialsData));
     }
 
     public void delete(String credentialsData) throws JsonProcessingException {
