@@ -4,22 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CategoryDto;
 import eu.senla.services.CategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/category")
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final ObjectMapper objectMapper;
 
-    public CategoryController(CategoryService categoryService, ObjectMapper objectMapper) {
-        this.categoryService = categoryService;
-        this.objectMapper = objectMapper;
-    }
 
     public List<String> getAll() throws JsonProcessingException {
         List<CategoryDto> categoryDtoList = categoryService.getAll();

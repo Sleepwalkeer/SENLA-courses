@@ -3,19 +3,17 @@ package eu.senla.services;
 import eu.senla.dao.CategoryDao;
 import eu.senla.dto.CategoryDto;
 import eu.senla.entities.Category;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryDao categoryDao;
     private final ModelMapper modelMapper;
 
-    public CategoryServiceImpl(CategoryDao categoryDao, ModelMapper modelMapper) {
-        this.categoryDao = categoryDao;
-        this.modelMapper = modelMapper;
-    }
 
     public List<CategoryDto> getAll() {
         List<CategoryDto> categoryDtoList = new ArrayList<>();

@@ -4,21 +4,20 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.ItemDto;
 import eu.senla.services.ItemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/item")
 public class ItemController {
     private final ItemService itemService;
     private final ObjectMapper objectMapper;
-
-    public ItemController(ItemService itemService, ObjectMapper objectMapper) {
-        this.itemService = itemService;
-        this.objectMapper = objectMapper;
-    }
 
     public List<String> getAll() throws JsonProcessingException {
         List<ItemDto> itemDtoList = itemService.getAll();

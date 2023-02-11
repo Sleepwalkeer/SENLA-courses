@@ -4,21 +4,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.services.CredentialsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/credentials")
 public class CredentialsController {
     private final CredentialsService credentialsService;
     private final ObjectMapper objectMapper;
 
-    public CredentialsController(CredentialsService credentialsService, ObjectMapper objectMapper) {
-        this.credentialsService = credentialsService;
-        this.objectMapper = objectMapper;
-    }
 
     public List<String> getAll() throws JsonProcessingException {
         List<CredentialsDto> credentialsDtoList = credentialsService.getAll();

@@ -4,6 +4,7 @@ import eu.senla.dao.OrderDao;
 import eu.senla.dto.ItemDto;
 import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,17 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
 
-    public OrderServiceImpl(OrderDao orderDao, ModelMapper modelMapper) {
-        this.orderDao = orderDao;
-        this.modelMapper = modelMapper;
-    }
-
-    @Transactional
     public OrderDto transactionTest() {
         Order order = new Order();
         order.setId(1);

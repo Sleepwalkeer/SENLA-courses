@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.OrderDto;
 import eu.senla.services.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,15 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/order")
 public class OrderController {
     private final OrderService orderService;
     private final ObjectMapper objectMapper;
 
-    public OrderController(OrderService orderService, ObjectMapper objectMapper) {
-        this.orderService = orderService;
-        this.objectMapper = objectMapper;
-    }
 
     public List<String> getAll() throws JsonProcessingException {
         List<OrderDto> orderDtoList = orderService.getAll();

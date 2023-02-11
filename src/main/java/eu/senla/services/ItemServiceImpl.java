@@ -3,19 +3,16 @@ package eu.senla.services;
 import eu.senla.dao.ItemDao;
 import eu.senla.dto.ItemDto;
 import eu.senla.entities.Item;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
     private final ItemDao itemDao;
     private final ModelMapper modelMapper;
 
-    public ItemServiceImpl(ItemDao itemDao, ModelMapper modelMapper) {
-        this.itemDao = itemDao;
-        this.modelMapper = modelMapper;
-    }
 
     public List<ItemDto> getAll() {
         List<ItemDto> itemDtoList = new ArrayList<>();

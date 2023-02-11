@@ -3,20 +3,18 @@ package eu.senla.services;
 import eu.senla.dao.AccountDao;
 import eu.senla.dto.AccountDto;
 import eu.senla.entities.Account;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
     private final AccountDao accountDao;
     private final ModelMapper modelMapper;
 
-    public AccountServiceImpl(AccountDao accountDao, ModelMapper modelMapper) {
-        this.accountDao = accountDao;
-        this.modelMapper = modelMapper;
-    }
+
 
     public List<AccountDto> getAll() {
         List<AccountDto> accountDtoList = new ArrayList<>();

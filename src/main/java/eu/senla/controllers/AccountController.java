@@ -4,22 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.AccountDto;
 import eu.senla.services.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping("/account")
 public class AccountController {
 
     private final AccountService accountService;
     private final ObjectMapper objectMapper;
 
-    public AccountController(AccountService accountService, ObjectMapper objectMapper) {
-        this.accountService = accountService;
-        this.objectMapper = objectMapper;
-    }
 
     public List<String> getAll() throws JsonProcessingException {
         List<AccountDto> accountDtoList = accountService.getAll();

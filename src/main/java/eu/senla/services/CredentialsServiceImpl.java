@@ -3,19 +3,16 @@ package eu.senla.services;
 import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.entities.Credentials;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class CredentialsServiceImpl implements CredentialsService {
     private final CredentialsDao credentialsDao;
     private final ModelMapper modelMapper;
 
-    public CredentialsServiceImpl(CredentialsDao credentialsDao, ModelMapper modelMapper) {
-        this.credentialsDao = credentialsDao;
-        this.modelMapper = modelMapper;
-    }
 
     public List<CredentialsDto> getAll() {
         List<CredentialsDto> credentialsDtoList = new ArrayList<>();
