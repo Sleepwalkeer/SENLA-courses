@@ -3,8 +3,8 @@ package eu.senla.dto;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -18,7 +18,7 @@ public class OrderDto {
     private AccountDto customer;
     private AccountDto worker;
     private List<ItemDto> itemList;
-    private Long startDateTime;
-    private Long endDateTime;
+    private Timestamp startDateTime;
+    private Timestamp endDateTime;
     private BigDecimal totalPrice;
 }
