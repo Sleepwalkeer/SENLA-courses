@@ -15,7 +15,7 @@ public interface ItemDao {
 
     Item update(Item item);
 
-    Item save(Item item);
+    void save(Item item);
 
     void delete(Item item);
 

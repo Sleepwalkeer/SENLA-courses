@@ -15,7 +15,7 @@ public interface AccountDao {
 
     Account update(Account account);
 
-    Account save(Account account);
+    void save(Account account);
 
     void delete(Account account);
 

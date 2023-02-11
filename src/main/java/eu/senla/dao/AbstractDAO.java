@@ -15,8 +15,7 @@ public abstract class AbstractDAO<K, T> {
     private EntityManager entityManager;
 
 
-    public T save(T entity) {
-       return entityManager.merge(entity);
+    public void save(T entity) {entityManager.persist(entity);
     }
 
     public T update(T entity) {
