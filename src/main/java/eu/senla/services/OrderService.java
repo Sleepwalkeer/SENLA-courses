@@ -11,7 +11,7 @@ import java.util.List;
 public interface OrderService {
     List<OrderDto> getAll();
 
-    OrderDto getById(OrderDto accountDto);
+    OrderDto getById(Integer id);
 
     void create(OrderDto accountDto);
 

@@ -10,7 +10,7 @@ import java.util.List;
 public interface ItemService {
     List<ItemDto> getAll();
 
-    ItemDto getById(ItemDto accountDto);
+    ItemDto getById(Integer id);
 
     void create(ItemDto accountDto);
 

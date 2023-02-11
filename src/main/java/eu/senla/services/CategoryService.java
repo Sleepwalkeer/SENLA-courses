@@ -10,7 +10,7 @@ import java.util.List;
 public interface CategoryService {
     List<CategoryDto> getAll();
 
-    CategoryDto getById(CategoryDto accountDto);
+    CategoryDto getById(Integer id);
 
     void create(CategoryDto accountDto);
 

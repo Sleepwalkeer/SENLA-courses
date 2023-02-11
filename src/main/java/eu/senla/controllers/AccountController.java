@@ -6,6 +6,8 @@ import eu.senla.dto.AccountDto;
 import eu.senla.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,9 +32,14 @@ public class AccountController {
         return accountJsonList;
     }
 
-    public String getById(String accountData) throws JsonProcessingException {
-        return fromDtoToJson(accountService.getById(fromJsonToDto(accountData)));
+
+    @GetMapping("/{id}")
+    public AccountDto getById(@PathVariable Integer id){
+
     }
+//    public String getById(String accountData) throws JsonProcessingException {
+//        return fromDtoToJson(accountService.getById(fromJsonToDto(accountData)));
+//    }
 
     public String update(String accountData) throws JsonProcessingException {
         return fromDtoToJson(accountService.update(fromJsonToDto(accountData)));

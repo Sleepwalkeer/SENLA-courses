@@ -24,8 +24,8 @@ public class CredentialsServiceImpl implements CredentialsService {
         return credentialsDtoList;
     }
 
-    public CredentialsDto getById(CredentialsDto credentialsDto) {
-        return modelMapper.map(credentialsDao.findById(credentialsDto.getId()), CredentialsDto.class);
+    public CredentialsDto getById(Integer id) {
+        return modelMapper.map(credentialsDao.findById(id), CredentialsDto.class);
     }
 
     public void create(CredentialsDto credentialsDto) {

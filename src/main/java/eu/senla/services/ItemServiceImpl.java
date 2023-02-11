@@ -24,8 +24,8 @@ public class ItemServiceImpl implements ItemService {
         return itemDtoList;
     }
 
-    public ItemDto getById(ItemDto itemDto) {
-        return modelMapper.map(itemDao.findById(itemDto.getId()), ItemDto.class);
+    public ItemDto getById(Integer id) {
+        return modelMapper.map(itemDao.findById(id), ItemDto.class);
     }
 
     public void create(ItemDto itemDto) {

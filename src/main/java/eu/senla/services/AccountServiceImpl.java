@@ -26,8 +26,8 @@ public class AccountServiceImpl implements AccountService {
         return accountDtoList;
     }
 
-    public AccountDto getById(AccountDto accountDto) {
-        return modelMapper.map(accountDao.findById(accountDto.getId()), AccountDto.class);
+    public AccountDto getById(Integer id) {
+        return modelMapper.map(accountDao.findById(id), AccountDto.class);
     }
 
     public void create(AccountDto accountDto) {

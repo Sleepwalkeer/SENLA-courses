@@ -25,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDtoList;
     }
 
-    public CategoryDto getById(CategoryDto categoryDto) {
-        return modelMapper.map(categoryDao.findById(categoryDto.getId()), CategoryDto.class);
+    public CategoryDto getById(Integer id) {
+        return modelMapper.map(categoryDao.findById(id), CategoryDto.class);
     }
 
     public CategoryDto update(CategoryDto categoryDto) {

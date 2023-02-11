@@ -11,7 +11,7 @@ import java.util.List;
 public interface AccountService {
     List<AccountDto> getAll();
 
-    AccountDto getById(AccountDto accountDto);
+    AccountDto getById(Integer id);
 
     void create(AccountDto accountDto);
 
