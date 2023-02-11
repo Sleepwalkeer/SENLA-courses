@@ -6,10 +6,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.List;
-
-
+@Repository
 public class ItemDaoImpl extends AbstractDAO<Integer, Item> implements ItemDao {
     @PersistenceContext
     private EntityManager entityManager;

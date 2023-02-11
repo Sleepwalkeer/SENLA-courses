@@ -17,9 +17,10 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
-@ComponentScan(value = "eu.senla")
+@ComponentScan(value = "eu.senla",
+  excludeFilters = @ComponentScan.Filter(type = FilterType.REGEX, pattern = "eu.senla.controllers.*"))
 @PropertySource("classpath:application.properties")
-public class Config {
+public class ContextConfiguration {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;

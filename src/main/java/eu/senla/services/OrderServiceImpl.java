@@ -5,20 +5,16 @@ import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.List;
 @RequiredArgsConstructor
+@Service
 public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
-
-    public OrderDto transactionTest() {
-        Order order = new Order();
-        order.setId(1);
-        return modelMapper.map(orderDao.findById(order.getId()), OrderDto.class);
-    }
 
     public List<OrderDto> getAll() {
         List<Order> orders = orderDao.findAll();
@@ -31,8 +27,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public OrderDto getById(Integer id) {
-        Order order = orderDao.findById(id);
-        return modelMapper.map(order, OrderDto.class);
+        return modelMapper.map(orderDao.findById(id), OrderDto.class);
     }
 
     public void create(OrderDto orderDto) {

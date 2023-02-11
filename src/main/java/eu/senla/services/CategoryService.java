@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 @Transactional
-@Service
 public interface CategoryService {
     List<CategoryDto> getAll();
 

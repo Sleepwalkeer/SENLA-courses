@@ -5,10 +5,12 @@ import eu.senla.dto.CredentialsDto;
 import eu.senla.entities.Credentials;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 @RequiredArgsConstructor
+@Service
 public class CredentialsServiceImpl implements CredentialsService {
     private final CredentialsDao credentialsDao;
     private final ModelMapper modelMapper;

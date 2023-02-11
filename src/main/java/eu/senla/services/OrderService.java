@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Transactional
-@Service
 public interface OrderService {
     List<OrderDto> getAll();
 
@@ -19,5 +18,4 @@ public interface OrderService {
 
     void delete(OrderDto accountDto);
 
-    OrderDto transactionTest();
 }

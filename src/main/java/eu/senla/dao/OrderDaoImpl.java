@@ -6,12 +6,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDao {
     @PersistenceContext
     private EntityManager entityManager;

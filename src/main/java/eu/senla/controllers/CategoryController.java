@@ -2,10 +2,15 @@ package eu.senla.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.senla.dto.AccountDto;
 import eu.senla.dto.CategoryDto;
 import eu.senla.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/category")
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -30,9 +36,14 @@ public class CategoryController {
         return categoryJsonList;
     }
 
-    public String getById(String categoryData) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.getById(fromJsonToDto(categoryData)));
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> getById(@PathVariable Integer id){
+        log.info("received request /account" + id);
+        return  ResponseEntity.ok(categoryService.getById(id));
     }
+//    public String getById(String categoryData) throws JsonProcessingException {
+//        return fromDtoToJson(categoryService.getById(fromJsonToDto(categoryData)));
+//    }
 
     public String update(String categoryData) throws JsonProcessingException {
         return fromDtoToJson(categoryService.update(fromJsonToDto(categoryData)));

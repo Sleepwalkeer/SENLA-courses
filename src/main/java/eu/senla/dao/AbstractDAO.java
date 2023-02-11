@@ -8,7 +8,6 @@ import jakarta.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Repository
 public abstract class AbstractDAO<K, T> {
 
     @PersistenceContext

@@ -5,7 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.services.CredentialsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/credentials")
 public class CredentialsController {
@@ -29,8 +34,13 @@ public class CredentialsController {
         return credentialsJsonList;
     }
 
-    public String getById(String credentialsData) throws JsonProcessingException {
-        return fromDtoToJson(credentialsService.getById(fromJsonToDto(credentialsData)));
+//    public String getById(String credentialsData) throws JsonProcessingException {
+//        return fromDtoToJson(credentialsService.getById(fromJsonToDto(credentialsData)));
+//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<CredentialsDto> getById(@PathVariable Integer id){
+        log.info("received request /account" + id);
+        return  ResponseEntity.ok(credentialsService.getById(id));
     }
 
     public String update(String credentialsData) throws JsonProcessingException {

@@ -5,10 +5,12 @@ import eu.senla.dto.ItemDto;
 import eu.senla.entities.Item;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 @RequiredArgsConstructor
+@Service
 public class ItemServiceImpl implements ItemService {
     private final ItemDao itemDao;
     private final ModelMapper modelMapper;

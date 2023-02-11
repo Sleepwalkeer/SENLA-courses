@@ -2,10 +2,15 @@ package eu.senla.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import eu.senla.dto.CredentialsDto;
 import eu.senla.dto.OrderDto;
 import eu.senla.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
     private final ObjectMapper objectMapper;
@@ -29,8 +35,14 @@ public class OrderController {
         return orderJsonList;
     }
 
-    public String getById(String orderData) throws JsonProcessingException {
-        return fromDtoToJson(orderService.getById(fromJsonToDto(orderData)));
+//    public String getById(String orderData) throws JsonProcessingException {
+//        return fromDtoToJson(orderService.getById(fromJsonToDto(orderData)));
+//    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDto> getById(@PathVariable Integer id){
+        log.info("received request /account" + id);
+        return  ResponseEntity.ok(orderService.getById(id));
     }
 
     public String update(String orderData) throws JsonProcessingException {
@@ -45,10 +57,6 @@ public class OrderController {
         orderService.delete(fromJsonToDto(orderData));
     }
 
-    public String transactionTest() throws JsonProcessingException {
-        return objectMapper.writeValueAsString(orderService.transactionTest());
-
-    }
 
     private OrderDto fromJsonToDto(String orderJson) throws JsonProcessingException {
         return objectMapper.readValue(orderJson, OrderDto.class);

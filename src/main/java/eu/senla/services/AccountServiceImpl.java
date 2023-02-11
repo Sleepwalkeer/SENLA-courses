@@ -5,14 +5,17 @@ import eu.senla.dto.AccountDto;
 import eu.senla.entities.Account;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 @RequiredArgsConstructor
+@Service
 public class AccountServiceImpl implements AccountService {
 
     private final AccountDao accountDao;
     private final ModelMapper modelMapper;
+
 
 
 
