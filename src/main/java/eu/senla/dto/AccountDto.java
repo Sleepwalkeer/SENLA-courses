@@ -10,7 +10,7 @@ import lombok.*;
 public class AccountDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String firstName;
     private String secondName;
     private String phone;

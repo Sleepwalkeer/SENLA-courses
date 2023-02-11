@@ -10,6 +10,6 @@ import lombok.*;
 public class CategoryDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String name;
 }

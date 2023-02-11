@@ -10,7 +10,7 @@ import lombok.*;
 public class CredentialsDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String username;
     private String password;
 }
