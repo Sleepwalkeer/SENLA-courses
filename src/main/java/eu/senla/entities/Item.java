@@ -18,7 +18,7 @@ public class Item {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id",nullable = false)
@@ -31,6 +31,6 @@ public class Item {
     private BigDecimal price;
 
     @Column(name = "quantity", nullable = false)
-    private int quantity;
+    private Integer quantity;
 
 }
