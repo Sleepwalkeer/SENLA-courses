@@ -3,7 +3,6 @@ package eu.senla.dao;
 import eu.senla.entities.Category;
 import org.springframework.stereotype.Component;
 
-@Component
 public class CategoryDaoImpl extends AbstractDAO<Integer, Category> implements CategoryDao {
 
     @Override

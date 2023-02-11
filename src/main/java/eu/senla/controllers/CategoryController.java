@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CategoryDto;
 import eu.senla.services.CategoryService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RestController
 public class CategoryController {
 
     private final CategoryService categoryService;

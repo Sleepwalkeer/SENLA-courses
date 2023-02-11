@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.OrderDto;
 import eu.senla.services.OrderService;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RestController
 public class OrderController {
     private final OrderService orderService;
     private final ObjectMapper objectMapper;

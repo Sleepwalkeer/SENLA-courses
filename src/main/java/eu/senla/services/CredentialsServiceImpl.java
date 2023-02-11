@@ -4,12 +4,10 @@ import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.entities.Credentials;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class CredentialsServiceImpl implements CredentialsService {
     private final CredentialsDao credentialsDao;
     private final ModelMapper modelMapper;

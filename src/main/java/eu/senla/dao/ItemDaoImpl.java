@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Component
+
 public class ItemDaoImpl extends AbstractDAO<Integer, Item> implements ItemDao {
     @PersistenceContext
     private EntityManager entityManager;

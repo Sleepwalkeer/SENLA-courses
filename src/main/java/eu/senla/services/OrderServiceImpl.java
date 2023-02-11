@@ -6,14 +6,12 @@ import eu.senla.dto.OrderDto;
 import eu.senla.entities.Order;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;

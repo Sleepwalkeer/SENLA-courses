@@ -4,14 +4,10 @@ import eu.senla.dao.CategoryDao;
 import eu.senla.dto.CategoryDto;
 import eu.senla.entities.Category;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-@Transactional
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryDao categoryDao;
     private final ModelMapper modelMapper;

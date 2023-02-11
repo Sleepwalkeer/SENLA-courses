@@ -1,9 +1,11 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Order;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface OrderDao {
     List<Order> findAll();
 

@@ -4,12 +4,10 @@ import eu.senla.dao.AccountDao;
 import eu.senla.dto.AccountDto;
 import eu.senla.entities.Account;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class AccountServiceImpl implements AccountService {
 
     private final AccountDao accountDao;

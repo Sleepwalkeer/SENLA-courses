@@ -1,10 +1,11 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Item;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
-
+@Repository
 public interface ItemDao {
     List<Item> findAll();
 

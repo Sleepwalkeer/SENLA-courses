@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Component;
 
-@Component
 public class AccountDaoImpl extends AbstractDAO<Integer, Account> implements AccountDao {
 
     @PersistenceContext
