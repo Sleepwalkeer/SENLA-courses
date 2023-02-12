@@ -18,7 +18,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
-
+    static{
+        System.out.println("home controller created");
+    }
     private final AccountService accountService;
     private final ObjectMapper objectMapper;
 
