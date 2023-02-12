@@ -1,7 +1,6 @@
 package eu.senla.services;
 
 import eu.senla.dto.CategoryDto;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -11,9 +10,11 @@ public interface CategoryService {
 
     CategoryDto getById(Integer id);
 
-    void create(CategoryDto accountDto);
+    void create(CategoryDto categoryDto);
 
-    CategoryDto update(CategoryDto accountDto);
+    CategoryDto update(Integer id, CategoryDto categoryDto);
 
-    void delete(CategoryDto accountDto);
+    boolean delete(CategoryDto categoryDto);
+
+    boolean deleteById(Integer id);
 }

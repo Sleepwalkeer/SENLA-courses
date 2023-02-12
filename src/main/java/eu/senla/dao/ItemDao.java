@@ -5,20 +5,21 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ItemDao {
     List<Item> findAll();
 
-    Item findById(Integer id);
-
+    Optional<Item> findById(Integer id);
     Item findByIdEager(Integer id);
 
     Item update(Item item);
 
     void save(Item item);
 
-    void delete(Item item);
+    boolean delete(Item item);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
     List<Item> GetItemsMoreExpensiveThan(BigDecimal bigDecimal);
 }

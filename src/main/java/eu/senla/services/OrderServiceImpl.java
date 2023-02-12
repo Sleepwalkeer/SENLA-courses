@@ -7,39 +7,51 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
 
-    public List<OrderDto> getAll() {
-        List<Order> orders = orderDao.findAll();
-        List<OrderDto> orderDtoList = new ArrayList<>();
-
-        for (Order order : orders) {
-            orderDtoList.add(modelMapper.map(order, OrderDto.class));
-        }
-        return orderDtoList;
-    }
-
     public OrderDto getById(Integer id) {
-        return modelMapper.map(orderDao.findById(id), OrderDto.class);
+        Order order = orderDao.findById(id).orElse(null);
+        if (order == null) {
+            return null;
+        }
+        return modelMapper.map(order, OrderDto.class);
     }
 
     public void create(OrderDto orderDto) {
-        orderDao.save(modelMapper.map(orderDto, Order.class));
+        Order order = modelMapper.map(orderDto, Order.class);
+        orderDao.save(order);
     }
 
-    public OrderDto update(OrderDto orderDto) {
-        return modelMapper.map(orderDao.update(modelMapper.map(orderDto, Order.class)), OrderDto.class);
+    public OrderDto update(Integer id, OrderDto orderDto) {
+        Order order = orderDao.findById(id).orElse(null);
+        if (order == null) {
+            return null;
+        }
+        modelMapper.map(orderDto, order);
+        Order updatedOrder = orderDao.update(order);
+        return modelMapper.map(updatedOrder, OrderDto.class);
     }
 
-    public void delete(OrderDto orderDto) {
-        orderDao.delete(modelMapper.map(orderDto, Order.class));
+    public boolean deleteById(Integer id) {
+        return orderDao.deleteById(id);
     }
 
+    @Override
+    public boolean delete(OrderDto orderDto) {
+        return orderDao.delete(modelMapper.map(orderDto, Order.class));
+    }
+
+    public List<OrderDto> getAll() {
+        List<Order> orders = orderDao.findAll();
+        return orders.stream()
+                .map(order -> modelMapper.map(order, OrderDto.class))
+                .collect(Collectors.toList());
+    }
 }

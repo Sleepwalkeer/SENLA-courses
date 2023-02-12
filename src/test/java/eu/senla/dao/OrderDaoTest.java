@@ -16,6 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
@@ -58,7 +59,8 @@ public class OrderDaoTest {
 
     @Test
     public void updateTest() {
-        Order order = orderDao.findById(1);
+        Optional<Order> orderOptional = orderDao.findById(1);
+        Order order = orderOptional.get();
         order.setEndDateTime(new Timestamp(1675855790625L));
         Order orderFromDb = orderDao.update(order);
         Assertions.assertEquals(order.getEndDateTime(), orderFromDb.getEndDateTime());
@@ -84,7 +86,8 @@ public class OrderDaoTest {
 
     @Test
     public void getLazyAssociationsWithoutTransactionalTest() {
-        Order order = orderDao.findById(1);
+        Optional<Order> orderOptional = orderDao.findById(1);
+        Order order = orderOptional.get();
         List<Item> items = order.getItems();
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(items));
     }
@@ -110,21 +113,21 @@ public class OrderDaoTest {
         categoryDao.save(category2);
 
         Item jackhammer = Item.builder()
-                .category(categoryDao.findById(1))
+                .category(categoryDao.findById(1).get())
                 .name("Excavator").price(new BigDecimal(750)).quantity(8).build();
         itemDao.save(jackhammer);
         Item angleGrinder = Item.builder()
-                .category(categoryDao.findById(1))
+                .category(categoryDao.findById(1).get())
                 .name("Drilling machine").price(new BigDecimal(600)).quantity(15).build();
         itemDao.save(angleGrinder);
 
         Item twoBedApp = Item.builder()
-                .category(categoryDao.findById(3))
+                .category(categoryDao.findById(3).get())
                 .name("4-bedroom app").price(new BigDecimal(4235)).quantity(2).build();
         itemDao.save(twoBedApp);
 
         Item lamborghini = Item.builder()
-                .category(categoryDao.findById(2))
+                .category(categoryDao.findById(2).get())
                 .name("Porsche").price(new BigDecimal(7200)).quantity(1).build();
         itemDao.save(lamborghini);
 

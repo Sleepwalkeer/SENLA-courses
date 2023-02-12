@@ -1,7 +1,7 @@
 package eu.senla.dao;
 
 import eu.senla.Config;
-import eu.senla.entities.*;
+import eu.senla.entities.Category;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -12,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Optional;
 
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
@@ -33,8 +31,8 @@ public class CategoryDaoTest {
     public void findyByIdTest() {
         Category category = Category.builder().id(1).name("Construction equipment").build();
 
-        Category categoryFromDb = categoryDao.findById(1);
-        Assertions.assertEquals(category, categoryFromDb);
+        Optional<Category> categoryFromDb = categoryDao.findById(1);
+        Assertions.assertEquals(category, categoryFromDb.get());
     }
 
     @Test

@@ -1,7 +1,6 @@
 package eu.senla.services;
 
 import eu.senla.dto.OrderDto;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,10 +11,11 @@ public interface OrderService {
 
     OrderDto getById(Integer id);
 
-    void create(OrderDto accountDto);
+    void create(OrderDto orderDto);
 
-    OrderDto update(OrderDto accountDto);
+    OrderDto update(Integer id, OrderDto orderDto);
 
-    void delete(OrderDto accountDto);
+    boolean delete(OrderDto orderDto);
+    boolean deleteById(Integer id);
 
 }

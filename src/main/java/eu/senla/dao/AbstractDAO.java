@@ -5,31 +5,39 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 public abstract class AbstractDAO<K, T> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
 
-    public void save(T entity) {entityManager.persist(entity);
+    public void save(T entity) {
+        entityManager.persist(entity);
     }
 
     public T update(T entity) {
         return entityManager.merge(entity);
     }
 
-    public void delete(T entity) {
-        entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
+    public boolean delete(T entity) {
+        if (entityManager.contains(entity)) {
+            entityManager.remove(entity);
+            return true;
+        }
+        return false;
     }
 
-    public void deleteById(K id) {
-        T entity = entityManager.find(getEntityClass(), id);
-        if (entity != null) {
-            entityManager.remove(entity);
+    public boolean deleteById(K id) {
+        Optional<T> optionalEntity = findById(id);
+        if (optionalEntity.isPresent()) {
+            entityManager.remove(optionalEntity.get());
+            return true;
         }
+        return false;
     }
 
     public List<T> findAll() {
@@ -40,8 +48,9 @@ public abstract class AbstractDAO<K, T> {
         return entityManager.createQuery(query).getResultList();
     }
 
-    public T findById(K id) {
-        return entityManager.find(getEntityClass(), id);
+    public Optional<T> findById(K id) {
+        T object = entityManager.find(getEntityClass(), id);
+        return Optional.ofNullable(object);
     }
 
     abstract Class<T> getEntityClass();

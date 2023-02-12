@@ -4,17 +4,19 @@ import eu.senla.entities.Category;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface CategoryDao {
     List<Category> findAll();
 
-    Category findById(Integer id);
+    Optional<Category> findById(Integer id);
 
     Category update(Category category);
 
     void save(Category category);
 
-    void delete(Category category);
+    boolean delete(Category category);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
 }

@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -17,29 +17,42 @@ public class CategoryServiceImpl implements CategoryService {
     private final ModelMapper modelMapper;
 
 
-    public List<CategoryDto> getAll() {
-        List<CategoryDto> categoryDtoList = new ArrayList<>();
-        List<Category> categories = categoryDao.findAll();
-
-        for (Category category : categories) {
-            categoryDtoList.add(modelMapper.map(category, CategoryDto.class));
-        }
-        return categoryDtoList;
-    }
-
     public CategoryDto getById(Integer id) {
-        return modelMapper.map(categoryDao.findById(id), CategoryDto.class);
-    }
-
-    public CategoryDto update(CategoryDto categoryDto) {
-        return modelMapper.map(categoryDao.update(modelMapper.map(categoryDto, Category.class)), CategoryDto.class);
+        Category category = categoryDao.findById(id).orElse(null);
+        if (category == null) {
+            return null;
+        }
+        return modelMapper.map(category, CategoryDto.class);
     }
 
     public void create(CategoryDto categoryDto) {
-        categoryDao.save(modelMapper.map(categoryDto, Category.class));
+        Category category = modelMapper.map(categoryDto, Category.class);
+        categoryDao.save(category);
     }
 
-    public void delete(CategoryDto categoryDto) {
-        categoryDao.delete(modelMapper.map(categoryDto, Category.class));
+    public CategoryDto update(Integer id, CategoryDto categoryDto) {
+        Category category = categoryDao.findById(id).orElse(null);
+        if (category == null) {
+            return null;
+        }
+        modelMapper.map(categoryDto, category);
+        Category updatedCategory = categoryDao.update(category);
+        return modelMapper.map(updatedCategory, CategoryDto.class);
+    }
+
+    public boolean deleteById(Integer id) {
+        return categoryDao.deleteById(id);
+    }
+
+    @Override
+    public boolean delete(CategoryDto categoryDto) {
+        return categoryDao.delete(modelMapper.map(categoryDto, Category.class));
+    }
+
+    public List<CategoryDto> getAll() {
+        List<Category> categorys = categoryDao.findAll();
+        return categorys.stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class))
+                .collect(Collectors.toList());
     }
 }

@@ -1,20 +1,12 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.senla.dto.AccountDto;
 import eu.senla.dto.CategoryDto;
 import eu.senla.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,44 +16,60 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final ObjectMapper objectMapper;
+  //  private final ObjectMapper objectMapper;
 
-
-    public List<String> getAll() throws JsonProcessingException {
-        List<CategoryDto> categoryDtoList = categoryService.getAll();
-        List<String> categoryJsonList = new ArrayList<>();
-        for (CategoryDto categoryDto : categoryDtoList) {
-            categoryJsonList.add(fromDtoToJson(categoryDto));
-        }
-        return categoryJsonList;
-    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDto> getById(@PathVariable Integer id){
-        log.info("received request /account" + id);
-        return  ResponseEntity.ok(categoryService.getById(id));
-    }
-//    public String getById(String categoryData) throws JsonProcessingException {
-//        return fromDtoToJson(categoryService.getById(fromJsonToDto(categoryData)));
-//    }
-
-    public String update(String categoryData) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.update(fromJsonToDto(categoryData)));
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Integer id) {
+        CategoryDto categoryDto = categoryService.getById(id);
+        if (categoryDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(categoryDto);
     }
 
-    public void create(String categoryData) throws JsonProcessingException {
-        categoryService.create(fromJsonToDto(categoryData));
+    @GetMapping("/hello")
+    public String HelloWorld() {
+        return "Hello World";
     }
 
-    public void delete(String categoryData) throws JsonProcessingException {
-        categoryService.delete(fromJsonToDto(categoryData));
+    @PostMapping
+    public void createCategory(@RequestBody CategoryDto categoryDto) {
+        categoryService.create(categoryDto);
     }
 
-    private CategoryDto fromJsonToDto(String categoryJson) throws JsonProcessingException {
-        return objectMapper.readValue(categoryJson, CategoryDto.class);
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
+        CategoryDto updatedCategoryDto = categoryService.update(id, categoryDto);
+        if (updatedCategoryDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedCategoryDto);
     }
 
-    private String fromDtoToJson(CategoryDto categoryDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(categoryDto);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
+        boolean deleted = categoryService.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCategory(@RequestBody CategoryDto categoryDto) {
+        boolean deleted = categoryService.delete(categoryDto);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getAllCategorys() {
+        List<CategoryDto> categoryDtos = categoryService.getAll();
+        return ResponseEntity.ok(categoryDtos);
     }
 }

@@ -1,7 +1,8 @@
 package eu.senla.dao;
 
 import eu.senla.Config;
-import eu.senla.entities.*;
+import eu.senla.entities.Account;
+import eu.senla.entities.Credentials;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Assertions;
@@ -13,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Optional;
 
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
@@ -37,13 +36,14 @@ public class AccountDaoTest {
                 .phone("+375298201846").email("malory.kay.p@gmail.com")
                 .credentials(Credentials.builder().username("MalloryKayP").password("kz25bj2jk23r").build()).build();
 
-        Account accountFromDb = accountDao.findById(1);
-        Assertions.assertEquals(account, accountFromDb);
+        Optional<Account> accountFromDb = accountDao.findById(1);
+        Assertions.assertEquals(account, accountFromDb.get());
     }
 
     @Test
     public void updateTest() {
-        Account account = accountDao.findById(1);
+        Optional<Account> accountOptional = accountDao.findById(1);
+        Account account = accountOptional.get();
         account.setPhone("+88005553535");
         account.setEmail("TestEmail");
 
@@ -71,7 +71,7 @@ public class AccountDaoTest {
 
     @Test
     public void getLazyAccociationsWithoutTransactionalTest() {
-        Credentials credentials = accountDao.findById(1).getCredentials();
+        Credentials credentials = accountDao.findById(1).get().getCredentials();
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(credentials));
     }
 

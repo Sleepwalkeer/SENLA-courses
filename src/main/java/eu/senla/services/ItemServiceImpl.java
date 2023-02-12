@@ -7,8 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -16,29 +17,42 @@ public class ItemServiceImpl implements ItemService {
     private final ModelMapper modelMapper;
 
 
-    public List<ItemDto> getAll() {
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        List<Item> items = itemDao.findAll();
-
-        for (Item item : items) {
-            itemDtoList.add(modelMapper.map(item, ItemDto.class));
-        }
-        return itemDtoList;
-    }
-
     public ItemDto getById(Integer id) {
-        return modelMapper.map(itemDao.findById(id), ItemDto.class);
+        Item item = itemDao.findById(id).orElse(null);
+        if (item == null) {
+            return null;
+        }
+        return modelMapper.map(item, ItemDto.class);
     }
 
     public void create(ItemDto itemDto) {
-        itemDao.save(modelMapper.map(itemDto, Item.class));
+        Item item = modelMapper.map(itemDto, Item.class);
+        itemDao.save(item);
     }
 
-    public ItemDto update(ItemDto itemDto) {
-        return modelMapper.map(itemDao.update(modelMapper.map(itemDto, Item.class)), ItemDto.class);
+    public ItemDto update(Integer id, ItemDto itemDto) {
+        Item item = itemDao.findById(id).orElse(null);
+        if (item == null) {
+            return null;
+        }
+        modelMapper.map(itemDto, item);
+        Item updatedItem = itemDao.update(item);
+        return modelMapper.map(updatedItem, ItemDto.class);
     }
 
-    public void delete(ItemDto itemDto) {
-        itemDao.delete(modelMapper.map(itemDto, Item.class));
+    public boolean deleteById(Integer id) {
+        return itemDao.deleteById(id);
+    }
+
+    @Override
+    public boolean delete(ItemDto itemDto) {
+        return itemDao.delete(modelMapper.map(itemDto, Item.class));
+    }
+
+    public List<ItemDto> getAll() {
+        List<Item> items = itemDao.findAll();
+        return items.stream()
+                .map(item -> modelMapper.map(item, ItemDto.class))
+                .collect(Collectors.toList());
     }
 }

@@ -1,7 +1,8 @@
 package eu.senla.dao;
 
 import eu.senla.Config;
-import eu.senla.entities.*;
+import eu.senla.entities.Category;
+import eu.senla.entities.Item;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -14,8 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.List;
+import java.util.Optional;
 
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
@@ -43,7 +43,8 @@ public class ItemDaoTest {
 
     @Test
     public void updateTest() {
-        Item item = itemDao.findById(4);
+        Optional<Item> itemOptional = itemDao.findById(4);
+        Item item = itemOptional.get();
 
 
         item.setName("Ferrari");
@@ -73,8 +74,8 @@ public class ItemDaoTest {
     @Test
     @Transactional
     public void getLazyAssociations() {
-        Item item = itemDao.findById(2);
-        Category category = item.getCategory();
+        Optional<Item> item = itemDao.findById(2);
+        Category category = item.get().getCategory();
         System.out.println(category);
     }
 

@@ -1,20 +1,12 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import eu.senla.dto.CredentialsDto;
 import eu.senla.dto.ItemDto;
 import eu.senla.services.ItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,44 +15,59 @@ import java.util.List;
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final ObjectMapper objectMapper;
-
-    public List<String> getAll() throws JsonProcessingException {
-        List<ItemDto> itemDtoList = itemService.getAll();
-        List<String> itemJsonList = new ArrayList<>();
-        for (ItemDto itemDto : itemDtoList) {
-            itemJsonList.add(fromDtoToJson(itemDto));
-        }
-        return itemJsonList;
-    }
+    //private final ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDto> getById(@PathVariable Integer id){
-        log.info("received request /account" + id);
-        return  ResponseEntity.ok(itemService.getById(id));
+    public ResponseEntity<ItemDto> getItemById(@PathVariable Integer id) {
+        ItemDto itemDto = itemService.getById(id);
+        if (itemDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(itemDto);
     }
 
-//    public String getById(String itemData) throws JsonProcessingException {
-//        return fromDtoToJson(itemService.getById(fromJsonToDto(itemData)));
-//    }
-
-    public String update(String itemData) throws JsonProcessingException {
-        return fromDtoToJson(itemService.update(fromJsonToDto(itemData)));
+    @GetMapping("/hello")
+    public String HelloWorld() {
+        return "Hello World";
     }
 
-    public void create(String itemData) throws JsonProcessingException {
-        itemService.create(fromJsonToDto(itemData));
+    @PostMapping
+    public void createItem(@RequestBody ItemDto itemDto) {
+        itemService.create(itemDto);
     }
 
-    public void delete(String itemData) throws JsonProcessingException {
-        itemService.delete(fromJsonToDto(itemData));
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemDto> updateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
+        ItemDto updatedItemDto = itemService.update(id, itemDto);
+        if (updatedItemDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedItemDto);
     }
 
-    private ItemDto fromJsonToDto(String itemJson) throws JsonProcessingException {
-        return objectMapper.readValue(itemJson, ItemDto.class);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
+        boolean deleted = itemService.deleteById(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    private String fromDtoToJson(ItemDto itemDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(itemDto);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteItem(@RequestBody ItemDto itemDto) {
+        boolean deleted = itemService.delete(itemDto);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ItemDto>> getAllItems() {
+        List<ItemDto> itemDtos = itemService.getAll();
+        return ResponseEntity.ok(itemDtos);
     }
 }

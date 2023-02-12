@@ -1,14 +1,15 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Account;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
-public interface AccountDao {
+import java.util.Optional;
+
+public interface AccountDao{
 
     List<Account> findAll();
 
-    Account findById(Integer id);
+    Optional<Account> findById(Integer id);
 
     Account findByIdEager(Integer id);
 
@@ -16,7 +17,7 @@ public interface AccountDao {
 
     void save(Account account);
 
-    void delete(Account account);
+    boolean delete(Account account);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
 }
