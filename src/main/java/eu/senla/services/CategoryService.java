@@ -4,6 +4,7 @@ import eu.senla.dto.CategoryDto;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Transactional
 public interface CategoryService {
     List<CategoryDto> getAll();

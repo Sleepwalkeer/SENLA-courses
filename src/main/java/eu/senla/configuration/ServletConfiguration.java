@@ -8,6 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"eu.senla"})
-public class ServletConfiguration implements WebMvcConfigurer{
+public class ServletConfiguration implements WebMvcConfigurer {
 
 }

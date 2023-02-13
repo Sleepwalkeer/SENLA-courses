@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/accounts")
 public class AccountController {
     private final AccountService accountService;
-   // private final ObjectMapper objectMapper;
+    // private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
@@ -27,14 +27,10 @@ public class AccountController {
         return ResponseEntity.ok(accountDto);
     }
 
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
-    }
-
     @PostMapping
-    public void createAccount(@RequestBody AccountDto accountDto) {
+    public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")

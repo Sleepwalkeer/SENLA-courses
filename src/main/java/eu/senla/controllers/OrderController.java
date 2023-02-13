@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
-  //  private final ObjectMapper objectMapper;
+    //  private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
@@ -25,11 +25,6 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(orderDto);
-    }
-
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
     }
 
     @PostMapping

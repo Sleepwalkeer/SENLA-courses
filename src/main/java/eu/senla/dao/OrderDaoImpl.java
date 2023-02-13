@@ -24,8 +24,8 @@ public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDa
     @Override
     public Order findByIdEager(Integer id) {
         EntityGraph<?> itemsGraph = entityManager.getEntityGraph("graph.Order.itemsCategory");
-        Map hints= new HashMap();
-        hints.put("javax.persistence.fetchgraph",itemsGraph);
+        Map hints = new HashMap();
+        hints.put("javax.persistence.fetchgraph", itemsGraph);
         return entityManager.find(Order.class, id, hints);
     }
 

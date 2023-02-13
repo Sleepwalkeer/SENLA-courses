@@ -5,7 +5,7 @@ import eu.senla.entities.Account;
 import java.util.List;
 import java.util.Optional;
 
-public interface AccountDao{
+public interface AccountDao {
 
     List<Account> findAll();
 

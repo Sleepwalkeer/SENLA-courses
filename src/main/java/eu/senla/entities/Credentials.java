@@ -20,7 +20,6 @@ public class Credentials {
     @Column(name = "id")
     private Integer id;
 
-
     @Column(name = "username", length = 30, nullable = false, unique = true)
     private String username;
 

@@ -12,6 +12,7 @@ public interface ItemDao {
     List<Item> findAll();
 
     Optional<Item> findById(Integer id);
+
     Item findByIdEager(Integer id);
 
     Item update(Item item);
@@ -21,5 +22,6 @@ public interface ItemDao {
     boolean delete(Item item);
 
     boolean deleteById(Integer id);
+
     List<Item> GetItemsMoreExpensiveThan(BigDecimal bigDecimal);
 }

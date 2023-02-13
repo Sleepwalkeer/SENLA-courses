@@ -21,7 +21,6 @@ public class CategoryDaoTest {
     @Autowired
     CategoryDao categoryDao;
 
-
     @BeforeAll
     public void setUp() {
         fillDatabaseWithDummyData();

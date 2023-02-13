@@ -16,7 +16,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-  //  private final ObjectMapper objectMapper;
+    //  private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
@@ -26,11 +26,6 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(categoryDto);
-    }
-
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
     }
 
     @PostMapping

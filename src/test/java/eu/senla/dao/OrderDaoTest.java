@@ -26,10 +26,8 @@ public class OrderDaoTest {
     OrderDao orderDao;
     @Autowired
     ItemDao itemDao;
-
     @Autowired
     AccountDao accountDao;
-
     @Autowired
     CategoryDao categoryDao;
 

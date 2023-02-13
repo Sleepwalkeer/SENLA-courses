@@ -26,11 +26,6 @@ public class ItemController {
         return ResponseEntity.ok(itemDto);
     }
 
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
-    }
-
     @PostMapping
     public void createItem(@RequestBody ItemDto itemDto) {
         itemService.create(itemDto);

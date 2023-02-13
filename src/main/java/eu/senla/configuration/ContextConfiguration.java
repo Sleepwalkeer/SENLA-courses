@@ -60,6 +60,7 @@ public class ContextConfiguration {
 
         return entityManagerFactory;
     }
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -75,7 +76,7 @@ public class ContextConfiguration {
         properties.setProperty("hibernate.hbm2ddl.auto", "validate");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql","true");
+        properties.setProperty("hibernate.format_sql", "true");
 
         return properties;
     }

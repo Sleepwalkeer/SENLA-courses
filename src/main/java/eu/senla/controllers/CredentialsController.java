@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/credentials")
 public class CredentialsController {
     private final CredentialsService credentialsService;
-   // private final ObjectMapper objectMapper;
+    // private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
@@ -25,11 +25,6 @@ public class CredentialsController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(credentialsDto);
-    }
-
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
     }
 
     @PostMapping

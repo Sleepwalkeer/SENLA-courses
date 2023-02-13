@@ -16,6 +16,7 @@ public interface OrderService {
     OrderDto update(Integer id, OrderDto orderDto);
 
     boolean delete(OrderDto orderDto);
+
     boolean deleteById(Integer id);
 
 }
