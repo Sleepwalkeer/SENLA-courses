@@ -1,4 +1,4 @@
-package eu.senla;
+package eu.senla.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import liquibase.integration.spring.SpringLiquibase;
@@ -17,7 +17,6 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
-@ComponentScan(value = "eu.senla")
 @PropertySource("classpath:applicationTest.properties")
 public class Config {
 
@@ -54,7 +53,6 @@ public class Config {
         entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPackagesToScan("eu.senla.entities");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactory.setJpaProperties(additionalProperties());
 
         return entityManagerFactory;
     }
@@ -65,18 +63,6 @@ public class Config {
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return transactionManager;
-    }
-
-
-    @Bean
-    Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
-
-        return properties;
     }
 
     @Bean

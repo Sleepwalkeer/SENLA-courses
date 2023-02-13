@@ -1,6 +1,7 @@
 package eu.senla.dao;
 
-import eu.senla.Config;
+import eu.senla.configuration.Config;
+import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
 import jakarta.persistence.PersistenceException;
@@ -19,7 +20,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccountDaoTest {
+public class AccountDaoTest extends ContainersEnvironment {
     @Autowired
     AccountDao accountDao;
 

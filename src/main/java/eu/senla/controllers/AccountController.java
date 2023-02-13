@@ -21,9 +21,6 @@ public class AccountController {
     @GetMapping("/{id}")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
         AccountDto accountDto = accountService.getById(id);
-        if (accountDto == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(accountDto);
     }
 
@@ -66,5 +63,10 @@ public class AccountController {
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         List<AccountDto> accountDtos = accountService.getAll();
         return ResponseEntity.ok(accountDtos);
+    }
+
+    @GetMapping("/hello")
+    public String HelloWorld() {
+        return "Hello World";
     }
 }

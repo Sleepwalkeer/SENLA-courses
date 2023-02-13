@@ -1,6 +1,7 @@
 package eu.senla.dao;
 
-import eu.senla.Config;
+import eu.senla.configuration.Config;
+import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.entities.*;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.LazyInitializationException;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class OrderDaoTest {
+public class OrderDaoTest extends ContainersEnvironment {
     @Autowired
     OrderDao orderDao;
     @Autowired

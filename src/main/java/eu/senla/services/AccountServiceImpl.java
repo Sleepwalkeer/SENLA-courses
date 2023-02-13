@@ -53,7 +53,6 @@ public class AccountServiceImpl implements AccountService {
     public boolean delete(AccountDto accountDto) {
         return accountDao.delete(modelMapper.map(accountDto, Account.class));
     }
-
     public List<AccountDto> getAll() {
         try {
             List<Account> accounts = accountDao.findAll();

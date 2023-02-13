@@ -1,6 +1,7 @@
 package eu.senla.dao;
 
-import eu.senla.Config;
+import eu.senla.configuration.Config;
+import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.entities.Category;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class CategoryDaoTest {
+public class CategoryDaoTest extends ContainersEnvironment {
     @Autowired
     CategoryDao categoryDao;
 
