@@ -1,7 +1,6 @@
 package eu.senla.services;
 
 import eu.senla.dao.AccountDao;
-import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.AccountDto;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.entities.Account;

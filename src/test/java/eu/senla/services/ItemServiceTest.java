@@ -1,6 +1,5 @@
 package eu.senla.services;
 
-import eu.senla.dao.CategoryDao;
 import eu.senla.dao.ItemDao;
 import eu.senla.dto.CategoryDto;
 import eu.senla.dto.ItemDto;

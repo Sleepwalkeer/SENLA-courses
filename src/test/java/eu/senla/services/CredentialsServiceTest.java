@@ -2,8 +2,6 @@ package eu.senla.services;
 
 import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.CredentialsDto;
-import eu.senla.dto.CredentialsDto;
-import eu.senla.entities.Credentials;
 import eu.senla.entities.Credentials;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;

@@ -1,13 +1,10 @@
 package eu.senla.services;
 
-import eu.senla.dao.AccountDaoTest;
 import eu.senla.dao.OrderDao;
 import eu.senla.dto.AccountDto;
 import eu.senla.dto.OrderDto;
-import eu.senla.dto.CredentialsDto;
 import eu.senla.entities.Account;
 import eu.senla.entities.Order;
-import eu.senla.entities.Credentials;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
 import eu.senla.exceptions.NotFoundException;

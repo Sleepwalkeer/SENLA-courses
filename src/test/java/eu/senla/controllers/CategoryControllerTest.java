@@ -3,7 +3,8 @@ package eu.senla.controllers;
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.ServletConfigurationTest;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,16 +14,15 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class})
 @WebAppConfiguration
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoryControllerTest extends ContainersEnvironment {
 
     @Autowired
@@ -36,20 +36,9 @@ public class CategoryControllerTest extends ContainersEnvironment {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
-
     @Test
-    public void getCategoryByIdTest() throws Exception {
-        int categoryId = 2;
-        this.mockMvc.perform(get("/categories/{id}", categoryId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(categoryId));
-    }
-
-    @Test
-    @Order(1)
     public void createCategoryTest() throws Exception {
-       fillWithDummyData();
-        String requestBody = "{\"name\": \"data\"}";
+        String requestBody = "{\"name\": \"create\"}";
         this.mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -57,6 +46,18 @@ public class CategoryControllerTest extends ContainersEnvironment {
 
     }
 
+    @Test
+    public void getCategoryByIdTest() throws Exception {
+        String dummyData = "{\"name\": \"getByIdData\"}";
+        this.mockMvc.perform(post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyData));
+
+        int categoryId = 1;
+        this.mockMvc.perform(get("/categories/{id}", categoryId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(categoryId));
+    }
 
     @Test
     public void createInvalidCategoryTest() throws Exception {
@@ -68,8 +69,12 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @Transactional
     public void updateCategoryTest() throws Exception {
+        String dummyData = "{\"name\": \"updateData\"}";
+        this.mockMvc.perform(post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyData));
+
         String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
 
         this.mockMvc.perform(put("/categories/{id}", 1)
@@ -93,10 +98,28 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @Transactional
     public void deleteCategoryByIdTest() throws Exception {
-        mockMvc.perform(delete("/categories/{id}", 1))
+
+        fillDeleteCategoryByIdDummyData();
+        mockMvc.perform(delete("/categories/{id}", 6))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private void fillDeleteCategoryByIdDummyData() throws Exception {
+
+        String[] deleteCategories = {
+                "{\"name\": \"deleteByIdData\"}",
+                "{\"name\": \"deleteByIdData1\"}",
+                "{\"name\": \"deleteByIdData2\"}",
+                "{\"name\": \"deleteByIdData3\"}",
+                "{\"name\": \"deleteByIdData4\"}",
+                "{\"name\": \"deleteByIdData5\"}"
+        };
+        for (String category : deleteCategories) {
+            this.mockMvc.perform(post("/categories")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(category));
+        }
     }
 
     @Test
@@ -107,13 +130,32 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @Transactional
     public void deleteCategoryTest() throws Exception {
-        String deleteRequestBody = "{\"id\":\"1\"}";
+
+        fillDeleteCategoryDummyData();
+
+        String deleteRequestBody = "{\"id\":\"5\"}";
         mockMvc.perform(delete("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(deleteRequestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private void fillDeleteCategoryDummyData() throws Exception {
+
+        String[] deleteCategories = {
+                "{\"name\": \"deleteByData\"}",
+                "{\"name\": \"deleteByData1\"}",
+                "{\"name\": \"deleteByData2\"}",
+                "{\"name\": \"deleteByData3\"}",
+                "{\"name\": \"deleteByData4\"}",
+                "{\"name\": \"deleteByData5\"}"
+        };
+        for (String category : deleteCategories) {
+            this.mockMvc.perform(post("/categories")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(category));
+        }
     }
 
     @Test
@@ -127,21 +169,24 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    public void getAllCategoriesTest() throws  Exception{
+    public void getAllCategoriesTest() throws Exception {
+        fillGetALlCategoriesDummyData();
+        String dummyData = "{\"name\": \"getAllData\"}";
+        this.mockMvc.perform(post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyData));
+
         mockMvc.perform(get("/categories"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
     }
-    private void fillWithDummyData() throws Exception {
-        String[] dummyData = {
-                "{\"name\": \"data1\"}",
 
-        };
-        for (String dummyDatum : dummyData) {
-            this.mockMvc.perform(post("/categories")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
+    private void fillGetALlCategoriesDummyData() throws Exception {
+        String dummyData = "{\"name\": \"getAll\"}";
+        this.mockMvc.perform(post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyData));
     }
 }
+
 
