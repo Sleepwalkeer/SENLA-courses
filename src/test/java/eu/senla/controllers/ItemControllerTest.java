@@ -141,10 +141,6 @@ public class ItemControllerTest extends ContainersEnvironment {
     private void fillWithDummyData() throws Exception {
         String[] dummyCategoryData = {
                 "{\"name\": \"data11\"}",
-                "{\"name\": \"data21\"}",
-                "{\"name\": \"data31\"}",
-                "{\"name\": \"data41\"}",
-                "{\"name\": \"data51\"}"
         };
         for (String dummyDatum : dummyCategoryData) {
             this.mockMvc.perform(post("/categories")
@@ -154,10 +150,7 @@ public class ItemControllerTest extends ContainersEnvironment {
 
         String[] dummyItemData = {
                 "{\"category\":{\"id\":1\"},\"name\":\"name1\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name2\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name3\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name4\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name5\",\"price\":1,\"quantity\":1}"
+
         };
 
         for (String dummyDatum : dummyItemData) {

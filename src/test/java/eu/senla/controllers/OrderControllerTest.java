@@ -136,13 +136,7 @@ public class OrderControllerTest extends ContainersEnvironment {
                 "{\"firstName\":\"name11\",\"secondName\":\"surname12\",\"phone\":\"12\",\"email\":\"12\"," +
                         "\"credentials\":{ \"username\": \"user12\", \"password\": \"pass12\" }}",
                 "{\"firstName\":\"name21\",\"secondName\":\"surname22\",\"phone\":\"22\",\"email\":\"22\"," +
-                        "\"credentials\":{ \"username\": \"user22\", \"password\": \"pass22\" }}",
-                "{\"firstName\":\"name31\",\"secondName\":\"surname32\",\"phone\":\"32\",\"email\":\"32\"," +
-                        "\"credentials\":{ \"username\": \"user32\", \"password\": \"pass32\" }}",
-                "{\"firstName\":\"name41\",\"secondName\":\"surname42\",\"phone\":\"42\",\"email\":\"42\"," +
-                        "\"credentials\":{ \"username\": \"user42\", \"password\": \"pass42\" }}",
-                "{\"firstName\":\"name51\",\"secondName\":\"surname52\",\"phone\":\"52\",\"email\":\"52\"," +
-                        "\"credentials\":{ \"username\": \"user52\", \"password\": \"pass52\" }}"
+                        "\"credentials\":{ \"username\": \"user22\", \"password\": \"pass22\" }}"
         };
         for (String dummyDatum : dummyAccountData) {
             this.mockMvc.perform(post("/accounts")
@@ -152,9 +146,7 @@ public class OrderControllerTest extends ContainersEnvironment {
         String[] dummyCategoryData = {
                 "{\"name\": \"data12\"}",
                 "{\"name\": \"data22\"}",
-                "{\"name\": \"data32\"}",
-                "{\"name\": \"data42\"}",
-                "{\"name\": \"data52\"}"
+                "{\"name\": \"data32\"}"
         };
         for (String dummyDatum : dummyCategoryData) {
             this.mockMvc.perform(post("/categories")
@@ -165,9 +157,7 @@ public class OrderControllerTest extends ContainersEnvironment {
         String[] dummyItemData = {
                 "{\"category\":{\"id\":1\"},\"name\":\"name12\",\"price\":1,\"quantity\":1}",
                 "{\"category\":{\"id\":1\"},\"name\":\"name22\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name32\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name42\",\"price\":1,\"quantity\":1}",
-                "{\"category\":{\"id\":1\"},\"name\":\"name52\",\"price\":1,\"quantity\":1}"
+                "{\"category\":{\"id\":1\"},\"name\":\"name32\",\"price\":1,\"quantity\":1}"
         };
 
         for (String dummyDatum : dummyItemData) {

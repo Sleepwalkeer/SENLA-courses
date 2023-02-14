@@ -70,14 +70,14 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @Transactional
     public void updateCategoryTest() throws Exception {
-        String requestBody = "{\"id\":2,\"name\":\"Apartments\"}";
+        String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
 
-        this.mockMvc.perform(put("/categories/{id}", 2)
+        this.mockMvc.perform(put("/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Apartments"));
     }
 
@@ -135,10 +135,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     private void fillWithDummyData() throws Exception {
         String[] dummyData = {
                 "{\"name\": \"data1\"}",
-                "{\"name\": \"data2\"}",
-                "{\"name\": \"data3\"}",
-                "{\"name\": \"data4\"}",
-                "{\"name\": \"data5\"}"
+
         };
         for (String dummyDatum : dummyData) {
             this.mockMvc.perform(post("/categories")

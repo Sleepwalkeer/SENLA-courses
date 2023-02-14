@@ -133,14 +133,7 @@ public class AccountControllerTest extends ContainersEnvironment {
         String[] dummyAccountData = {
                 "{\"firstName\":\"name11\",\"secondName\":\"surname11\",\"phone\":\"11\",\"email\":\"11\"," +
                         "\"credentials\":{ \"username\": \"user11\", \"password\": \"pass11\" }}",
-                "{\"firstName\":\"name21\",\"secondName\":\"surname21\",\"phone\":\"21\",\"email\":\"21\"," +
-                        "\"credentials\":{ \"username\": \"user21\", \"password\": \"pass21\" }}",
-                "{\"firstName\":\"name31\",\"secondName\":\"surname31\",\"phone\":\"31\",\"email\":\"31\"," +
-                        "\"credentials\":{ \"username\": \"user31\", \"password\": \"pass31\" }}",
-                "{\"firstName\":\"name41\",\"secondName\":\"surname41\",\"phone\":\"41\",\"email\":\"41\"," +
-                        "\"credentials\":{ \"username\": \"user41\", \"password\": \"pass41\" }}",
-                "{\"firstName\":\"name51\",\"secondName\":\"surname51\",\"phone\":\"51\",\"email\":\"51\"," +
-                        "\"credentials\":{ \"username\": \"user51\", \"password\": \"pass51\" }}"
+
         };
         for (String dummyDatum : dummyAccountData) {
             this.mockMvc.perform(post("/accounts")

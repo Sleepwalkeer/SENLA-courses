@@ -60,7 +60,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
 
     @Test
     public void createInvalidCredentialsTest() throws Exception {
-        String requestBody = "{\"name\": \"\"}";
+        String requestBody = "{ \"id\": 1, \"username\": \"\", \"password\": \"stellas\" }";
         this.mockMvc.perform(post("/credentials")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -120,10 +120,10 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     @Test
     public void deleteInvalidCredentialsTest() throws Exception {
 
-        String deleteRequestBody = "{\"id\":100000000,\"name\":\"Apartments\"}";
+        String requestBody = "{ \"id\": 100000, \"username\": \"stella_ickerton\", \"password\": \"stellas\" }";
         mockMvc.perform(delete("/credentials")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(deleteRequestBody))
+                        .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
@@ -137,10 +137,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     private void fillWithDummyData() throws Exception {
         String[] dummyCredentialsData = {
                 "{ \"username\": \"user1\", \"password\": \"password123\" }",
-        "{ \"username\": \"user2\", \"password\": \"dfsgfdsgsfdg\" }",
-        "{ \"username\": \"user3\", \"password\": \"122345\" }",
-        "{ \"username\": \"user4\", \"password\": \"qwerty143524\" }",
-        "{ \"username\": \"user5\", \"password\": \"pass\" }"
+
         };
 
         for (String dummyDatum : dummyCredentialsData) {
