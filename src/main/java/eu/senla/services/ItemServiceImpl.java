@@ -2,6 +2,7 @@ package eu.senla.services;
 
 import eu.senla.dao.ItemDao;
 import eu.senla.dto.ItemDto;
+import eu.senla.entities.Account;
 import eu.senla.entities.Item;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
@@ -52,12 +53,18 @@ public class ItemServiceImpl implements ItemService {
     }
 
     public boolean deleteById(Integer id) {
-        return itemDao.deleteById(id);
+        if (itemDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No item with ID " + id + " was found");
     }
 
     @Override
     public boolean delete(ItemDto itemDto) {
-        return itemDao.delete(modelMapper.map(itemDto, Item.class));
+        if (itemDao.delete(modelMapper.map(itemDto, Item.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such item was found");
     }
 
     public List<ItemDto> getAll() {

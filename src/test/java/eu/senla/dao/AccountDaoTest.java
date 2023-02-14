@@ -2,33 +2,29 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.ServletConfigurationTest;
 import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.LazyInitializationException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Optional;
 
-@ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ContextConfiguration(classes = {Config.class})
 public class AccountDaoTest extends ContainersEnvironment {
     @Autowired
     AccountDao accountDao;
-
-    @BeforeAll
-    public void setUp() {
-        fillDatabaseWithDummyData();
-    }
-
 
     @Test
     public void findyByIdTest() {

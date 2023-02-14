@@ -17,6 +17,15 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
+@ComponentScan(
+        basePackages = {"eu.senla"},
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.REGEX,
+                        pattern = "eu\\.senla\\.configuration\\..*"
+                )
+        }
+)
 @PropertySource("classpath:applicationTest.properties")
 public class Config {
 

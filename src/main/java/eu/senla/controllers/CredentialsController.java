@@ -28,8 +28,9 @@ public class CredentialsController {
     }
 
     @PostMapping
-    public void createCredentials(@RequestBody CredentialsDto credentialsDto) {
+    public ResponseEntity<Void> createCredentials(@RequestBody CredentialsDto credentialsDto) {
         credentialsService.create(credentialsDto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -43,22 +44,14 @@ public class CredentialsController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCredentialsById(@PathVariable Integer id) {
-        boolean deleted = credentialsService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        credentialsService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCredentials(@RequestBody CredentialsDto credentialsDto) {
-        boolean deleted = credentialsService.delete(credentialsDto);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        credentialsService.delete(credentialsDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

@@ -28,8 +28,9 @@ public class OrderController {
     }
 
     @PostMapping
-    public void createOrder(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) {
         orderService.create(orderDto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -43,22 +44,14 @@ public class OrderController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOrderById(@PathVariable Integer id) {
-        boolean deleted = orderService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        orderService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteOrder(@RequestBody OrderDto orderDto) {
-        boolean deleted = orderService.delete(orderDto);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        orderService.delete(orderDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

@@ -27,8 +27,9 @@ public class ItemController {
     }
 
     @PostMapping
-    public void createItem(@RequestBody ItemDto itemDto) {
+    public ResponseEntity<Void> createItem(@RequestBody ItemDto itemDto) {
         itemService.create(itemDto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -42,22 +43,14 @@ public class ItemController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
-        boolean deleted = itemService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteItem(@RequestBody ItemDto itemDto) {
-        boolean deleted = itemService.delete(itemDto);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        itemService.delete(itemDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

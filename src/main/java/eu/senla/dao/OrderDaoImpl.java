@@ -35,4 +35,9 @@ public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDa
         query.setParameter("itemCount", itemCount);
         return query.getResultList();
     }
+
+    @Override
+    public boolean delete(Order entity) {
+        return deleteById(entity.getId());
+    }
 }

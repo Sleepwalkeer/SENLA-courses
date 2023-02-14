@@ -29,37 +29,27 @@ public class CategoryController {
     }
 
     @PostMapping
-    public void createCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.create(categoryDto);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategoryDto = categoryService.update(id, categoryDto);
-        if (updatedCategoryDto == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(updatedCategoryDto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
-        boolean deleted = categoryService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        categoryService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteCategory(@RequestBody CategoryDto categoryDto) {
-        boolean deleted = categoryService.delete(categoryDto);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        categoryService.delete(categoryDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

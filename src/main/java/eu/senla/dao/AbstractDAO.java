@@ -23,13 +23,7 @@ public abstract class AbstractDAO<K, T> {
         return entityManager.merge(entity);
     }
 
-    public boolean delete(T entity) {
-        if (entityManager.contains(entity)) {
-            entityManager.remove(entity);
-            return true;
-        }
-        return false;
-    }
+   abstract public boolean delete(T entity);
 
     public boolean deleteById(K id) {
         Optional<T> optionalEntity = findById(id);

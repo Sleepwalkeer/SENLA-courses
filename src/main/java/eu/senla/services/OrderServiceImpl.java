@@ -2,6 +2,7 @@ package eu.senla.services;
 
 import eu.senla.dao.OrderDao;
 import eu.senla.dto.OrderDto;
+import eu.senla.entities.Account;
 import eu.senla.entities.Order;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
@@ -45,12 +46,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     public boolean deleteById(Integer id) {
-        return orderDao.deleteById(id);
+        if (orderDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No order with ID " + id + " was found");
     }
 
     @Override
     public boolean delete(OrderDto orderDto) {
-        return orderDao.delete(modelMapper.map(orderDto, Order.class));
+        if (orderDao.delete(modelMapper.map(orderDto, Order.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such order was found");
     }
 
     public List<OrderDto> getAll() {

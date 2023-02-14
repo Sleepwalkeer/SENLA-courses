@@ -1,5 +1,7 @@
 package eu.senla.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.entities.*;
@@ -13,15 +15,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-@ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ContextConfiguration(classes = {Config.class})
 public class OrderDaoTest extends ContainersEnvironment {
     @Autowired
     OrderDao orderDao;
@@ -31,12 +33,6 @@ public class OrderDaoTest extends ContainersEnvironment {
     AccountDao accountDao;
     @Autowired
     CategoryDao categoryDao;
-
-    @BeforeAll
-    public void setUp() {
-        fillDatabaseWithDummyData();
-    }
-
 
     @Test
     public void findyByIdEagerTest() {
@@ -57,7 +53,9 @@ public class OrderDaoTest extends ContainersEnvironment {
 
 
     @Test
-    public void updateTest() {
+    @Transactional
+    public void updateTest() throws JsonProcessingException {
+        fillDatabaseWithDummyData();
         Optional<Order> orderOptional = orderDao.findById(1);
         Order order = orderOptional.get();
         order.setEndDateTime(new Timestamp(1675855790625L));
@@ -91,7 +89,7 @@ public class OrderDaoTest extends ContainersEnvironment {
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(items));
     }
 
-    private void fillDatabaseWithDummyData() {
+    private void fillDatabaseWithDummyData() throws JsonProcessingException {
         Account customer = Account.builder().firstName("Lorence").secondName("Spall")
                 .phone("+375298201276").email("spalllorence@mail.ru")
                 .credentials(Credentials.builder().username("spalll").password("karjtkl").build()).build();
@@ -136,6 +134,9 @@ public class OrderDaoTest extends ContainersEnvironment {
                 .worker(Account.builder().id(1).build()).items(items).startDateTime(new Timestamp(1665778114323L))
                 .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
         orderDao.save(order);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(order);
+        System.out.println(json);
 
         items.remove(1);
 

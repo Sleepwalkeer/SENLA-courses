@@ -27,7 +27,7 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -41,22 +41,14 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAccountById(@PathVariable Integer id) {
-        boolean deleted = accountService.deleteById(id);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        accountService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteAccount(@RequestBody AccountDto accountDto) {
-        boolean deleted = accountService.delete(accountDto);
-        if (deleted) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        accountService.delete(accountDto);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping

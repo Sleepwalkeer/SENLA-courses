@@ -46,12 +46,18 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public boolean deleteById(Integer id) {
-        return accountDao.deleteById(id);
+        if (accountDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No account with ID " + id + " was found");
     }
 
     @Override
     public boolean delete(AccountDto accountDto) {
-        return accountDao.delete(modelMapper.map(accountDto, Account.class));
+        if (accountDao.delete(modelMapper.map(accountDto, Account.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such account was found");
     }
     public List<AccountDto> getAll() {
         try {

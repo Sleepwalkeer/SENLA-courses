@@ -2,6 +2,7 @@ package eu.senla.services;
 
 import eu.senla.dao.CategoryDao;
 import eu.senla.dto.CategoryDto;
+import eu.senla.entities.Account;
 import eu.senla.entities.Category;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
@@ -43,12 +44,18 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public boolean deleteById(Integer id) {
-        return categoryDao.deleteById(id);
+        if (categoryDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No category with ID " + id + " was found");
     }
 
     @Override
     public boolean delete(CategoryDto categoryDto) {
-        return categoryDao.delete(modelMapper.map(categoryDto, Category.class));
+        if (categoryDao.delete(modelMapper.map(categoryDto, Category.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such category was found");
     }
 
     public List<CategoryDto> getAll() {

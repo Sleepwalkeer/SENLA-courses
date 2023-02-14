@@ -43,5 +43,10 @@ public class ItemDaoImpl extends AbstractDAO<Integer, Item> implements ItemDao {
 
         return entityManager.createQuery(query).getResultList();
     }
+
+    @Override
+    public boolean delete(Item entity) {
+        return deleteById(entity.getId());
+    }
 }
 

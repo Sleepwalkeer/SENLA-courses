@@ -2,6 +2,7 @@ package eu.senla.services;
 
 import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.CredentialsDto;
+import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
@@ -46,12 +47,18 @@ public class CredentialsServiceImpl implements CredentialsService {
     }
 
     public boolean deleteById(Integer id) {
-        return credentialsDao.deleteById(id);
+        if (credentialsDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No credentials with ID " + id + " were found");
     }
 
     @Override
     public boolean delete(CredentialsDto credentialsDto) {
-        return credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class));
+        if (credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such credentials were found");
     }
 
     public List<CredentialsDto> getAll() {
