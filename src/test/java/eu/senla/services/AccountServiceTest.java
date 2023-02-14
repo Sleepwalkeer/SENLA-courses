@@ -147,7 +147,7 @@ public class AccountServiceTest {
         when(accountDao.delete(account)).thenReturn(false);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
-        Assertions.assertFalse(accountService.delete(accountDto));
+        Assertions.assertThrows(NotFoundException.class,()-> accountService.delete(accountDto));
         verify(accountDao).delete(account);
     }
 
@@ -163,11 +163,11 @@ public class AccountServiceTest {
     public void deleteByNonExistentIdTest() {
         when(accountDao.deleteById(1)).thenReturn(false);
 
-        Assertions.assertFalse(accountService.deleteById(1));
+        Assertions.assertThrows(NotFoundException.class,()-> accountService.deleteById(1));
         verify(accountDao).deleteById(1);
     }
 
-    @Test
+    @Test   
     public void getAllTest() {
         AccountDto accountDto1 = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("tost").username("tost").build())
                 .email("blablacar@gmail.com").phone("+375331234").firstName("Billy").secondName("StarkWall").build();

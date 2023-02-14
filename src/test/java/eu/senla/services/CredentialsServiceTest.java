@@ -133,7 +133,7 @@ public class CredentialsServiceTest {
         when(credentialsDao.delete(credentials)).thenReturn(false);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
-        Assertions.assertFalse(credentialsService.delete(credentialsDto));
+        Assertions.assertThrows(NotFoundException.class,()-> credentialsService.delete(credentialsDto));
         verify(credentialsDao).delete(credentials);
     }
 
@@ -149,7 +149,7 @@ public class CredentialsServiceTest {
     public void deleteByNonExistentIdTest() {
         when(credentialsDao.deleteById(1)).thenReturn(false);
 
-        Assertions.assertFalse(credentialsService.deleteById(1));
+        Assertions.assertThrows(NotFoundException.class,()-> credentialsService.deleteById(1));
         verify(credentialsDao).deleteById(1);
     }
 

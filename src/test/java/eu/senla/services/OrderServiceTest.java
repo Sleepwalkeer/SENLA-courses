@@ -164,7 +164,7 @@ public class OrderServiceTest {
         when(orderDao.delete(order)).thenReturn(false);
         when(modelMapper.map(orderDto, Order.class)).thenReturn(order);
 
-        Assertions.assertFalse(orderService.delete(orderDto));
+        Assertions.assertThrows(NotFoundException.class,()-> orderService.delete(orderDto));
         verify(orderDao).delete(order);
     }
 
@@ -179,8 +179,7 @@ public class OrderServiceTest {
     @Test
     public void deleteByNonExistentIdTest() {
         when(orderDao.deleteById(1)).thenReturn(false);
-
-        Assertions.assertFalse(orderService.deleteById(1));
+        Assertions.assertThrows(NotFoundException.class,()-> orderService.deleteById(1));
         verify(orderDao).deleteById(1);
     }
 

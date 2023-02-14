@@ -128,7 +128,7 @@ public class CategoryServiceTest {
         when(categoryDao.delete(category)).thenReturn(false);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
-        Assertions.assertFalse(categoryService.delete(categoryDto));
+        Assertions.assertThrows(NotFoundException.class,()-> categoryService.delete(categoryDto));
         verify(categoryDao).delete(category);
     }
 
@@ -144,7 +144,7 @@ public class CategoryServiceTest {
     public void deleteByNonExistentIdTest() {
         when(categoryDao.deleteById(1)).thenReturn(false);
 
-        Assertions.assertFalse(categoryService.deleteById(1));
+        Assertions.assertThrows(NotFoundException.class,()-> categoryService.deleteById(1));
         verify(categoryDao).deleteById(1);
     }
 
