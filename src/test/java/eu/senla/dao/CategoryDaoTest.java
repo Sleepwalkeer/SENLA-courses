@@ -2,33 +2,30 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.TestContainers;
 import eu.senla.entities.Category;
 import jakarta.persistence.PersistenceException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@ContextConfiguration(classes = {Config.class})
 @ExtendWith(SpringExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ContextConfiguration(classes = {Config.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CategoryDaoTest extends ContainersEnvironment {
     @Autowired
     CategoryDao categoryDao;
 
-    @BeforeAll
-    public void setUp() {
-        fillDatabaseWithDummyData();
-    }
 
     @Test
+    @Order(1)
     public void findyByIdTest() {
+        fillWithDummyData();
         Category category = Category.builder().id(1).name("Construction equipment").build();
 
         Optional<Category> categoryFromDb = categoryDao.findById(1);
@@ -36,6 +33,7 @@ public class CategoryDaoTest extends ContainersEnvironment {
     }
 
     @Test
+    @Transactional
     public void updateTest() {
         Category category = Category.builder().id(1).name("Construction equipment").build();
 
@@ -45,9 +43,10 @@ public class CategoryDaoTest extends ContainersEnvironment {
     }
 
     @Test
+    @Transactional
     public void deleteByIdTest() {
-        categoryDao.deleteById(4);
-        Assertions.assertNull(categoryDao.findById(4));
+        categoryDao.deleteById(1);
+        Assertions.assertFalse(categoryDao.findById(1).isPresent());
     }
 
     @Test
@@ -58,10 +57,10 @@ public class CategoryDaoTest extends ContainersEnvironment {
 
     @Test
     public void findByInvalidIdTest() {
-        Assertions.assertNull(categoryDao.findById(-4));
+        Assertions.assertFalse(categoryDao.findById(-4).isPresent());
     }
 
-    private void fillDatabaseWithDummyData() {
+    private void fillWithDummyData() {
         Category category = Category.builder().name("Construction equipment").build();
         categoryDao.save(category);
 

@@ -2,7 +2,7 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.ServletConfigurationTest;
+import eu.senla.configuration.TestContainers;
 import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
 import jakarta.persistence.PersistenceException;
@@ -10,24 +10,23 @@ import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {Config.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountDaoTest extends ContainersEnvironment {
     @Autowired
     AccountDao accountDao;
 
     @Test
+    @Order(1)
     public void findyByIdTest() {
+        fillWithDummyData();
         Account account = Account.builder().id(1).firstName("Mallory").secondName("Kay")
                 .phone("+375298201846").email("malory.kay.p@gmail.com")
                 .credentials(Credentials.builder().username("MalloryKayP").password("kz25bj2jk23r").build()).build();
@@ -37,6 +36,7 @@ public class AccountDaoTest extends ContainersEnvironment {
     }
 
     @Test
+    @Transactional
     public void updateTest() {
         Optional<Account> accountOptional = accountDao.findById(1);
         Account account = accountOptional.get();
@@ -50,16 +50,16 @@ public class AccountDaoTest extends ContainersEnvironment {
     }
 
     @Test
+    @Transactional
     public void deleteByIdTest() {
-        accountDao.deleteById(3);
-        Assertions.assertNull(accountDao.findById(3));
+        accountDao.deleteById(1);
+        Assertions.assertFalse(accountDao.findById(1).isPresent());
     }
 
     @Test
     public void addInvalidDataTest() {
         Account account = Account.builder().firstName("Mallory").secondName("Kay")
-                .phone("+375298201846").email("malory.kay.p@gmail.com")
-                .credentials(Credentials.builder().username("MalloryKayP").password("kz25bj2jk23r").build()).build();
+                .phone("+375298201846").credentials(Credentials.builder().username("MalloryKayP").password("kz25bj2jk23r").build()).build();
         account.setPhone("+88005553535");
         Assertions.assertThrows(PersistenceException.class, () -> accountDao.save(account));
         System.out.println();
@@ -71,10 +71,10 @@ public class AccountDaoTest extends ContainersEnvironment {
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(credentials));
     }
 
-    private void fillDatabaseWithDummyData() {
-        Account customer = Account.builder().firstName("Mallory").secondName("Kay")
+    private void fillWithDummyData() {
+        Account customer = Account.builder().firstName("testDao").secondName("testDao")
                 .phone("+375298201846").email("malory.kay.p@gmail.com")
-                .credentials(Credentials.builder().username("MalloryKayP").password("eurr2t4pr2").build()).build();
+                .credentials(Credentials.builder().username("testDao").password("testDao").build()).build();
         accountDao.save(customer);
 
         Account worker = Account.builder().firstName("Logan").secondName("Holmes")

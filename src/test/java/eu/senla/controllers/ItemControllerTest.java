@@ -106,7 +106,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    public void deleteAccountByInvalidIdTest() throws Exception {
+    public void deleteItemByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/items/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

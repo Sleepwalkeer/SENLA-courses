@@ -66,7 +66,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     @Transactional
     public void updateAccountTest() throws Exception {
         String requestBody = "{\"id\":\"1\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\",\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"1\"}}";
-        this.mockMvc.perform(put("/accounts/{id}", 2)
+        this.mockMvc.perform(put("/accounts/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
                 )
@@ -132,7 +132,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
         String[] dummyAccountData = {
                 "{\"firstName\":\"name11\",\"secondName\":\"surname11\",\"phone\":\"11\",\"email\":\"11\"," +
-                        "\"credentials\":{ \"username\": \"user11\", \"password\": \"pass11\" }}",
+                        "\"credentials\":{ \"username\": \"user11\", \"password\": \"pass11\" }}"
 
         };
         for (String dummyDatum : dummyAccountData) {

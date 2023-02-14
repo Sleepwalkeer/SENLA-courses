@@ -101,7 +101,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    public void deleteAccountByInvalidIdTest() throws Exception {
+    public void deleteItemByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/credentials/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
@@ -136,12 +136,13 @@ public class CredentialsControllerTest extends ContainersEnvironment {
 
     private void fillWithDummyData() throws Exception {
         String[] dummyCredentialsData = {
-                "{ \"username\": \"user1\", \"password\": \"password123\" }",
+                "{\"firstName\":\"name13\",\"secondName\":\"surname13\",\"phone\":\"13\",\"email\":\"13\"," +
+                        "\"credentials\":{ \"username\": \"user13\", \"password\": \"pass13\" }}"
 
         };
 
         for (String dummyDatum : dummyCredentialsData) {
-            this.mockMvc.perform(post("/credentials")
+            this.mockMvc.perform(post("/accounts")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(dummyDatum));
         }

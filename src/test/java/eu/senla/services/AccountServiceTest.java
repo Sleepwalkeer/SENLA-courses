@@ -16,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,6 +153,7 @@ public class AccountServiceTest {
     }
 
     @Test
+    @Transactional
     public void deleteByIdTest() {
         when(accountDao.deleteById(1)).thenReturn(true);
 
@@ -167,7 +169,7 @@ public class AccountServiceTest {
         verify(accountDao).deleteById(1);
     }
 
-    @Test   
+    @Test
     public void getAllTest() {
         AccountDto accountDto1 = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("tost").username("tost").build())
                 .email("blablacar@gmail.com").phone("+375331234").firstName("Billy").secondName("StarkWall").build();

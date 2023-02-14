@@ -100,7 +100,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    public void deleteAccountByInvalidIdTest() throws Exception {
+    public void deleteCategoryByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/categories/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

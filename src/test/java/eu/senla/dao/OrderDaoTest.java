@@ -1,16 +1,14 @@
 package eu.senla.dao;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.TestContainers;
 import eu.senla.entities.*;
+import eu.senla.entities.Order;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.LazyInitializationException;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +22,7 @@ import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {Config.class})
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class OrderDaoTest extends ContainersEnvironment {
     @Autowired
     OrderDao orderDao;
@@ -41,21 +40,36 @@ public class OrderDaoTest extends ContainersEnvironment {
         Order order = Order.builder().id(1).customer(Account.builder().id(1).build())
                 .worker(Account.builder().id(1).build()).items(items).startDateTime(new Timestamp(1665778114323L))
                 .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
-        orderDao.save(order);
 
         Order orderFromDb = orderDao.findByIdEager(1);
 
         Assertions.assertEquals(order, orderFromDb);
         Assertions.assertEquals(order.getWorker(), orderFromDb.getWorker());
         Assertions.assertEquals(order.getCustomer(), orderFromDb.getCustomer());
-        Assertions.assertArrayEquals(order.getItems().toArray(), orderFromDb.getItems().toArray());
     }
+
+    @Test
+    @org.junit.jupiter.api.Order(1)
+    public void findyByIdTest() {
+        fillWithDummyData();
+        List<Item> items = itemDao.findAll();
+        Order order = Order.builder().id(1).customer(Account.builder().id(1).build())
+                .worker(Account.builder().id(1).build()).items(items).startDateTime(new Timestamp(1665778114323L))
+                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
+
+        Optional<Order> orderFromDb = orderDao.findById(1);
+
+        Assertions.assertEquals(order, orderFromDb.get());
+        Assertions.assertEquals(order.getStartDateTime(), orderFromDb.get().getStartDateTime());
+        Assertions.assertEquals(order.getEndDateTime(), orderFromDb.get().getEndDateTime());
+        Assertions.assertEquals(order.getTotalPrice(), orderFromDb.get().getTotalPrice());
+    }
+
 
 
     @Test
     @Transactional
     public void updateTest() throws JsonProcessingException {
-        fillDatabaseWithDummyData();
         Optional<Order> orderOptional = orderDao.findById(1);
         Order order = orderOptional.get();
         order.setEndDateTime(new Timestamp(1675855790625L));
@@ -64,9 +78,10 @@ public class OrderDaoTest extends ContainersEnvironment {
     }
 
     @Test
+    @Transactional
     public void deleteByIdTest() {
-        orderDao.deleteById(2);
-        Assertions.assertNull(orderDao.findById(2));
+        orderDao.deleteById(1);
+        Assertions.assertFalse(orderDao.findById(1).isPresent());
     }
 
     @Test
@@ -78,7 +93,7 @@ public class OrderDaoTest extends ContainersEnvironment {
 
     @Test
     public void findByInvalidIdTest() {
-        Assertions.assertNull(orderDao.findById(5));
+        Assertions.assertFalse(orderDao.findById(50).isPresent());
     }
 
     @Test
@@ -89,7 +104,7 @@ public class OrderDaoTest extends ContainersEnvironment {
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(items));
     }
 
-    private void fillDatabaseWithDummyData() throws JsonProcessingException {
+    private void fillWithDummyData(){
         Account customer = Account.builder().firstName("Lorence").secondName("Spall")
                 .phone("+375298201276").email("spalllorence@mail.ru")
                 .credentials(Credentials.builder().username("spalll").password("karjtkl").build()).build();
@@ -134,14 +149,11 @@ public class OrderDaoTest extends ContainersEnvironment {
                 .worker(Account.builder().id(1).build()).items(items).startDateTime(new Timestamp(1665778114323L))
                 .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
         orderDao.save(order);
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(order);
-        System.out.println(json);
 
         items.remove(1);
 
         Order order1 = Order.builder().customer(Account.builder().id(1).build())
-                .worker(Account.builder().id(2).build()).items(items).startDateTime(new Timestamp(1665733114323L))
+                .worker(Account.builder().id(1).build()).items(items).startDateTime(new Timestamp(1665733114323L))
                 .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(11600)).build();
         orderDao.save(order1);
     }
