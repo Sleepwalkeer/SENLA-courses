@@ -17,6 +17,8 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
+@ComponentScan(
+        basePackages = {"eu.senla"})
 @PropertySource("classpath:application.properties")
 public class ContextConfiguration {
 

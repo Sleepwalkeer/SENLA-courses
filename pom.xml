@@ -242,11 +242,11 @@
                 <artifactId>tomcat7-maven-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
-                    <url>http://localhost:8080</url>
-                    <server>Tomcat Server</server>
-                    <path>/</path>
+                    <server>mavenTomcat</server>
+                    <password>admin</password>
                     <username>admin</username>
-                    <password></password>
+                    <url>http://localhost:8080/</url>
+                    <path>/bla</path>
                 </configuration>
             </plugin>
         </plugins>
