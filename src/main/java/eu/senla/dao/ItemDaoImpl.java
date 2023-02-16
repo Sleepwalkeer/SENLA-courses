@@ -4,12 +4,16 @@ import eu.senla.entities.Item;
 import eu.senla.entities.Item_;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.*;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
+
 import java.math.BigDecimal;
 import java.util.List;
 
-@Component
+@Repository
 public class ItemDaoImpl extends AbstractDAO<Integer, Item> implements ItemDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -38,6 +42,11 @@ public class ItemDaoImpl extends AbstractDAO<Integer, Item> implements ItemDao {
         query.select(root).where(builder.greaterThan(root.get(Item_.PRICE), price));
 
         return entityManager.createQuery(query).getResultList();
+    }
+
+    @Override
+    public boolean delete(Item entity) {
+        return deleteById(entity.getId());
     }
 }
 

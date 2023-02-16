@@ -1,55 +1,60 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CategoryDto;
 import eu.senla.services.CategoryService;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final ObjectMapper objectMapper;
+    //  private final ObjectMapper objectMapper;
 
-    public CategoryController(CategoryService categoryService, ObjectMapper objectMapper) {
-        this.categoryService = categoryService;
-        this.objectMapper = objectMapper;
-    }
 
-    public List<String> getAll() throws JsonProcessingException {
-        List<CategoryDto> categoryDtoList = categoryService.getAll();
-        List<String> categoryJsonList = new ArrayList<>();
-        for (CategoryDto categoryDto : categoryDtoList) {
-            categoryJsonList.add(fromDtoToJson(categoryDto));
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Integer id) {
+        CategoryDto categoryDto = categoryService.getById(id);
+        if (categoryDto == null) {
+            return ResponseEntity.notFound().build();
         }
-        return categoryJsonList;
+        return ResponseEntity.ok(categoryDto);
     }
 
-    public String getById(String categoryData) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.getById(fromJsonToDto(categoryData)));
+    @PostMapping
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryDto categoryDto) {
+        categoryService.create(categoryDto);
+        return ResponseEntity.ok().build();
     }
 
-    public String update(String categoryData) throws JsonProcessingException {
-        return fromDtoToJson(categoryService.update(fromJsonToDto(categoryData)));
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
+        CategoryDto updatedCategoryDto = categoryService.update(id, categoryDto);
+        return ResponseEntity.ok(updatedCategoryDto);
     }
 
-    public void create(String categoryData) throws JsonProcessingException {
-        categoryService.create(fromJsonToDto(categoryData));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
+        categoryService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    public void delete(String categoryData) throws JsonProcessingException {
-        categoryService.delete(fromJsonToDto(categoryData));
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCategory(@RequestBody CategoryDto categoryDto) {
+        categoryService.delete(categoryDto);
+        return ResponseEntity.ok().build();
     }
 
-    private CategoryDto fromJsonToDto(String categoryJson) throws JsonProcessingException {
-        return objectMapper.readValue(categoryJson, CategoryDto.class);
-    }
-
-    private String fromDtoToJson(CategoryDto categoryDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(categoryDto);
+    @GetMapping
+    public ResponseEntity<List<CategoryDto>> getAllCategorys() {
+        List<CategoryDto> categoryDtos = categoryService.getAll();
+        return ResponseEntity.ok(categoryDtos);
     }
 }

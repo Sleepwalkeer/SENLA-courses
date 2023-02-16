@@ -1,4 +1,4 @@
-package eu.senla;
+package eu.senla.configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import liquibase.integration.spring.SpringLiquibase;
@@ -17,9 +17,10 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
-@ComponentScan(value = "eu.senla")
-@PropertySource("classpath:applicationTest.properties")
-public class Config {
+@ComponentScan(
+        basePackages = {"eu.senla"})
+@PropertySource("classpath:application.properties")
+public class ContextConfiguration {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
@@ -58,6 +59,7 @@ public class Config {
 
         return entityManagerFactory;
     }
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -71,9 +73,9 @@ public class Config {
     Properties additionalProperties() {
         Properties properties = new Properties();
         properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql","true");
+        properties.setProperty("hibernate.format_sql", "true");
 
         return properties;
     }

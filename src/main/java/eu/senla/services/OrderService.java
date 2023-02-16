@@ -9,13 +9,14 @@ import java.util.List;
 public interface OrderService {
     List<OrderDto> getAll();
 
-    OrderDto getById(OrderDto accountDto);
+    OrderDto getById(Integer id);
 
-    void create(OrderDto accountDto);
+    void create(OrderDto orderDto);
 
-    OrderDto update(OrderDto accountDto);
+    OrderDto update(Integer id, OrderDto orderDto);
 
-    void delete(OrderDto accountDto);
+    boolean delete(OrderDto orderDto);
 
-    OrderDto transactionTest();
+    boolean deleteById(Integer id);
+
 }

@@ -4,13 +4,15 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AccountDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String firstName;
     private String secondName;
     private String phone;

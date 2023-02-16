@@ -2,47 +2,73 @@ package eu.senla.services;
 
 import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.CredentialsDto;
+import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
+import eu.senla.exceptions.BadRequestException;
+import eu.senla.exceptions.DatabaseAccessException;
+import eu.senla.exceptions.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Component
+@RequiredArgsConstructor
+@Service
 public class CredentialsServiceImpl implements CredentialsService {
     private final CredentialsDao credentialsDao;
     private final ModelMapper modelMapper;
 
-    public CredentialsServiceImpl(CredentialsDao credentialsDao, ModelMapper modelMapper) {
-        this.credentialsDao = credentialsDao;
-        this.modelMapper = modelMapper;
-    }
 
-    public List<CredentialsDto> getAll() {
-        List<CredentialsDto> credentialsDtoList = new ArrayList<>();
-        List<Credentials> credentialsList = credentialsDao.findAll();
-
-        for (Credentials credentials : credentialsList) {
-            credentialsDtoList.add(modelMapper.map(credentials, CredentialsDto.class));
-        }
-        return credentialsDtoList;
-    }
-
-    public CredentialsDto getById(CredentialsDto credentialsDto) {
-        return modelMapper.map(credentialsDao.findById(credentialsDto.getId()), CredentialsDto.class);
+    public CredentialsDto getById(Integer id) {
+        Credentials credentials = credentialsDao.findById(id).orElseThrow(() ->
+                new NotFoundException("No credentials with ID " + id + " was found"));
+        return modelMapper.map(credentials, CredentialsDto.class);
     }
 
     public void create(CredentialsDto credentialsDto) {
-        credentialsDao.save(modelMapper.map(credentialsDto, Credentials.class));
+        if (credentialsDto.getPassword() == null || credentialsDto.getPassword().isEmpty()) {
+            throw new BadRequestException("Password is required");
+        }
+        if (credentialsDto.getUsername() == null || credentialsDto.getUsername().isEmpty()) {
+            throw new BadRequestException("Username is required");
+        }
+        Credentials credentials = modelMapper.map(credentialsDto, Credentials.class);
+        credentialsDao.save(credentials);
     }
 
-    public CredentialsDto update(CredentialsDto credentialsDto) {
-        return modelMapper.map(credentialsDao.update(modelMapper.map(credentialsDto, Credentials.class)), CredentialsDto.class);
+    public CredentialsDto update(Integer id, CredentialsDto credentialsDto) {
+        Credentials credentials = credentialsDao.findById(id).orElseThrow(() ->
+                new NotFoundException("No credentials with ID " + id + " was found"));
+        modelMapper.map(credentialsDto, credentials);
+        Credentials updatedCredentials = credentialsDao.update(credentials);
+        return modelMapper.map(updatedCredentials, CredentialsDto.class);
     }
 
+    public boolean deleteById(Integer id) {
+        if (credentialsDao.deleteById(id)){
+            return true;
+        }
+        else throw new NotFoundException("No credentials with ID " + id + " were found");
+    }
 
-    public void delete(CredentialsDto credentialsDto) {
-        credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class));
+    @Override
+    public boolean delete(CredentialsDto credentialsDto) {
+        if (credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class))){
+            return true;
+        }
+        else throw new NotFoundException("No such credentials were found");
+    }
+
+    public List<CredentialsDto> getAll() {
+        try {
+            List<Credentials> credentialss = credentialsDao.findAll();
+            return credentialss.stream()
+                    .map(credentials -> modelMapper.map(credentials, CredentialsDto.class))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new DatabaseAccessException("Unable to access database");
+        }
     }
 }

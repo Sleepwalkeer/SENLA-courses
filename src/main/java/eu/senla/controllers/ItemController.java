@@ -1,54 +1,61 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.ItemDto;
 import eu.senla.services.ItemService;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final ObjectMapper objectMapper;
+    //private final ObjectMapper objectMapper;
 
-    public ItemController(ItemService itemService, ObjectMapper objectMapper) {
-        this.itemService = itemService;
-        this.objectMapper = objectMapper;
-    }
-
-    public List<String> getAll() throws JsonProcessingException {
-        List<ItemDto> itemDtoList = itemService.getAll();
-        List<String> itemJsonList = new ArrayList<>();
-        for (ItemDto itemDto : itemDtoList) {
-            itemJsonList.add(fromDtoToJson(itemDto));
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemDto> getItemById(@PathVariable Integer id) {
+        ItemDto itemDto = itemService.getById(id);
+        if (itemDto == null) {
+            return ResponseEntity.notFound().build();
         }
-        return itemJsonList;
+        return ResponseEntity.ok(itemDto);
     }
 
-    public String getById(String itemData) throws JsonProcessingException {
-        return fromDtoToJson(itemService.getById(fromJsonToDto(itemData)));
+    @PostMapping
+    public ResponseEntity<Void> createItem(@RequestBody ItemDto itemDto) {
+        itemService.create(itemDto);
+        return ResponseEntity.ok().build();
     }
 
-    public String update(String itemData) throws JsonProcessingException {
-        return fromDtoToJson(itemService.update(fromJsonToDto(itemData)));
+    @PutMapping("/{id}")
+    public ResponseEntity<ItemDto> updateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
+        ItemDto updatedItemDto = itemService.update(id, itemDto);
+        if (updatedItemDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedItemDto);
     }
 
-    public void create(String itemData) throws JsonProcessingException {
-        itemService.create(fromJsonToDto(itemData));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
+        itemService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    public void delete(String itemData) throws JsonProcessingException {
-        itemService.delete(fromJsonToDto(itemData));
+    @DeleteMapping
+    public ResponseEntity<Void> deleteItem(@RequestBody ItemDto itemDto) {
+        itemService.delete(itemDto);
+        return ResponseEntity.ok().build();
     }
 
-    private ItemDto fromJsonToDto(String itemJson) throws JsonProcessingException {
-        return objectMapper.readValue(itemJson, ItemDto.class);
-    }
-
-    private String fromDtoToJson(ItemDto itemDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(itemDto);
+    @GetMapping
+    public ResponseEntity<List<ItemDto>> getAllItems() {
+        List<ItemDto> itemDtos = itemService.getAll();
+        return ResponseEntity.ok(itemDtos);
     }
 }

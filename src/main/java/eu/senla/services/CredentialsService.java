@@ -1,17 +1,21 @@
 package eu.senla.services;
 
 import eu.senla.dto.CredentialsDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public interface CredentialsService {
     List<CredentialsDto> getAll();
 
-    CredentialsDto getById(CredentialsDto credentialsDto);
+    CredentialsDto getById(Integer id);
 
-    void create(CredentialsDto accountDto);
+    void create(CredentialsDto credentialsDto);
 
-    CredentialsDto update(CredentialsDto accountDto);
+    CredentialsDto update(Integer id, CredentialsDto credentialsDto);
 
-    void delete(CredentialsDto accountDto);
+    boolean delete(CredentialsDto credentialsDto);
+
+    boolean deleteById(Integer id);
 }

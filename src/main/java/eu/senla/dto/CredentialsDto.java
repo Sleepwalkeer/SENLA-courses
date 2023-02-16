@@ -4,13 +4,15 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CredentialsDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String username;
     private String password;
 }

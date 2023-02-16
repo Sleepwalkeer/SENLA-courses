@@ -1,54 +1,62 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.services.CredentialsService;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@RestController
+@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/credentials")
 public class CredentialsController {
     private final CredentialsService credentialsService;
-    private final ObjectMapper objectMapper;
+    // private final ObjectMapper objectMapper;
 
-    public CredentialsController(CredentialsService credentialsService, ObjectMapper objectMapper) {
-        this.credentialsService = credentialsService;
-        this.objectMapper = objectMapper;
-    }
 
-    public List<String> getAll() throws JsonProcessingException {
-        List<CredentialsDto> credentialsDtoList = credentialsService.getAll();
-        List<String> credentialsJsonList = new ArrayList<>();
-        for (CredentialsDto credentialsDto : credentialsDtoList) {
-            credentialsJsonList.add(fromDtoToJson(credentialsDto));
+    @GetMapping("/{id}")
+    public ResponseEntity<CredentialsDto> getCredentialsById(@PathVariable Integer id) {
+        CredentialsDto credentialsDto = credentialsService.getById(id);
+        if (credentialsDto == null) {
+            return ResponseEntity.notFound().build();
         }
-        return credentialsJsonList;
+        return ResponseEntity.ok(credentialsDto);
     }
 
-    public String getById(String credentialsData) throws JsonProcessingException {
-        return fromDtoToJson(credentialsService.getById(fromJsonToDto(credentialsData)));
+    @PostMapping
+    public ResponseEntity<Void> createCredentials(@RequestBody CredentialsDto credentialsDto) {
+        credentialsService.create(credentialsDto);
+        return ResponseEntity.ok().build();
     }
 
-    public String update(String credentialsData) throws JsonProcessingException {
-        return fromDtoToJson(credentialsService.update(fromJsonToDto(credentialsData)));
+    @PutMapping("/{id}")
+    public ResponseEntity<CredentialsDto> updateCredentials(@PathVariable Integer id, @RequestBody CredentialsDto credentialsDto) {
+        CredentialsDto updatedCredentialsDto = credentialsService.update(id, credentialsDto);
+        if (updatedCredentialsDto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updatedCredentialsDto);
     }
 
-    public void create(String credentialsData) throws JsonProcessingException {
-        credentialsService.create(fromJsonToDto(credentialsData));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCredentialsById(@PathVariable Integer id) {
+        credentialsService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    public void delete(String credentialsData) throws JsonProcessingException {
-        credentialsService.delete(fromJsonToDto(credentialsData));
+    @DeleteMapping
+    public ResponseEntity<Void> deleteCredentials(@RequestBody CredentialsDto credentialsDto) {
+        credentialsService.delete(credentialsDto);
+        return ResponseEntity.ok().build();
     }
 
-    private CredentialsDto fromJsonToDto(String credentialsJson) throws JsonProcessingException {
-        return objectMapper.readValue(credentialsJson, CredentialsDto.class);
-    }
-
-    private String fromDtoToJson(CredentialsDto credentialsDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(credentialsDto);
+    @GetMapping
+    public ResponseEntity<List<CredentialsDto>> getAllCredentialss() {
+        List<CredentialsDto> credentialsDtos = credentialsService.getAll();
+        return ResponseEntity.ok(credentialsDtos);
     }
 }

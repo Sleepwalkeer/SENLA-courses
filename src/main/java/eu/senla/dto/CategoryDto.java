@@ -4,12 +4,14 @@ import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CategoryDto {
 
     @EqualsAndHashCode.Include
-    private int id;
+    private Integer id;
     private String name;
 }

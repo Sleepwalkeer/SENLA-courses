@@ -17,8 +17,16 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
-@ComponentScan(value = "eu.senla")
-@PropertySource("classpath:application.properties")
+@ComponentScan(
+        basePackages = {"eu.senla"},
+        excludeFilters = {
+                @ComponentScan.Filter(
+                        type = FilterType.REGEX,
+                        pattern = "eu\\.senla\\.configuration\\..*"
+                )
+        }
+)
+@PropertySource("classpath:applicationTest.properties")
 public class Config {
 
     @Value("${spring.datasource.driver-class-name}")
@@ -54,28 +62,16 @@ public class Config {
         entityManagerFactory.setDataSource(dataSource());
         entityManagerFactory.setPackagesToScan("eu.senla.entities");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        entityManagerFactory.setJpaProperties(additionalProperties());
 
         return entityManagerFactory;
     }
+
     @Bean
     public PlatformTransactionManager transactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
 
         return transactionManager;
-    }
-
-
-    @Bean
-    Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql","true");
-
-        return properties;
     }
 
     @Bean

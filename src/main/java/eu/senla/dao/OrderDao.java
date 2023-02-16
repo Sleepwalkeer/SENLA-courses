@@ -1,23 +1,26 @@
 package eu.senla.dao;
 
 import eu.senla.entities.Order;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
+@Repository
 public interface OrderDao {
     List<Order> findAll();
 
-    Order findById(Integer id);
+    Optional<Order> findById(Integer id);
 
     Order findByIdEager(Integer id);
 
     Order update(Order passedOrder);
 
-    Order save(Order passedOrder);
+    void save(Order passedOrder);
 
-    void delete(Order passedOrder);
+    boolean delete(Order passedOrder);
 
-    void deleteById(Integer id);
+    boolean deleteById(Integer id);
 
     List<Order> getOrdersWithMoreItemsThan(int itemCount);
 }

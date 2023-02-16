@@ -5,13 +5,13 @@ import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Component
+@Repository
 public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDao {
     @PersistenceContext
     private EntityManager entityManager;
@@ -24,8 +24,8 @@ public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDa
     @Override
     public Order findByIdEager(Integer id) {
         EntityGraph<?> itemsGraph = entityManager.getEntityGraph("graph.Order.itemsCategory");
-        Map hints= new HashMap();
-        hints.put("javax.persistence.fetchgraph",itemsGraph);
+        Map hints = new HashMap();
+        hints.put("javax.persistence.fetchgraph", itemsGraph);
         return entityManager.find(Order.class, id, hints);
     }
 
@@ -34,5 +34,10 @@ public class OrderDaoImpl extends AbstractDAO<Integer, Order> implements OrderDa
         Query query = entityManager.createQuery(jpql);
         query.setParameter("itemCount", itemCount);
         return query.getResultList();
+    }
+
+    @Override
+    public boolean delete(Order entity) {
+        return deleteById(entity.getId());
     }
 }

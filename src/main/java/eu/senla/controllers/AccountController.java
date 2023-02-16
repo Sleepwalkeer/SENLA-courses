@@ -1,55 +1,64 @@
 package eu.senla.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.senla.dto.AccountDto;
 import eu.senla.services.AccountService;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/accounts")
 public class AccountController {
-
     private final AccountService accountService;
-    private final ObjectMapper objectMapper;
+    // private final ObjectMapper objectMapper;
 
-    public AccountController(AccountService accountService, ObjectMapper objectMapper) {
-        this.accountService = accountService;
-        this.objectMapper = objectMapper;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
+        AccountDto accountDto = accountService.getById(id);
+        return ResponseEntity.ok(accountDto);
     }
 
-    public List<String> getAll() throws JsonProcessingException {
-        List<AccountDto> accountDtoList = accountService.getAll();
-        List<String> accountJsonList = new ArrayList<>();
-        for (AccountDto accountDto : accountDtoList) {
-            accountJsonList.add(fromDtoToJson(accountDto));
+    @PostMapping
+    public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
+        accountService.create(accountDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
+        AccountDto updatedAccountDto = accountService.update(id, accountDto);
+        if (updatedAccountDto == null) {
+            return ResponseEntity.notFound().build();
         }
-        return accountJsonList;
+        return ResponseEntity.ok(updatedAccountDto);
     }
 
-    public String getById(String accountData) throws JsonProcessingException {
-        return fromDtoToJson(accountService.getById(fromJsonToDto(accountData)));
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAccountById(@PathVariable Integer id) {
+        accountService.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 
-    public String update(String accountData) throws JsonProcessingException {
-        return fromDtoToJson(accountService.update(fromJsonToDto(accountData)));
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAccount(@RequestBody AccountDto accountDto) {
+        accountService.delete(accountDto);
+        return ResponseEntity.ok().build();
     }
 
-    public void create(String accountData) throws JsonProcessingException {
-         accountService.create(fromJsonToDto(accountData));
+    @GetMapping
+    public ResponseEntity<List<AccountDto>> getAllAccounts() {
+        List<AccountDto> accountDtos = accountService.getAll();
+        return ResponseEntity.ok(accountDtos);
     }
 
-    public void delete(String accountData) throws JsonProcessingException {
-        accountService.delete(fromJsonToDto(accountData));
-    }
-
-    private AccountDto fromJsonToDto(String accountJson) throws JsonProcessingException {
-        return objectMapper.readValue(accountJson, AccountDto.class);
-    }
-
-    private String fromDtoToJson(AccountDto accountDto) throws JsonProcessingException {
-        return objectMapper.writeValueAsString(accountDto);
+    @GetMapping("/hello")
+    public String HelloWorld() {
+        return "Hello World";
     }
 }

@@ -1,17 +1,21 @@
 package eu.senla.services;
 
 import eu.senla.dto.ItemDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Transactional
 public interface ItemService {
     List<ItemDto> getAll();
 
-    ItemDto getById(ItemDto accountDto);
+    ItemDto getById(Integer id);
 
-    void create(ItemDto accountDto);
+    void create(ItemDto itemDto);
 
-    ItemDto update(ItemDto accountDto);
+    ItemDto update(Integer id, ItemDto itemDto);
 
-    void delete(ItemDto accountDto);
+    boolean delete(ItemDto itemDto);
+
+    boolean deleteById(Integer id);
 }
