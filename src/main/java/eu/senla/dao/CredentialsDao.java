@@ -12,6 +12,8 @@ public interface CredentialsDao {
 
     Optional<Credentials> findById(Integer id);
 
+    Optional<Credentials> findByUsername(String username);
+
     Credentials update(Credentials credentials);
 
     void save(Credentials credentials);
