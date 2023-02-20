@@ -1,0 +1,2 @@
+ALTER TABLE credentials
+ADD COLUMN role varchar(30) UNIQUE NOT NULL DEFAULT 'USER';

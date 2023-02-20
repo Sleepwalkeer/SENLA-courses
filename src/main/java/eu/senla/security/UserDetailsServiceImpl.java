@@ -24,8 +24,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Credentials credentials = credentialsDao.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return new User(credentials.getUsername(), credentials.getPassword(), authorities);
+       return SecurityUser.fromCredentials(credentials);
     }
 }

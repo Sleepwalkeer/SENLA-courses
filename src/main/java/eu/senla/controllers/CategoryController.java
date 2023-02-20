@@ -5,6 +5,7 @@ import eu.senla.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,10 +17,10 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
-    //  private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Integer id) {
         CategoryDto categoryDto = categoryService.getById(id);
         if (categoryDto == null) {
@@ -29,30 +30,34 @@ public class CategoryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> createCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.create(categoryDto);
         return ResponseEntity.ok().build();
     }
-
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
         CategoryDto updatedCategoryDto = categoryService.update(id, categoryDto);
         return ResponseEntity.ok(updatedCategoryDto);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
         categoryService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteCategory(@RequestBody CategoryDto categoryDto) {
         categoryService.delete(categoryDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<List<CategoryDto>> getAllCategorys() {
         List<CategoryDto> categoryDtos = categoryService.getAll();
         return ResponseEntity.ok(categoryDtos);

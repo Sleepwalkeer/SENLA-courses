@@ -296,4 +296,14 @@
         <sqlFile encoding="utf8" path="./sql/30.rent_order-add-index-index_customer_id.sql"
                  relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="credentials-role" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="credentials"
+                              columnName="role"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/31.credentials-add-role.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog> 

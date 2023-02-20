@@ -1,5 +1,6 @@
 package eu.senla.dto;
 
+import eu.senla.entities.Role;
 import lombok.*;
 
 @Getter
@@ -15,4 +16,5 @@ public class CredentialsDto {
     private Integer id;
     private String username;
     private String password;
+    private Role role;
 }
