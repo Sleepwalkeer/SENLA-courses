@@ -19,21 +19,18 @@ public class AccountController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
         AccountDto accountDto = accountService.getById(id);
         return ResponseEntity.ok(accountDto);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
         AccountDto updatedAccountDto = accountService.update(id, accountDto);
         if (updatedAccountDto == null) {
@@ -43,21 +40,18 @@ public class AccountController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteAccountById(@PathVariable Integer id) {
         accountService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteAccount(@RequestBody AccountDto accountDto) {
         accountService.delete(accountDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('read')")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         List<AccountDto> accountDtos = accountService.getAll();
         return ResponseEntity.ok(accountDtos);

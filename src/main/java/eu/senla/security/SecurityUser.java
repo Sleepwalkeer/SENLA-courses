@@ -55,7 +55,6 @@ public class SecurityUser implements UserDetails {
     }
 
     public static UserDetails fromCredentials(Credentials credentials){
-        System.out.println("чек");
         return new SecurityUser(
                 credentials.getUsername(),
                 credentials.getPassword(),
