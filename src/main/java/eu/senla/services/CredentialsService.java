@@ -8,10 +8,10 @@ import java.util.List;
 
 @Transactional
 public interface CredentialsService {
-    @PreAuthorize("hasAuthority('read')")
+    @PreAuthorize("hasAuthority('write')")
     List<CredentialsDto> getAll();
 
-    @PreAuthorize("hasAuthority('read')")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     CredentialsDto getById(Integer id);
 
     @PreAuthorize("hasAuthority('write')")

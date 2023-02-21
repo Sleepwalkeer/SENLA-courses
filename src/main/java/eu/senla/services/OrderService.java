@@ -8,7 +8,7 @@ import java.util.List;
 
 @Transactional
 public interface OrderService {
-    @PreAuthorize("hasAuthority('read')")
+    @PreAuthorize("hasAuthority('write')")
     List<OrderDto> getAll();
 
     @PreAuthorize("hasAuthority('read')")
