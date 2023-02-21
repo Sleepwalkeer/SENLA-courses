@@ -22,7 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(proxyTargetClass = true)
 public class SecurityConfiguration {
 
     private final JwtConfigurer jwtConfigurer;

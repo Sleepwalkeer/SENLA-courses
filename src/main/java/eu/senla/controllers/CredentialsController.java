@@ -19,6 +19,7 @@ public class CredentialsController {
 
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     public ResponseEntity<CredentialsDto> getCredentialsById(@PathVariable Integer id) {
         CredentialsDto credentialsDto = credentialsService.getById(id);
         if (credentialsDto == null) {
@@ -28,12 +29,14 @@ public class CredentialsController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> createCredentials(@RequestBody CredentialsDto credentialsDto) {
         credentialsService.create(credentialsDto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     public ResponseEntity<CredentialsDto> updateCredentials(@PathVariable Integer id, @RequestBody CredentialsDto credentialsDto) {
         CredentialsDto updatedCredentialsDto = credentialsService.update(id, credentialsDto);
         if (updatedCredentialsDto == null) {
@@ -43,18 +46,21 @@ public class CredentialsController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     public ResponseEntity<Void> deleteCredentialsById(@PathVariable Integer id) {
         credentialsService.deleteById(id);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
+    @PreAuthorize("hasAuthority('write')|| #credentialsDto.id == authentication.principal.id")
     public ResponseEntity<Void> deleteCredentials(@RequestBody CredentialsDto credentialsDto) {
         credentialsService.delete(credentialsDto);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<List<CredentialsDto>> getAllCredentialss() {
         List<CredentialsDto> credentialsDtos = credentialsService.getAll();
         return ResponseEntity.ok(credentialsDtos);
