@@ -16,12 +16,18 @@ public class SecurityUser implements UserDetails {
 
     private final String username;
     private final String password;
+
+
+    private final Integer id;
     private final List<SimpleGrantedAuthority> authorities;
 
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
+    }
+    public Integer getId() {
+        return id;
     }
 
     @Override
@@ -58,6 +64,7 @@ public class SecurityUser implements UserDetails {
         return new SecurityUser(
                 credentials.getUsername(),
                 credentials.getPassword(),
+                credentials.getId(),
                 credentials.getRole().getAuthorities().stream().toList()
         );
     }

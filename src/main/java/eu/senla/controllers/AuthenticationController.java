@@ -33,21 +33,16 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate (@RequestBody AuthenticationRequestDto request){
-        try {
             authenticationManager.authenticate
                     (new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
             Credentials credentials = credentialsDao.findByUsername(request.getUsername()).
                     orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-            String token = jwtTokenProvider.createToken(request.getUsername(), credentials.getRole().name());
+            String token = jwtTokenProvider.createToken(request.getUsername(), credentials.getRole().name(), credentials.getId());
             Map<Object,Object> response = new HashMap<>();
             response.put("username",request.getUsername());
             response.put("token", token);
 
             return ResponseEntity.ok(response);
-
-        } catch (AuthenticationException e) {
-            return new ResponseEntity<>("Invalid email and/or password", HttpStatus.FORBIDDEN);
-        }
     }
 
     @PostMapping("/logout")

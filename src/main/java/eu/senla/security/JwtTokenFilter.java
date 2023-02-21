@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -31,8 +32,8 @@ public class JwtTokenFilter extends GenericFilterBean implements Filter {
         } catch (JwtAuthenticationException e) {
             SecurityContextHolder.clearContext();
             ((HttpServletResponse) servletResponse).sendError(e.getHttpStatus().value());
-            throw new JwtAuthenticationException("JWT token is invalid or expired");
+            throw new JwtAuthenticationException("JWT token is invalid or expired", HttpStatus.UNAUTHORIZED);
         }
         filterChain.doFilter(servletRequest,servletResponse);
-    }
+        }
 }

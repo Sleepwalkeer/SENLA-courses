@@ -10,18 +10,19 @@ import java.util.List;
 public interface AccountService {
     @PreAuthorize("hasAuthority('read')")
     List<AccountDto> getAll();
+
     @PreAuthorize("hasAuthority('read')")
     AccountDto getById(Integer id);
 
     @PreAuthorize("hasAuthority('write')")
     void create(AccountDto accountDto);
 
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     AccountDto update(Integer id, AccountDto accountDto);
 
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     boolean deleteById(Integer id);
 
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write')|| #accountDto.id == authentication.principal.id")
     boolean delete(AccountDto accountDto);
 }

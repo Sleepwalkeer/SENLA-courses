@@ -14,10 +14,10 @@ public interface OrderService {
     @PreAuthorize("hasAuthority('read')")
     OrderDto getById(Integer id);
 
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
     void create(OrderDto orderDto);
 
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
     OrderDto update(Integer id, OrderDto orderDto);
 
     @PreAuthorize("hasAuthority('write')")
