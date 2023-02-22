@@ -154,7 +154,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     public void updateCredentialsByUnauthorizedUserTest() throws Exception {
         String requestBody = "{ \"id\": 4, \"username\": \"stella_ickerton\", \"password\": \"stellas\" , \"role\" : \"USER\" }";
 
-        this.mockMvc.perform(put("/accounts/{id}", 4)
+        this.mockMvc.perform(put("/credentials/{id}", 4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -198,7 +198,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     @WithUserDetails("delaccAuth11")
     public void deleteCredentialsByAuthorizedIdTest() throws Exception {
         Credentials credsForDeletion = accountDao.findByEmail("delaccAuth11").get().getCredentials();
-        mockMvc.perform(delete("/accounts/{id}", credsForDeletion.getId()))
+        mockMvc.perform(delete("/credentials/{id}", credsForDeletion.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
