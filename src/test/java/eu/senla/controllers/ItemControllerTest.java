@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -70,6 +71,7 @@ public class ItemControllerTest extends ContainersEnvironment {
 
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void getItemByIdTest() throws Exception {
 
         fillGetItemByIdDummyData();
@@ -92,7 +94,9 @@ public class ItemControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+
     @Test
+    @WithUserDetails("Sleepwalker")
     public void createItemTest() throws Exception {
         String dummyCategoryData = "{\"name\": \"createdata11\"}";
         this.mockMvc.perform(post("/categories")
@@ -108,6 +112,17 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker2")
+    public void createItemWithUnauthorizedIdTest() throws Exception {
+        String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\",\"price\":\"1\",\"quantity\":\"1\"}";
+        this.mockMvc.perform(post("/items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("Sleepwalker")
     public void createInvalidItemTest() throws Exception {
         String requestBody = "{\"name\": \"\"}";
         this.mockMvc.perform(post("/items")
@@ -116,9 +131,11 @@ public class ItemControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
-    @Test
-    public void updateItemTest() throws Exception {
 
+
+    @Test
+    @WithUserDetails("Sleepwalker")
+    public void updateItemTest() throws Exception {
         fillUpdateItemTestDummyData();
 
         String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"},\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
@@ -128,6 +145,19 @@ public class ItemControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("updateItemData"));
+    }
+
+    @Test
+    @WithUserDetails("Sleepwalker2")
+    public void updateItemWithUnauthorizedUserTest() throws Exception {
+
+        fillUpdateItemTestDummyData();
+
+        String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"},\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
+        this.mockMvc.perform(put("/items/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     private void fillUpdateItemTestDummyData() throws Exception {
@@ -142,6 +172,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void updateInvalidItemTest() throws Exception {
         String requestBody = "{\"category\":{\"id\":\"1000\"},\"name\":\"updateInvalidData\",\"price\":\"1\",\"quantity\":\"1\"}";
         this.mockMvc.perform(put("/items/{id}", 1000)
@@ -152,12 +183,23 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteItemByIdTest() throws Exception {
 
         fillDeleteItemByIdDummyData();
 
         mockMvc.perform(delete("/items/{id}", 4))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("Sleepwalker3")
+    public void deleteItemByIdWithUnauthorizedUserTest() throws Exception {
+
+        fillDeleteItemByIdDummyData();
+
+        mockMvc.perform(delete("/items/{id}", 4))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     private void fillDeleteItemByIdDummyData() throws Exception {
@@ -182,6 +224,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteItemByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/items/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -189,6 +232,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteItemTest() throws Exception {
 
         fillDeleteItemDummyData();
@@ -199,6 +243,20 @@ public class ItemControllerTest extends ContainersEnvironment {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(deleteRequestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("Sleepwalker3")
+    public void deleteItemWithUnauthorizedUserTest() throws Exception {
+
+        fillDeleteItemDummyData();
+
+        String deleteRequestBody = "{\"id\":\"3\"}";
+
+        mockMvc.perform(delete("/items")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(deleteRequestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     private void fillDeleteItemDummyData() throws Exception {
@@ -223,6 +281,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteInvalidItemTest() throws Exception {
 
         String deleteRequestBody = "{\"id\":\"10000\"}";
@@ -233,6 +292,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void getAllItemsTest() throws Exception {
         fillGetAllItemsWithDummyData();
 

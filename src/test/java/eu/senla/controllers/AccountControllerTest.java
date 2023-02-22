@@ -168,17 +168,17 @@ public class AccountControllerTest extends ContainersEnvironment {
     @WithUserDetails("updaccAuth1")
     public void updateAccountByAuthorizedUserTest() throws Exception {
         Account accountForUpdate = accountDao.findByEmail("updaccAuth1").get();
-        String requestBody = "{\"id\":\"" + accountForUpdate.getId() + "\",\"firstName\":\"updaccnewAuth\"," +
-                "\"secondName\":\"updaccnewAuth\",\"phone\":\"updaccAuth\"," +
-                "\"email\":\"updaccAuth\",\"credentials\":{\"id\":\"" + accountForUpdate.getId() +
-                "\", \"username\": \"Slee2\", \"password\": \"Slee\" , \"role\" : \"USER\" }}";
+        String requestBody = "{\"id\":\"" + accountForUpdate.getId() + "\",\"firstName\":\"updaccnewAuth1\"," +
+                "\"secondName\":\"updaccnewAuth1\",\"phone\":\"updaccAuth1\"," +
+                "\"email\":\"updaccAuth1\",\"credentials\":{\"id\":\"" + accountForUpdate.getId() +
+                "\", \"username\": \"Sleep2\", \"password\": \"Sleep\" , \"role\" : \"USER\" }}";
 
         this.mockMvc.perform(put("/accounts/{id}", accountForUpdate.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(accountForUpdate.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnewAuth"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnewAuth1"));
     }
 
 
@@ -240,7 +240,9 @@ public class AccountControllerTest extends ContainersEnvironment {
     @WithUserDetails("Sleepwalker")
     public void deleteAccountTest() throws Exception {
         fillDeleteAccountDummyData();
-        String deleteRequestBody = "{\"id\":\"7\"}";
+        Account account = accountDao.findByEmail("deleteacc22").get();
+
+        String deleteRequestBody = "{\"id\":\"" + account.getId() + "\"}";
         mockMvc.perform(delete("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(deleteRequestBody))
