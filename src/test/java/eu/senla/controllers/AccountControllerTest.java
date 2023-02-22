@@ -2,12 +2,17 @@ package eu.senla.controllers;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import eu.senla.dao.AccountDao;
+import eu.senla.entities.Account;
+import eu.senla.entities.Credentials;
+import eu.senla.entities.Role;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,13 +26,17 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class})
+@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountControllerTest extends ContainersEnvironment {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mockMvc;
+
+    @Autowired
+    private AccountDao accountDao;
 
     @BeforeEach
     public void setup() {
@@ -35,9 +44,31 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
 
+
+
     @Test
+    @Order(1)
+    public void fillDummyData(){
+        Account admin = Account.builder().firstName("Admin").secondName("Admin")
+                .phone("+3758232734").email("kfgkzsf")
+                .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+        accountDao.save(admin);
+        Account user2 =  Account.builder().firstName("User2").secondName("user2")
+                .phone("+375823274").email("kfgkzsfdf")
+                .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+        accountDao.save(user2);
+        Account user3 =  Account.builder().firstName("User3").secondName("user3")
+                .phone("+375823wer").email("kfgkzsgd")
+                .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+        accountDao.save(user3);
+    }
+
+
+
+    @Test
+    @WithUserDetails("Sleepwalker")
     public void getAccountByIdTest() throws Exception {
-        fillGetAccountDummyData();
+        //fillGetAccountDummyData();
         int credentialsId = 1;
         this.mockMvc.perform(get("/accounts/{id}", credentialsId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -45,13 +76,17 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     private void fillGetAccountDummyData() throws Exception {
-        String dummyCredentialsData = "{\"firstName\":\"getacc\",\"secondName\":\"getacc\",\"phone\":\"getacc\"," +
-                "\"email\":\"getacc\",\"credentials\":{ \"username\": \"getacc\"," +
-                " \"password\": \"getacc\" }}";
-        this.mockMvc.perform(post("/accounts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(dummyCredentialsData))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+//        String dummyCredentialsData = "{\"firstName\":\"getacc\",\"secondName\":\"getacc\",\"phone\":\"getacc\"," +
+//                "\"email\":\"getacc\",\"credentials\":{ \"username\": \"getacc\"," +
+//                " \"password\": \"getacc\" }}";
+//        this.mockMvc.perform(post("/accounts")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(dummyCredentialsData))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+        Account testDaoAcc = Account.builder().firstName("testDaoAccFind2").secondName("testDaoAccFind2")
+                .phone("testDaoAccFind2").email("testDaoAccFin2d")
+                .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+        accountDao.save(testDaoAcc);
     }
 
     @Test

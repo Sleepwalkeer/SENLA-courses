@@ -30,7 +30,7 @@ public class CredentialsDaoImpl extends AbstractDAO<Integer, Credentials> implem
         CriteriaQuery<Credentials> query = builder.createQuery(Credentials.class);
         Root<Credentials> root = query.from(Credentials.class);
         query.select(root);
-        query.where(builder.equal(root.get(Credentials_.username), username));
+       query.where(builder.equal(root.get(Credentials_.username), username));
         TypedQuery<Credentials> typedQuery = entityManager.createQuery(query);
         return typedQuery.getResultList().stream().findFirst();
     }
