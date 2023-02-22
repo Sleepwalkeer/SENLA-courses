@@ -43,6 +43,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public ResponseEntity<Void> deleteCategoryById(@PathVariable Integer id) {
         categoryService.deleteById(id);
         return ResponseEntity.ok().build();

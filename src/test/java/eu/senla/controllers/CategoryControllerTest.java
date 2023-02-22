@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -70,16 +71,27 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void createCategoryTest() throws Exception {
         String requestBody = "{\"name\": \"create\"}";
         this.mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 
+
     @Test
+    @WithUserDetails("Sleepwalker2")
+    public void createCategoryWithUnauthorizedUserTest() throws Exception {
+        String requestBody = "{\"name\": \"create\"}";
+        this.mockMvc.perform(post("/categories")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+    @Test
+    @WithUserDetails("Sleepwalker")
     public void getCategoryByIdTest() throws Exception {
         String dummyData = "{\"name\": \"getByIdData\"}";
         this.mockMvc.perform(post("/categories")
@@ -93,6 +105,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void createInvalidCategoryTest() throws Exception {
         String requestBody = "{\"name\": \"\"}";
         this.mockMvc.perform(post("/categories")
@@ -102,6 +115,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void updateCategoryTest() throws Exception {
         String dummyData = "{\"name\": \"updateData\"}";
         this.mockMvc.perform(post("/categories")
@@ -120,6 +134,18 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker3")
+    public void updateCategoryWithUnauthorizedUserTest() throws Exception {
+        String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
+
+        this.mockMvc.perform(put("/categories/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("Sleepwalker")
     public void updateInvalidCategoryTest() throws Exception {
         String updateRequestBody = "{\"id\":7000,\"name\":\"Electronics\"}";
 
@@ -131,13 +157,13 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteCategoryByIdTest() throws Exception {
 
         fillDeleteCategoryByIdDummyData();
         mockMvc.perform(delete("/categories/{id}", 6))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
     private void fillDeleteCategoryByIdDummyData() throws Exception {
 
         String[] deleteCategories = {
@@ -156,6 +182,17 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker3")
+    public void deleteCategoryByIdWithUnauthorizedUserTest() throws Exception {
+
+        fillDeleteCategoryByIdDummyData();
+        mockMvc.perform(delete("/categories/{id}", 6))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+
+    @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteCategoryByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/categories/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -163,8 +200,8 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteCategoryTest() throws Exception {
-
         fillDeleteCategoryDummyData();
 
         String deleteRequestBody = "{\"id\":\"5\"}";
@@ -187,11 +224,13 @@ public class CategoryControllerTest extends ContainersEnvironment {
         for (String category : deleteCategories) {
             this.mockMvc.perform(post("/categories")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(category));
+                    .content(category))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
         }
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void deleteInvalidCategoryTest() throws Exception {
 
         String deleteRequestBody = "{\"id\":100000000,\"name\":\"Apartments\"}";
@@ -202,6 +241,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
+    @WithUserDetails("Sleepwalker")
     public void getAllCategoriesTest() throws Exception {
         fillGetALlCategoriesDummyData();
         String dummyData = "{\"name\": \"getAllData\"}";

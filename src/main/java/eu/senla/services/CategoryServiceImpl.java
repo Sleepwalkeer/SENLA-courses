@@ -37,8 +37,6 @@ public class CategoryServiceImpl implements CategoryService {
             }
             Category category = modelMapper.map(categoryDto, Category.class);
             categoryDao.save(category);
-            throw new InsufficientPrivilegesException("You do not have sufficient privileges to do this", HttpStatus.FORBIDDEN);
-
     }
 
     public CategoryDto update(Integer id, CategoryDto categoryDto) {

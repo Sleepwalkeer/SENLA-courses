@@ -109,7 +109,7 @@ public class OrderControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Sleepwalker")
-    public void testCreateOrder() throws Exception {
+    public void createOrderTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
                 "\"startDateTime\":1665778114323,\"endDateTime\":1675778114323,\"totalPrice\":12200}";
@@ -121,7 +121,7 @@ public class OrderControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Sleepwalker2")
-    public void testCreateOrderUnauthorizedId() throws Exception {
+    public void createOrderUnauthorizedIdTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
                 "\"startDateTime\":1665778114323,\"endDateTime\":1675778114323,\"totalPrice\":12200}";
