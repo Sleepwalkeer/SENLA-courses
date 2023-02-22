@@ -2,7 +2,12 @@ package eu.senla.controllers;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
+import eu.senla.dao.AccountDao;
+import eu.senla.entities.Account;
+import eu.senla.entities.Credentials;
+import eu.senla.entities.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,24 +21,51 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.PostConstruct;
+
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class})
+@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class ItemControllerTest extends ContainersEnvironment {
-
     @Autowired
-
     private WebApplicationContext webApplicationContext;
-
+    @Autowired
+    private AccountDao accountDao;
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+    }
+
+    @PostConstruct
+    public void SaveDummyAuthorizationData() {
+        fillDummyAuthorizationData();
+    }
+
+    public void fillDummyAuthorizationData() {
+        if (accountDao.findByEmail("kfgkzsf").isEmpty()) {
+            Account admin = Account.builder().firstName("Admin").secondName("Admin")
+                    .phone("+3758232734").email("kfgkzsf")
+                    .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+            accountDao.save(admin);
+        }
+        if (accountDao.findByEmail("kfgkzsfdf").isEmpty()) {
+            Account user2 = Account.builder().firstName("User2").secondName("user2")
+                    .phone("+375823274").email("kfgkzsfdf")
+                    .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+            accountDao.save(user2);
+        }
+        if (accountDao.findByEmail("kfgkzsddgd").isEmpty()) {
+            Account user3 = Account.builder().firstName("User3").secondName("user3")
+                    .phone("+375823wer").email("kfgkzsddgd")
+                    .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+            accountDao.save(user3);
+        }
     }
 
 
@@ -172,8 +204,8 @@ public class ItemControllerTest extends ContainersEnvironment {
     private void fillDeleteItemDummyData() throws Exception {
         String dummyCategoryData = "{\"name\": \"deleteDdata11\"}";
         this.mockMvc.perform(post("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(dummyCategoryData));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyCategoryData));
 
         String[] dummyItemData = {
                 "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata\",\"price\":\"1\",\"quantity\":\"1\"}",
@@ -209,15 +241,15 @@ public class ItemControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
     }
 
-   private void fillGetAllItemsWithDummyData() throws Exception {
-       String dummyCategoryData = "{\"name\": \"allitemscat\"}";
-       this.mockMvc.perform(post("/categories")
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(dummyCategoryData));
+    private void fillGetAllItemsWithDummyData() throws Exception {
+        String dummyCategoryData = "{\"name\": \"allitemscat\"}";
+        this.mockMvc.perform(post("/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyCategoryData));
 
-       String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getallItems\",\"price\":\"1\",\"quantity\":\"1\"}";
-       this.mockMvc.perform(post("/items")
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(dummyItemData));
+        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getallItems\",\"price\":\"1\",\"quantity\":\"1\"}";
+        this.mockMvc.perform(post("/items")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(dummyItemData));
     }
 }

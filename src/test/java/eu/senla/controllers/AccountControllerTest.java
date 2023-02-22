@@ -8,8 +8,8 @@ import eu.senla.dao.AccountDao;
 import eu.senla.entities.Account;
 import eu.senla.entities.Credentials;
 import eu.senla.entities.Role;
-import org.junit.Before;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -32,13 +32,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class AccountControllerTest extends ContainersEnvironment {
-
     @Autowired
     private WebApplicationContext webApplicationContext;
-    private MockMvc mockMvc;
-
     @Autowired
     private AccountDao accountDao;
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void setup() {
@@ -146,6 +144,13 @@ public class AccountControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnew"));
     }
 
+    private void fillUpdateAccountDummyData() throws Exception {
+        Account dummyCredentialsData = Account.builder().firstName("updacc").secondName("updacc")
+                .phone("updacc").email("updacc")
+                .credentials(Credentials.builder().username("updacc").password("updacc").role(Role.USER).build()).build();
+        accountDao.save(dummyCredentialsData);
+    }
+
     @Test
     @WithUserDetails("Sleepwalker2")
     public void updateAccountByUnauthorizedUserTest() throws Exception {
@@ -176,13 +181,6 @@ public class AccountControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnewAuth"));
     }
 
-
-    private void fillUpdateAccountDummyData() throws Exception {
-        Account dummyCredentialsData = Account.builder().firstName("updacc").secondName("updacc")
-                .phone("updacc").email("updacc")
-                .credentials(Credentials.builder().username("updacc").password("updacc").role(Role.USER).build()).build();
-        accountDao.save(dummyCredentialsData);
-    }
 
     @Test
     @WithUserDetails("Sleepwalker")
@@ -283,16 +281,8 @@ public class AccountControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Sleepwalker")
     public void getAllAccountsTest() throws Exception {
-        fillGetAllAccountsDummyData();
         mockMvc.perform(get("/accounts"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
-    }
-
-    private void fillGetAllAccountsDummyData() throws Exception {
-        Account dummyCredentialsData = Account.builder().firstName("getAllacc").secondName("getAllacc")
-                .phone("getAllacc").email("getAllacc")
-                .credentials(Credentials.builder().username("getAllacc").password("getAllacc").role(Role.USER).build()).build();
-        accountDao.save(dummyCredentialsData);
     }
 }
