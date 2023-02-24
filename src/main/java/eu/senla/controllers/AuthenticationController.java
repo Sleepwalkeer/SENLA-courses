@@ -4,6 +4,8 @@ import eu.senla.dao.CredentialsDao;
 import eu.senla.dto.AuthenticationRequestDto;
 import eu.senla.entities.Credentials;
 import eu.senla.security.JwtTokenProvider;
+import eu.senla.services.AuthenticationService;
+import eu.senla.services.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -26,28 +28,16 @@ import java.util.Map;
 @RequestMapping("/auth")
 @AllArgsConstructor
 public class AuthenticationController {
+    private final AuthenticationServiceImpl authenticationService;
 
-    private final AuthenticationManager authenticationManager;
-    private CredentialsDao credentialsDao;
-    private JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate (@RequestBody AuthenticationRequestDto request){
-            authenticationManager.authenticate
-                    (new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
-            Credentials credentials = credentialsDao.findByUsername(request.getUsername()).
-                    orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
-            String token = jwtTokenProvider.createToken(request.getUsername(), credentials.getRole().name(), credentials.getId());
-            Map<Object,Object> response = new HashMap<>();
-            response.put("username",request.getUsername());
-            response.put("token", token);
-
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response){
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request,response,null);
+        authenticationService.logout(request,response);
     }
 }

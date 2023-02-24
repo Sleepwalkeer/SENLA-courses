@@ -31,7 +31,7 @@ public class SecurityConfiguration {
     private final UserDetailsService userDetailsService;
 
     @Value("${password.strength}")
-    private final int passwordStrength;
+    private int passwordStrength;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -51,7 +51,6 @@ public class SecurityConfiguration {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login").permitAll()
-                .requestMatchers("/auth/logout").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
