@@ -20,46 +20,37 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
-        AccountDto accountDto = accountService.getById(id);
-        return ResponseEntity.ok(accountDto);
+    public AccountDto getAccountById(@PathVariable Integer id) {
+        return accountService.getById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
+    public void createAccount(@RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
-        AccountDto updatedAccountDto = accountService.update(id, accountDto);
-        if (updatedAccountDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedAccountDto);
+    public AccountDto updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
+        return accountService.update(id, accountDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public ResponseEntity<Void> deleteAccountById(@PathVariable Integer id) {
+    public void deleteAccountById(@PathVariable Integer id) {
         accountService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')|| #accountDto.id == authentication.principal.id")
-    public ResponseEntity<Void> deleteAccount(@RequestBody AccountDto accountDto) {
+    public void deleteAccount(@RequestBody AccountDto accountDto) {
         accountService.delete(accountDto);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<List<AccountDto>> getAllAccounts() {
-        List<AccountDto> accountDtos = accountService.getAll();
-        return ResponseEntity.ok(accountDtos);
+    public List<AccountDto> getAllAccounts() {
+        return accountService.getAll();
     }
 }

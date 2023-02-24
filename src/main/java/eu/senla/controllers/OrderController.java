@@ -20,50 +20,38 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public ResponseEntity<OrderDto> getOrderById(@PathVariable Integer id) {
-        OrderDto orderDto = orderService.getById(id);
-        if (orderDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(orderDto);
+    public OrderDto getOrderById(@PathVariable Integer id) {
+        return orderService.getById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public ResponseEntity<Void> createOrder(@RequestBody OrderDto orderDto) {
+    public void createOrder(@RequestBody OrderDto orderDto) {
         orderService.create(orderDto);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public ResponseEntity<OrderDto> updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) {
-        OrderDto updatedOrderDto = orderService.update(id, orderDto);
-        if (updatedOrderDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedOrderDto);
+    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) {
+        return orderService.update(id, orderDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> deleteOrderById(@PathVariable Integer id) {
+    public void deleteOrderById(@PathVariable Integer id) {
         orderService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> deleteOrder(@RequestBody OrderDto orderDto) {
+    public void deleteOrder(@RequestBody OrderDto orderDto) {
         orderService.delete(orderDto);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<List<OrderDto>> getAllOrders() {
-        List<OrderDto> orderDtos = orderService.getAll();
-        return ResponseEntity.ok(orderDtos);
+    public List<OrderDto> getAllOrders() {
+        return orderService.getAll();
     }
 }
 

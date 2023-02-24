@@ -19,49 +19,37 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public ResponseEntity<ItemDto> getItemById(@PathVariable Integer id) {
-        ItemDto itemDto = itemService.getById(id);
-        if (itemDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(itemDto);
+    public ItemDto getItemById(@PathVariable Integer id) {
+        return itemService.getById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> createItem(@RequestBody ItemDto itemDto) {
+    public void createItem(@RequestBody ItemDto itemDto) {
         itemService.create(itemDto);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<ItemDto> updateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
-        ItemDto updatedItemDto = itemService.update(id, itemDto);
-        if (updatedItemDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedItemDto);
+    public ItemDto updateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
+        return itemService.update(id, itemDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> deleteItemById(@PathVariable Integer id) {
+    public void deleteItemById(@PathVariable Integer id) {
         itemService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<Void> deleteItem(@RequestBody ItemDto itemDto) {
+    public void deleteItem(@RequestBody ItemDto itemDto) {
         itemService.delete(itemDto);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('read')")
-    public ResponseEntity<List<ItemDto>> getAllItems() {
-        List<ItemDto> itemDtos = itemService.getAll();
-        return ResponseEntity.ok(itemDtos);
+    public List<ItemDto> getAllItems() {
+        return itemService.getAll();
     }
 }

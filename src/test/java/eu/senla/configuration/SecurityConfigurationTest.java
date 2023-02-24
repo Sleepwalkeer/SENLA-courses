@@ -2,10 +2,8 @@ package eu.senla.configuration;
 
 
 import eu.senla.security.JwtConfigurer;
-import eu.senla.security.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,14 +22,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(proxyTargetClass = true)
-public class SecurityConfiguration {
+public class SecurityConfigurationTest {
 
     private final JwtConfigurer jwtConfigurer;
 
     private final UserDetailsService userDetailsService;
-
-    @Value("${password.strength}")
-    private final int passwordStrength;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -42,7 +37,6 @@ public class SecurityConfiguration {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -60,7 +54,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(passwordStrength);
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(12);
     }
 }
