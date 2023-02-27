@@ -2,6 +2,8 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.SecurityConfigurationTest;
+import eu.senla.configuration.ServletConfigurationTest;
 import eu.senla.entities.*;
 import jakarta.persistence.PersistenceException;
 import org.hibernate.LazyInitializationException;
@@ -11,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -18,7 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class})
+@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@WebAppConfiguration
 public class OrderDaoTest extends ContainersEnvironment {
     @Autowired
     OrderDao orderDao;
@@ -43,12 +47,16 @@ public class OrderDaoTest extends ContainersEnvironment {
     private void fillUpdateDummyData() {
         Account customer = Account.builder().firstName("orderDaoUpd").secondName("orderDaoUpd")
                 .phone("orderDaoUpd").email("orderDaoUpd")
-                .credentials(Credentials.builder().username("orderDaoUpd").password("orderDaoUpd").build()).build();
+                .credentials(Credentials.builder().username("orderDaoUpd").password("orderDaoUpd").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoUpd1").secondName("orderDaoUpd1")
                 .phone("orderDaoUpd1").email("orderDaoUpd1")
-                .credentials(Credentials.builder().username("orderDaoUpd1").password("orderDaoUpd1").build()).build();
+                .credentials(Credentials.builder().username("orderDaoUpd1").password("orderDaoUpd1").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer1);
 
         Category category = Category.builder().name("orderDaoUpd").build();
@@ -85,12 +93,16 @@ public class OrderDaoTest extends ContainersEnvironment {
     private void fillFindByIdDummyData() {
         Account customer = Account.builder().firstName("orderDaoFind").secondName("orderDaoFind")
                 .phone("orderDaoFind").email("orderDaoFind")
-                .credentials(Credentials.builder().username("orderDaoFind").password("orderDaoFind").build()).build();
+                .credentials(Credentials.builder().username("orderDaoFind").password("orderDaoFind").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoFind1").secondName("orderDaoFind1")
                 .phone("orderDaoFind1").email("orderDaoFind1")
-                .credentials(Credentials.builder().username("orderDaoFind1").password("orderDaoFind1").build()).build();
+                .credentials(Credentials.builder().username("orderDaoFind1").password("orderDaoFind1").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer1);
 
         Category category = Category.builder().name("orderDaoFind").build();
@@ -119,12 +131,16 @@ public class OrderDaoTest extends ContainersEnvironment {
     private void fillDeleteByIdDummyData() {
         Account customer = Account.builder().firstName("orderDaoDel").secondName("orderDaoDel")
                 .phone("orderDaoDel").email("orderDaoDel")
-                .credentials(Credentials.builder().username("orderDaoDel").password("orderDaoDel").build()).build();
+                .credentials(Credentials.builder().username("orderDaoDel").password("orderDaoDel").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoDel1").secondName("orderDaoDel1")
                 .phone("orderDaoDel1").email("orderDaoDel1")
-                .credentials(Credentials.builder().username("orderDaoDel1").password("orderDaoDel1").build()).build();
+                .credentials(Credentials.builder().username("orderDaoDel1").password("orderDaoDel1").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer1);
 
         Category category = Category.builder().name("orderDaoDel").build();
@@ -209,12 +225,16 @@ public class OrderDaoTest extends ContainersEnvironment {
     private void fillGetLazyDummyData() {
         Account customer = Account.builder().firstName("ordDaoLazy").secondName("ordDaoLazy")
                 .phone("ordDaoLazy").email("ordDaoLazy")
-                .credentials(Credentials.builder().username("ordDaoLazy").password("ordDaoLazy").build()).build();
+                .credentials(Credentials.builder().username("ordDaoLazy").password("ordDaoLazy").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer);
 
         Account customer1 = Account.builder().firstName("ordDaoLazy1").secondName("ordDaoLazy1")
                 .phone("ordDaoLazy1").email("ordDaoLazy1")
-                .credentials(Credentials.builder().username("ordDaoLazy1").password("ordDaoLazy1").build()).build();
+                .credentials(Credentials.builder().username("ordDaoLazy1").password("ordDaoLazy1").role(Role.USER)
+                        .build())
+                .build();
         accountDao.save(customer1);
 
         Category category = Category.builder().name("ordDaoLazy").build();

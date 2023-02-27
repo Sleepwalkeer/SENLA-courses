@@ -23,7 +23,10 @@ public class Credentials {
     @Column(name = "username", length = 30, nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", length = 30, nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
 }

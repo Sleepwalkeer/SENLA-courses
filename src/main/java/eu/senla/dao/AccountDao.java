@@ -13,6 +13,8 @@ public interface AccountDao {
 
     Account findByIdEager(Integer id);
 
+    Optional<Account> findByEmail(String email);
+
     Account update(Account account);
 
     void save(Account account);

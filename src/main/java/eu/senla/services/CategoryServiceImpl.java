@@ -6,9 +6,13 @@ import eu.senla.entities.Account;
 import eu.senla.entities.Category;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
+import eu.senla.exceptions.InsufficientPrivilegesException;
 import eu.senla.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,11 +32,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public void create(CategoryDto categoryDto) {
-        if (categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
-            throw new BadRequestException("Category name is required");
-        }
-        Category category = modelMapper.map(categoryDto, Category.class);
-        categoryDao.save(category);
+            if (categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
+                throw new BadRequestException("Category name is required");
+            }
+            Category category = modelMapper.map(categoryDto, Category.class);
+            categoryDao.save(category);
     }
 
     public CategoryDto update(Integer id, CategoryDto categoryDto) {

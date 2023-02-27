@@ -32,13 +32,13 @@ public class Config {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.test.url}")
     private String url;
 
-    @Value("${spring.datasource.username}")
+    @Value("${spring.datasource.test.username}")
     private String username;
 
-    @Value("${spring.datasource.password}")
+    @Value("${spring.datasource.test.password}")
     private String password;
 
     @Value("${spring.liquibase.change-log}")

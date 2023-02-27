@@ -2,6 +2,8 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.SecurityConfigurationTest;
+import eu.senla.configuration.ServletConfigurationTest;
 import eu.senla.entities.Category;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Assertions;
@@ -10,11 +12,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class})
+@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@WebAppConfiguration
 public class CategoryDaoTest extends ContainersEnvironment {
     @Autowired
     CategoryDao categoryDao;

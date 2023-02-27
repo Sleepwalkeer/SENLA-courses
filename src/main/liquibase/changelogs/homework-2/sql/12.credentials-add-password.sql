@@ -1,2 +1,2 @@
 ALTER TABLE credentials
-ADD COLUMN password varchar(30) NOT NULL;
+ADD COLUMN password varchar(255) NOT NULL;
