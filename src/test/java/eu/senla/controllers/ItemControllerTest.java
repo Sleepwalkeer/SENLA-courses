@@ -52,26 +52,26 @@ public class ItemControllerTest extends ContainersEnvironment {
         if (accountDao.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
                     .phone("+3758232734").email("kfgkzsf")
-                    .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+                    .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountDao.save(admin);
         }
         if (accountDao.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
                     .phone("+375823274").email("kfgkzsfdf")
-                    .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountDao.save(user2);
         }
         if (accountDao.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
                     .phone("+375823wer").email("kfgkzsddgd")
-                    .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountDao.save(user3);
         }
     }
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getItemByIdTest() throws Exception {
 
         fillGetItemByIdDummyData();
@@ -96,7 +96,7 @@ public class ItemControllerTest extends ContainersEnvironment {
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createItemTest() throws Exception {
         String dummyCategoryData = "{\"name\": \"createdata11\"}";
         this.mockMvc.perform(post("/categories")
@@ -112,7 +112,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void createItemWithUnauthorizedIdTest() throws Exception {
         String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\",\"price\":\"1\",\"quantity\":\"1\"}";
         this.mockMvc.perform(post("/items")
@@ -122,7 +122,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createInvalidItemTest() throws Exception {
         String requestBody = "{\"name\": \"\"}";
         this.mockMvc.perform(post("/items")
@@ -134,7 +134,7 @@ public class ItemControllerTest extends ContainersEnvironment {
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateItemTest() throws Exception {
         fillUpdateItemTestDummyData();
 
@@ -148,7 +148,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void updateItemWithUnauthorizedUserTest() throws Exception {
 
         fillUpdateItemTestDummyData();
@@ -172,7 +172,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateInvalidItemTest() throws Exception {
         String requestBody = "{\"category\":{\"id\":\"1000\"},\"name\":\"updateInvalidData\",\"price\":\"1\",\"quantity\":\"1\"}";
         this.mockMvc.perform(put("/items/{id}", 1000)
@@ -183,7 +183,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteItemByIdTest() throws Exception {
 
         fillDeleteItemByIdDummyData();
@@ -193,7 +193,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void deleteItemByIdWithUnauthorizedUserTest() throws Exception {
 
         fillDeleteItemByIdDummyData();
@@ -224,7 +224,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteItemByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/items/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -232,7 +232,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteItemTest() throws Exception {
 
         fillDeleteItemDummyData();
@@ -246,7 +246,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void deleteItemWithUnauthorizedUserTest() throws Exception {
 
         fillDeleteItemDummyData();
@@ -281,7 +281,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteInvalidItemTest() throws Exception {
 
         String deleteRequestBody = "{\"id\":\"10000\"}";
@@ -292,7 +292,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getAllItemsTest() throws Exception {
         fillGetAllItemsWithDummyData();
 

@@ -53,25 +53,25 @@ public class CategoryControllerTest extends ContainersEnvironment {
         if (accountDao.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
                     .phone("+3758232734").email("kfgkzsf")
-                    .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+                    .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountDao.save(admin);
         }
         if (accountDao.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
                     .phone("+375823274").email("kfgkzsfdf")
-                    .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountDao.save(user2);
         }
         if (accountDao.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
                     .phone("+375823wer").email("kfgkzsddgd")
-                    .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountDao.save(user3);
         }
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createCategoryTest() throws Exception {
         String requestBody = "{\"name\": \"create\"}";
         this.mockMvc.perform(post("/categories")
@@ -82,7 +82,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
 
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void createCategoryWithUnauthorizedUserTest() throws Exception {
         String requestBody = "{\"name\": \"create\"}";
         this.mockMvc.perform(post("/categories")
@@ -91,7 +91,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getCategoryByIdTest() throws Exception {
         String dummyData = "{\"name\": \"getByIdData\"}";
         this.mockMvc.perform(post("/categories")
@@ -105,7 +105,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createInvalidCategoryTest() throws Exception {
         String requestBody = "{\"name\": \"\"}";
         this.mockMvc.perform(post("/categories")
@@ -115,7 +115,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateCategoryTest() throws Exception {
         String dummyData = "{\"name\": \"updateData\"}";
         this.mockMvc.perform(post("/categories")
@@ -134,7 +134,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void updateCategoryWithUnauthorizedUserTest() throws Exception {
         String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
 
@@ -145,7 +145,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateInvalidCategoryTest() throws Exception {
         String updateRequestBody = "{\"id\":7000,\"name\":\"Electronics\"}";
 
@@ -157,7 +157,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteCategoryByIdTest() throws Exception {
 
         fillDeleteCategoryByIdDummyData();
@@ -182,17 +182,17 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void deleteCategoryByIdWithUnauthorizedUserTest() throws Exception {
 
         fillDeleteCategoryByIdDummyData();
-        mockMvc.perform(delete("/categories/{id}", 6))
+        mockMvc.perform(delete("/categories/{id}", 7))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteCategoryByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/categories/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -200,7 +200,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteCategoryTest() throws Exception {
         fillDeleteCategoryDummyData();
 
@@ -230,7 +230,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteInvalidCategoryTest() throws Exception {
 
         String deleteRequestBody = "{\"id\":100000000,\"name\":\"Apartments\"}";
@@ -241,7 +241,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getAllCategoriesTest() throws Exception {
         fillGetALlCategoriesDummyData();
         String dummyData = "{\"name\": \"getAllData\"}";

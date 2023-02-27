@@ -37,6 +37,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('write')")
     public void deleteCategoryById(@PathVariable Integer id) {
         categoryService.deleteById(id);
     }

@@ -52,25 +52,25 @@ public class OrderControllerTest extends ContainersEnvironment {
         if (accountDao.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
                     .phone("+3758232734").email("kfgkzsf")
-                    .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+                    .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountDao.save(admin);
         }
         if (accountDao.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
                     .phone("+375823274").email("kfgkzsfdf")
-                    .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountDao.save(user2);
         }
         if (accountDao.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
                     .phone("+375823wer").email("kfgkzsddgd")
-                    .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountDao.save(user3);
         }
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getOrderByIdTest() throws Exception {
         fillGetOrderByIdDummyData();
         this.mockMvc.perform(get("/orders/{id}", 1))
@@ -108,7 +108,7 @@ public class OrderControllerTest extends ContainersEnvironment {
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createOrderTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
@@ -120,7 +120,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void createOrderUnauthorizedIdTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
@@ -132,7 +132,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createInvalidOrderTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
@@ -144,7 +144,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateOrderTest() throws Exception {
         fillUpdateOrderDummyData();
         String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\",\"firstName\":\"updor\",\"secondName\":\"updord\",\"phone\":\"updor\"," +
@@ -190,7 +190,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void updateOrderWithUnauthorizedUserTest() throws Exception {
         fillUpdateOrderDummyData();
         String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\",\"firstName\":\"updor\",\"secondName\":\"updord\",\"phone\":\"updor\"," +
@@ -205,7 +205,7 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateInvalidOrderTest() throws Exception {
         String requestBody = "{\"id\": 25,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
@@ -217,7 +217,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteOrderByIdTest() throws Exception {
         fillDeleteOrderByIdDummyData();
         mockMvc.perform(delete("/orders/{id}", 4))
@@ -270,7 +270,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteOrderByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/orders/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -278,7 +278,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteOrderTest() throws Exception {
         fillDeleteOrderDummyData();
         String deleteRequestBody = "{\"id\":\"5\"}";
@@ -288,7 +288,7 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     private void fillDeleteOrderDummyData() throws Exception {
         String dummyAccountData = "{\"firstName\":\"delord\",\"secondName\":\"delord\",\"phone\":\"delord\",\"email\":\"delord\"," +
                 "\"credentials\":{ \"username\": \"delord\", \"password\": \"delord\" , \"role\" : \"USER\"  }}";
@@ -335,7 +335,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteInvalidOrderTest() throws Exception {
 
         String requestBody = "{\"id\": 150,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
@@ -348,7 +348,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getAllOrdersTest() throws Exception {
         fillGetAllOrderDummyData();
         mockMvc.perform(get("/orders"))

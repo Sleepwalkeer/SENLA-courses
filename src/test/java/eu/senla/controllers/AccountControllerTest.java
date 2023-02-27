@@ -52,19 +52,19 @@ public class AccountControllerTest extends ContainersEnvironment {
         if (accountDao.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
                     .phone("+3758232734").email("kfgkzsf")
-                    .credentials(Credentials.builder().username("Sleepwalker").password("escapism").role(Role.ADMIN).build()).build();
+                    .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountDao.save(admin);
         }
         if (accountDao.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
                     .phone("+375823274").email("kfgkzsfdf")
-                    .credentials(Credentials.builder().username("Sleepwalker2").password("escapism2").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountDao.save(user2);
         }
         if (accountDao.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
                     .phone("+375823wer").email("kfgkzsddgd")
-                    .credentials(Credentials.builder().username("Sleepwalker3").password("escapism3").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountDao.save(user3);
         }
         if (accountDao.findByEmail("updaccAuth1").isEmpty()) {
@@ -82,7 +82,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getAccountByIdTest() throws Exception {
         int credentialsId = 1;
         this.mockMvc.perform(get("/accounts/{id}", credentialsId))
@@ -91,14 +91,14 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void getAccountByUnauthorizedIdTest() throws Exception {
         this.mockMvc.perform(get("/accounts/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
-    @WithUserDetails("Sleepwalker3")
+    @WithUserDetails("User3")
     public void getAccountByAuthorizedIdTest() throws Exception {
         this.mockMvc.perform(get("/accounts/{id}", 3))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -106,7 +106,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void CreateAccountTest() throws Exception {
         String requestBody = "{\"firstName\":\"Mallory\",\"secondName\":\"Cyber\",\"phone\":\"113\",\"email\":\"113\"" +
                 ",\"credentials\":{ \"username\": \"Mallory\", \"password\": \"ultrasuperpass\" , \"role\" : \"USER\" }}";
@@ -118,7 +118,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void createInvalidAccountTest() throws Exception {
         String requestBody = "{\"secondName\":\"Cyber\",\"phone\":\"113\",\"email\":\"113\"" +
                 ",\"credentials\":{ \"username\": \"Mallory\", \"password\": \"ultrasuerpass\" }}";
@@ -129,7 +129,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateAccountTest() throws Exception {
         fillUpdateAccountDummyData();
 
@@ -152,7 +152,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker2")
+    @WithUserDetails("User2")
     public void updateAccountByUnauthorizedUserTest() throws Exception {
         String requestBody = "{\"id\":\"4\",\"firstName\":\"updaccnew\",\"secondName\":\"updaccnew\",\"phone\":\"updaccnew\"," +
                 "\"email\":\"updaccnew\",\"credentials\":{\"id\":\"4\", \"username\": \"updaccnew\"," +
@@ -183,7 +183,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void updateInvalidAccountTest() throws Exception {
         String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\",\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"100000\"}}";
 
@@ -194,7 +194,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteAccountByIdTest() throws Exception {
         fillDeleteAccountByIdDummyData();
         mockMvc.perform(delete("/accounts/{id}", 6))
@@ -229,7 +229,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteAccountByInvalidIdTest() throws Exception {
         mockMvc.perform(delete("/accounts/{id}", 500000)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -237,7 +237,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteAccountTest() throws Exception {
         fillDeleteAccountDummyData();
         Account account = accountDao.findByEmail("deleteacc22").get();
@@ -269,7 +269,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void deleteInvalidAccountTest() throws Exception {
         String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\"," +
                 "\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"100000\"}}";
@@ -281,7 +281,7 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     @Test
-    @WithUserDetails("Sleepwalker")
+    @WithUserDetails("Admin")
     public void getAllAccountsTest() throws Exception {
         mockMvc.perform(get("/accounts"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
