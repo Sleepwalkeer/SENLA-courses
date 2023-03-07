@@ -14,10 +14,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
-import java.util.Properties;
 
 @EnableTransactionManagement
-@EnableJpaRepositories("eu.senla.dao")
+@EnableJpaRepositories("eu.senla.repository")
 @Configuration
 @ComponentScan(
         basePackages = {"eu.senla"},

@@ -1,6 +1,6 @@
 package eu.senla.security;
 
-import eu.senla.exceptions.JwtAuthenticationException;
+import eu.senla.exception.JwtAuthenticationException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,6 +18,7 @@ import java.io.IOException;
 public class JwtTokenFilter extends GenericFilterBean implements Filter {
     private final JwtTokenProvider jwtTokenProvider;
 
+
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
@@ -34,6 +35,6 @@ public class JwtTokenFilter extends GenericFilterBean implements Filter {
             ((HttpServletResponse) servletResponse).sendError(e.getHttpStatus().value());
             throw new JwtAuthenticationException("JWT token is invalid or expired", HttpStatus.UNAUTHORIZED);
         }
-        filterChain.doFilter(servletRequest,servletResponse);
-        }
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
 }

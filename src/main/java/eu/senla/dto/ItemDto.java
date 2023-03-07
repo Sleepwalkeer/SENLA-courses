@@ -9,8 +9,8 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 @AllArgsConstructor
-@ToString
 @NoArgsConstructor
+@ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ItemDto {
 

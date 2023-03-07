@@ -1,6 +1,6 @@
 package eu.senla.dto;
 
-import eu.senla.entities.Role;
+import eu.senla.entity.Role;
 import lombok.*;
 
 @Getter

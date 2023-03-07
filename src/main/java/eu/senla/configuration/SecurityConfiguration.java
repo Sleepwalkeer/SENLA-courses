@@ -2,7 +2,6 @@ package eu.senla.configuration;
 
 
 import eu.senla.security.JwtConfigurer;
-import eu.senla.security.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +31,7 @@ public class SecurityConfiguration {
 
     @Value("${password.strength}")
     private int passwordStrength;
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

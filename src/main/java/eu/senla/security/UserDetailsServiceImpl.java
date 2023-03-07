@@ -1,7 +1,7 @@
 package eu.senla.security;
 
-import eu.senla.dao.CredentialsDao;
-import eu.senla.entities.Credentials;
+import eu.senla.repository.CredentialsRepository;
+import eu.senla.entity.Credentials;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+    private CredentialsRepository credentialsRepository;
 
-    private  CredentialsDao credentialsDao;
 
     @Autowired
-    public UserDetailsServiceImpl(CredentialsDao credentialsDao) {
-        this.credentialsDao = credentialsDao;
+    public UserDetailsServiceImpl(CredentialsRepository credentialsRepository) {
+        this.credentialsRepository = credentialsRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Credentials credentials = credentialsDao.findByUsername(username)
+        Credentials credentials = credentialsRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-       return SecurityUser.fromCredentials(credentials);
+        return SecurityUser.fromCredentials(credentials);
     }
 }

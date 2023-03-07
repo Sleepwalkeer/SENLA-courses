@@ -17,9 +17,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @EnableTransactionManagement
-@EnableJpaRepositories("eu.senla.dao")
+@EnableJpaRepositories("eu.senla.repository")
 @Configuration
-@ComponentScan( basePackages = {"eu.senla"})
+@ComponentScan(basePackages = {"eu.senla"})
 @PropertySource("classpath:application.properties")
 public class ContextConfiguration {
 

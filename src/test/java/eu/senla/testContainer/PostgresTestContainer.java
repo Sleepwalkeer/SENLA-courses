@@ -6,6 +6,7 @@ public class PostgresTestContainer extends PostgreSQLContainer<PostgresTestConta
     private static final String DOCKER_IMAGE = "postgres:latest";
     private static final String DATABASE_NAME = "TestDb";
     private static PostgresTestContainer container;
+
     private PostgresTestContainer() {
         super(DOCKER_IMAGE);
     }
@@ -28,6 +29,5 @@ public class PostgresTestContainer extends PostgreSQLContainer<PostgresTestConta
 
     @Override
     public void stop() {
-
     }
 }

@@ -1,6 +1,6 @@
 package eu.senla.security;
 
-import eu.senla.exceptions.JwtAuthenticationException;
+import eu.senla.exception.JwtAuthenticationException;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +21,12 @@ import java.util.Date;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class JwtTokenProvider {
-
     private final UserDetailsService userDetailsService;
 
     @Value("${jwt.header}")
     private String authorizationHeader;
     @Value("${jwt.secret}")
     private String secretKey;
-
     @Value("${jwt.expiration}")
     private Long validityInMillis;
 
@@ -41,7 +39,7 @@ public class JwtTokenProvider {
     public String createToken(String username, String role, Long id) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
-        claims.put("id",id);
+        claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMillis);
 
@@ -65,14 +63,14 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        return  new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request){
-        return  request.getHeader(authorizationHeader);
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader(authorizationHeader);
     }
 }

@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 @Configuration
 @ComponentScan(
-        basePackages = {"eu.senla.controllers"},
+        basePackages = {"eu.senla.controller"},
         excludeFilters = {
                 @ComponentScan.Filter(
                         type = FilterType.REGEX,
