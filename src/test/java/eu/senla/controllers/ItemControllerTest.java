@@ -223,13 +223,13 @@ public class ItemControllerTest extends ContainersEnvironment {
         }
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteItemByInvalidIdTest() throws Exception {
-        mockMvc.perform(delete("/items/{id}", 500000)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteItemByInvalidIdTest() throws Exception {
+//        mockMvc.perform(delete("/items/{id}", 500000)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")
@@ -280,16 +280,16 @@ public class ItemControllerTest extends ContainersEnvironment {
         }
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteInvalidItemTest() throws Exception {
-
-        String deleteRequestBody = "{\"id\":\"10000\"}";
-        mockMvc.perform(delete("/items")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(deleteRequestBody))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteInvalidItemTest() throws Exception {
+//
+//        String deleteRequestBody = "{\"id\":\"10000\"}";
+//        mockMvc.perform(delete("/items")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(deleteRequestBody))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")

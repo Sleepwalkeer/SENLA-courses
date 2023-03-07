@@ -16,7 +16,7 @@ import java.util.List;
 public class OrderDto {
 
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
     private AccountDto customer;
     private AccountDto worker;
     private List<ItemDto> itemList;

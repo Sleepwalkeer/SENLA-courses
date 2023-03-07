@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -29,13 +30,13 @@ public class AccountDaoTest extends ContainersEnvironment {
     @Test
     public void findyByIdTest() {
         fillFindByIdDummyData();
-        Account account = Account.builder().id(1).firstName("Mallory").secondName("Kay")
+        Account account = Account.builder().id(1L).firstName("Mallory").secondName("Kay")
                 .phone("+375298201846").email("malory.kay.p@gmail.com")
                 .credentials(Credentials.builder().username("MalloryKayP").password("kz25bj2jk23r").role(Role.USER)
                         .build())
                 .build();
 
-        Optional<Account> accountFromDb = accountDao.findById(1);
+        Optional<Account> accountFromDb = accountDao.findById(1L);
         Assertions.assertEquals(account, accountFromDb.get());
     }
 
@@ -56,7 +57,7 @@ public class AccountDaoTest extends ContainersEnvironment {
         account.setPhone("+88005553535");
         account.setEmail("TestEmail");
 
-        Account accountFromDb = accountDao.update(account);
+        Account accountFromDb = accountDao.save(account);
 
         Assertions.assertEquals(account.getPhone(), accountFromDb.getPhone());
         Assertions.assertEquals(account.getEmail(), accountFromDb.getEmail());
@@ -74,7 +75,7 @@ public class AccountDaoTest extends ContainersEnvironment {
     @Test
     public void deleteByIdTest() {
         fillDeleteByIdDummyData();
-        int deleteId = accountDao.findByEmail("testDaoAcc1").get().getId();
+        Long deleteId = accountDao.findByEmail("testDaoAcc7").get().getId();
         accountDao.deleteById(deleteId);
         Assertions.assertFalse(accountDao.findById(deleteId).isPresent());
     }
@@ -116,6 +117,12 @@ public class AccountDaoTest extends ContainersEnvironment {
                 .credentials(Credentials.builder().username("testDaoAcc6").password("testDaoAcc6").role(Role.USER).build())
                 .build();
         accountDao.save(testDaoAcc6);
+
+        Account testDaoAcc7 = Account.builder().firstName("testDaoAcc7").secondName("testDaoAcc7")
+                .phone("testDaoAcc7").email("testDaoAcc7")
+                .credentials(Credentials.builder().username("testDaoAcc7").password("testDaoAcc7").role(Role.USER).build())
+                .build();
+        accountDao.save(testDaoAcc7);
     }
 
     @Test
@@ -124,13 +131,13 @@ public class AccountDaoTest extends ContainersEnvironment {
                 .phone("+375298201846").credentials(Credentials.builder().password("kz25bj2jk23r").role(Role.USER).build())
                 .build();
         account.setPhone("+88005553535");
-        Assertions.assertThrows(PersistenceException.class, () -> accountDao.save(account));
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> accountDao.save(account));
         System.out.println();
     }
 
     @Test
     public void getLazyAccociationsWithoutTransactionalTest() {
-        Credentials credentials = accountDao.findById(1).get().getCredentials();
+        Credentials credentials = accountDao.findById(1L).get().getCredentials();
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(credentials));
     }
 

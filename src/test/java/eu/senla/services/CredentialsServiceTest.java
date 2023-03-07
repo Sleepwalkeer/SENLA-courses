@@ -38,10 +38,10 @@ public class CredentialsServiceTest {
 
     @Test
     public void createTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
 
-        doNothing().when(credentialsDao).save(credentials);
+        when(credentialsDao.save(credentials)).thenReturn(credentials);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
         credentialsService.create(credentialsDto);
@@ -51,116 +51,94 @@ public class CredentialsServiceTest {
 
     @Test
     public void createWithInvalidDataTest() {
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).build();
         Assertions.assertThrows(BadRequestException.class, () -> credentialsService.create(credentialsDto));
     }
 
     @Test
     public void getByIdTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
 
-        when(credentialsDao.findById(1)).thenReturn(Optional.ofNullable(credentials));
+        when(credentialsDao.findById(1L)).thenReturn(Optional.ofNullable(credentials));
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
 
-        CredentialsDto credentialsDtoRetrieved = credentialsService.getById(1);
+        CredentialsDto credentialsDtoRetrieved = credentialsService.getById(1L);
 
-        verify(credentialsDao).findById(1);
+        verify(credentialsDao).findById(1L);
         Assertions.assertNotNull(credentialsDto);
         Assertions.assertEquals(credentialsDto, credentialsDtoRetrieved);
     }
 
     @Test
     public void getByInvalidIdTest() {
-        when(credentialsDao.findById(1)).thenReturn(Optional.empty());
+        when(credentialsDao.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.getById(1));
-        verify(credentialsDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.getById(1L));
+        verify(credentialsDao).findById(1L);
     }
 
     @Test
     public void updateTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
 
-        when(credentialsDao.update(credentials)).thenReturn(credentials);
-        when(credentialsDao.findById(1)).thenReturn(Optional.ofNullable(credentials));
+        when(credentialsDao.save(credentials)).thenReturn(credentials);
+        when(credentialsDao.findById(1L)).thenReturn(Optional.ofNullable(credentials));
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
-        CredentialsDto credentialsDtoRetrieved = credentialsService.update(1, credentialsDto);
+        CredentialsDto credentialsDtoRetrieved = credentialsService.update(1L, credentialsDto);
 
 
-        verify(credentialsDao).findById(1);
-        verify(credentialsDao).update(credentials);
+        verify(credentialsDao).findById(1L);
+        verify(credentialsDao).save(credentials);
         Assertions.assertEquals(credentialsDto, credentialsDtoRetrieved);
     }
 
     @Test
     public void updateNonExistentCredentialsTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
 
-        when(credentialsDao.update(credentials)).thenReturn(credentials);
-        when(credentialsDao.findById(1)).thenReturn(Optional.empty());
+        when(credentialsDao.save(credentials)).thenReturn(credentials);
+        when(credentialsDao.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
-        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.update(1, credentialsDto));
-        verify(credentialsDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.update(1L, credentialsDto));
+        verify(credentialsDao).findById(1L);
     }
 
 
     @Test
     public void deleteTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
-
-        when(credentialsDao.delete(credentials)).thenReturn(true);
+        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
+        doNothing().when(credentialsDao).delete(credentials);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
-
-        Assertions.assertTrue(credentialsService.delete(credentialsDto));
+        credentialsService.delete(credentialsDto);
         verify(credentialsDao).delete(credentials);
     }
 
-    @Test
-    public void deleteNonExistentCredentialsTest() {
-        Credentials credentials = Credentials.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1).password("test").username("test").build();
-
-        when(credentialsDao.delete(credentials)).thenReturn(false);
-        when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
-
-        Assertions.assertThrows(NotFoundException.class,()-> credentialsService.delete(credentialsDto));
-        verify(credentialsDao).delete(credentials);
-    }
 
     @Test
     public void deleteByIdTest() {
-        when(credentialsDao.deleteById(1)).thenReturn(true);
-
-        Assertions.assertTrue(credentialsService.deleteById(1));
-        verify(credentialsDao).deleteById(1);
-    }
-
-    @Test
-    public void deleteByNonExistentIdTest() {
-        when(credentialsDao.deleteById(1)).thenReturn(false);
-
-        Assertions.assertThrows(NotFoundException.class,()-> credentialsService.deleteById(1));
-        verify(credentialsDao).deleteById(1);
+        doNothing().when(credentialsDao).deleteById(1L);
+        credentialsService.deleteById(1L);
+        verify(credentialsDao).deleteById(1L);
     }
 
     @Test
     public void getAllTest() {
-        CredentialsDto credentialsDto1 = CredentialsDto.builder().id(1).password("test").username("test").build();
-        CredentialsDto credentialsDto2 = CredentialsDto.builder().id(2).password("tost").username("tost").build();
+        CredentialsDto credentialsDto1 = CredentialsDto.builder().id(1L).password("test").username("test").build();
+        CredentialsDto credentialsDto2 = CredentialsDto.builder().id(2L).password("tost").username("tost").build();
         List<CredentialsDto> credentialsDtos = new ArrayList<>();
         credentialsDtos.add(credentialsDto1);
         credentialsDtos.add(credentialsDto2);
 
-        Credentials credentials1 = Credentials.builder().id(1).password("test").username("test").build();
-        Credentials credentials2 = Credentials.builder().id(2).password("tost").username("tost").build();
+        Credentials credentials1 = Credentials.builder().id(1L).password("test").username("test").build();
+        Credentials credentials2 = Credentials.builder().id(2L).password("tost").username("tost").build();
         List<Credentials> credentialsList = new ArrayList<>();
         credentialsList.add(credentials1);
         credentialsList.add(credentials2);

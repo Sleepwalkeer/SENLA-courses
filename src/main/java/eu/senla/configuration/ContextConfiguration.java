@@ -5,6 +5,7 @@ import liquibase.integration.spring.SpringLiquibase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -16,9 +17,9 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @EnableTransactionManagement
+@EnableJpaRepositories("eu.senla.dao")
 @Configuration
-@ComponentScan(
-        basePackages = {"eu.senla"})
+@ComponentScan( basePackages = {"eu.senla"})
 @PropertySource("classpath:application.properties")
 public class ContextConfiguration {
 

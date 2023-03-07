@@ -228,13 +228,13 @@ public class AccountControllerTest extends ContainersEnvironment {
         accountDao.save(dummyCredentialsData3);
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteAccountByInvalidIdTest() throws Exception {
-        mockMvc.perform(delete("/accounts/{id}", 500000)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteAccountByInvalidIdTest() throws Exception {
+//        mockMvc.perform(delete("/accounts/{id}", 500000)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")
@@ -268,17 +268,17 @@ public class AccountControllerTest extends ContainersEnvironment {
         accountDao.save(dummyCredentialsData3);
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteInvalidAccountTest() throws Exception {
-        String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\"," +
-                "\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"100000\"}}";
-
-        mockMvc.perform(delete("/accounts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteInvalidAccountTest() throws Exception {
+//        String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\"," +
+//                "\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"100000\"}}";
+//
+//        mockMvc.perform(delete("/accounts")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")

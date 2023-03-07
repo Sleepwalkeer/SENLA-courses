@@ -11,13 +11,13 @@ public interface CategoryService {
 
     List<CategoryDto> getAll();
 
-    CategoryDto getById(Integer id);
+    CategoryDto getById(Long id);
 
     void create(CategoryDto categoryDto);
 
-    CategoryDto update(Integer id, CategoryDto categoryDto);
+    CategoryDto update(Long id, CategoryDto categoryDto);
 
-    boolean delete(CategoryDto categoryDto);
+    void delete(CategoryDto categoryDto);
 
-    boolean deleteById(Integer id);
+    void deleteById(Long id);
 }

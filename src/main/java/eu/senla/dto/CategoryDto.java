@@ -12,6 +12,6 @@ import lombok.*;
 public class CategoryDto {
 
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
     private String name;
 }

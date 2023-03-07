@@ -20,7 +20,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public AccountDto getAccountById(@PathVariable Integer id) {
+    public AccountDto getAccountById(@PathVariable Long id) {
         return accountService.getById(id);
     }
 
@@ -32,13 +32,13 @@ public class AccountController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public AccountDto updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
+    public AccountDto updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
         return accountService.update(id, accountDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public void deleteAccountById(@PathVariable Integer id) {
+    public void deleteAccountById(@PathVariable Long id) {
         accountService.deleteById(id);
     }
 

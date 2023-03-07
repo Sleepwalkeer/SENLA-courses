@@ -20,7 +20,7 @@ public class OrderController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public OrderDto getOrderById(@PathVariable Integer id) {
+    public OrderDto getOrderById(@PathVariable Long id) {
         return orderService.getById(id);
     }
 
@@ -32,13 +32,13 @@ public class OrderController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public OrderDto updateOrder(@PathVariable Integer id, @RequestBody OrderDto orderDto) {
+    public OrderDto updateOrder(@PathVariable Long id, @RequestBody OrderDto orderDto) {
         return orderService.update(id, orderDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public void deleteOrderById(@PathVariable Integer id) {
+    public void deleteOrderById(@PathVariable Long id) {
         orderService.deleteById(id);
     }
 

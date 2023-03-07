@@ -25,41 +25,34 @@ public class CategoryServiceImpl implements CategoryService {
     private final ModelMapper modelMapper;
 
 
-    public CategoryDto getById(Integer id) {
+    public CategoryDto getById(Long id) {
         Category category = categoryDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
         return modelMapper.map(category, CategoryDto.class);
     }
 
     public void create(CategoryDto categoryDto) {
-            if (categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
-                throw new BadRequestException("Category name is required");
-            }
-            Category category = modelMapper.map(categoryDto, Category.class);
-            categoryDao.save(category);
+        if (categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
+            throw new BadRequestException("Category name is required");
+        }
+        Category category = modelMapper.map(categoryDto, Category.class);
+        categoryDao.save(category);
     }
 
-    public CategoryDto update(Integer id, CategoryDto categoryDto) {
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
         Category category = categoryDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
         modelMapper.map(categoryDto, category);
-        Category updatedCategory = categoryDao.update(category);
+        Category updatedCategory = categoryDao.save(category);
         return modelMapper.map(updatedCategory, CategoryDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (categoryDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No category with ID " + id + " was found");
+    public void deleteById(Long id) {
+        categoryDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(CategoryDto categoryDto) {
-        if (categoryDao.delete(modelMapper.map(categoryDto, Category.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such category was found");
+    public void delete(CategoryDto categoryDto) {
+        categoryDao.delete(modelMapper.map(categoryDto, Category.class));
     }
 
     public List<CategoryDto> getAll() {

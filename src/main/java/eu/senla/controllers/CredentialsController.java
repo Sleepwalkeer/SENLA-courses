@@ -20,7 +20,7 @@ public class CredentialsController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public CredentialsDto getCredentialsById(@PathVariable Integer id) {
+    public CredentialsDto getCredentialsById(@PathVariable Long id) {
         return credentialsService.getById(id);
     }
 
@@ -32,13 +32,13 @@ public class CredentialsController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public CredentialsDto updateCredentials(@PathVariable Integer id, @RequestBody CredentialsDto credentialsDto) {
+    public CredentialsDto updateCredentials(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
         return credentialsService.update(id, credentialsDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public void deleteCredentialsById(@PathVariable Integer id) {
+    public void deleteCredentialsById(@PathVariable Long id) {
         credentialsService.deleteById(id);
     }
 

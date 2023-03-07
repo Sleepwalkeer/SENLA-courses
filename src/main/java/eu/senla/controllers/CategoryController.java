@@ -21,7 +21,7 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public CategoryDto getCategoryById(@PathVariable Integer id) {
+    public CategoryDto getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
@@ -32,13 +32,13 @@ public class CategoryController {
     }
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public CategoryDto updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public void deleteCategoryById(@PathVariable Integer id) {
+    public void deleteCategoryById(@PathVariable Long id) {
         categoryService.deleteById(id);
     }
 

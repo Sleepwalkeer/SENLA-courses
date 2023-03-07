@@ -11,13 +11,13 @@ public interface AccountService {
 
     List<AccountDto> getAll();
 
-    AccountDto getById(Integer id);
+    AccountDto getById(Long id);
 
     void create(AccountDto accountDto);
 
-    AccountDto update(Integer id, AccountDto accountDto);
+    AccountDto update(Long id, AccountDto accountDto);
 
-    boolean deleteById(Integer id);
+    void deleteById(Long id);
 
-    boolean delete(AccountDto accountDto);
+    void delete(AccountDto accountDto);
 }

@@ -41,12 +41,12 @@ public class ItemServiceTest {
 
     @Test
     public void createTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
 
-        doNothing().when(itemDao).save(item);
+        when(itemDao.save(item)).thenReturn(item);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
         itemService.create(itemDto);
@@ -63,123 +63,101 @@ public class ItemServiceTest {
 
     @Test
     public void getByIdTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
 
-        when(itemDao.findById(1)).thenReturn(Optional.ofNullable(item));
+        when(itemDao.findById(1L)).thenReturn(Optional.ofNullable(item));
         when(modelMapper.map(item, ItemDto.class)).thenReturn(itemDto);
 
-        ItemDto itemDtoRetrieved = itemService.getById(1);
+        ItemDto itemDtoRetrieved = itemService.getById(1L);
 
-        verify(itemDao).findById(1);
+        verify(itemDao).findById(1L);
         Assertions.assertNotNull(itemDto);
         Assertions.assertEquals(itemDto, itemDtoRetrieved);
     }
 
     @Test
     public void getByInvalidIdTest() {
-        when(itemDao.findById(1)).thenReturn(Optional.empty());
+        when(itemDao.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.getById(1));
-        verify(itemDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.getById(1L));
+        verify(itemDao).findById(1L);
     }
 
     @Test
     public void updateTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
 
-        when(itemDao.update(item)).thenReturn(item);
-        when(itemDao.findById(1)).thenReturn(Optional.ofNullable(item));
+        when(itemDao.save(item)).thenReturn(item);
+        when(itemDao.findById(1L)).thenReturn(Optional.ofNullable(item));
         when(modelMapper.map(item, ItemDto.class)).thenReturn(itemDto);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
-        ItemDto itemDtoRetrieved = itemService.update(1, itemDto);
+        ItemDto itemDtoRetrieved = itemService.update(1L, itemDto);
 
 
-        verify(itemDao).findById(1);
-        verify(itemDao).update(item);
+        verify(itemDao).findById(1L);
+        verify(itemDao).save(item);
         Assertions.assertEquals(itemDto, itemDtoRetrieved);
     }
 
     @Test
     public void updateNonExistentItemTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
 
-        when(itemDao.update(item)).thenReturn(item);
-        when(itemDao.findById(1)).thenReturn(Optional.empty());
+        when(itemDao.save(item)).thenReturn(item);
+        when(itemDao.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(item, ItemDto.class)).thenReturn(itemDto);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.update(1, itemDto));
-        verify(itemDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
+        verify(itemDao).findById(1L);
     }
 
 
     @Test
     public void deleteTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
 
-        when(itemDao.delete(item)).thenReturn(true);
+        doNothing().when(itemDao).delete(item);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
-
-        Assertions.assertTrue(itemService.delete(itemDto));
+        itemService.delete(itemDto);
         verify(itemDao).delete(item);
     }
 
-    @Test
-    public void deleteNonExistentItemTest() {
-        Item item = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
-                .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
-                .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-
-        when(itemDao.delete(item)).thenReturn(false);
-        when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
-
-        Assertions.assertThrows(NotFoundException.class,()-> itemService.delete(itemDto));
-        verify(itemDao).delete(item);
-    }
 
     @Test
     public void deleteByIdTest() {
-        when(itemDao.deleteById(1)).thenReturn(true);
-
-        Assertions.assertTrue(itemService.deleteById(1));
-        verify(itemDao).deleteById(1);
+        doNothing().when(itemDao).deleteById(1L);
+        itemService.deleteById(1L);
+        verify(itemDao).deleteById(1L);
     }
 
-    @Test
-    public void deleteByNonExistentIdTest() {
-        when(itemDao.deleteById(1)).thenReturn(false);
-
-        Assertions.assertThrows(NotFoundException.class,()-> itemService.deleteById(1));
-        verify(itemDao).deleteById(1);
-    }
 
     @Test
     public void getAllTest() {
-        ItemDto itemDto1 = ItemDto.builder().id(1).category(CategoryDto.builder().id(1).name("Construction Tools").build())
+        ItemDto itemDto1 = ItemDto.builder().id(1L).category(CategoryDto.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        ItemDto itemDto2 = ItemDto.builder().id(2).category(CategoryDto.builder().id(2).name("Luxury").build())
+        ItemDto itemDto2 = ItemDto.builder().id(2L).category(CategoryDto.builder().id(2L).name("Luxury").build())
                 .name("Porsche Cayenne").price(new BigDecimal(500)).quantity(1).build();
         List<ItemDto> itemDtos = new ArrayList<>();
         itemDtos.add(itemDto1);
         itemDtos.add(itemDto2);
 
-        Item item1 = Item.builder().id(1).category(Category.builder().id(1).name("Construction Tools").build())
+        Item item1 = Item.builder().id(1L).category(Category.builder().id(1L).name("Construction Tools").build())
                 .name("JackHammer").price(new BigDecimal(5)).quantity(3).build();
-        Item item2 = Item.builder().id(2).category(Category.builder().id(2).name("Luxury").build())
+        Item item2 = Item.builder().id(2L).category(Category.builder().id(2L).name("Luxury").build())
                 .name("Porsche Cayenne").price(new BigDecimal(500)).quantity(1).build();
         List<Item> categories = new ArrayList<>();
         categories.add(item1);

@@ -18,7 +18,7 @@ public class SecurityUser implements UserDetails {
     private final String password;
 
 
-    private final Integer id;
+    private final Long id;
     private final List<SimpleGrantedAuthority> authorities;
 
 
@@ -26,7 +26,7 @@ public class SecurityUser implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

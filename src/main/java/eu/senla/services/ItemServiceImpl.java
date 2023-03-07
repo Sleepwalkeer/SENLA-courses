@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
     private final ItemDao itemDao;
     private final ModelMapper modelMapper;
 
-    public ItemDto getById(Integer id) {
+    public ItemDto getById(Long id) {
         Item item = itemDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No item with ID " + id + " was found"));
         return modelMapper.map(item, ItemDto.class);
@@ -44,27 +44,20 @@ public class ItemServiceImpl implements ItemService {
         itemDao.save(item);
     }
 
-    public ItemDto update(Integer id, ItemDto itemDto) {
+    public ItemDto update(Long id, ItemDto itemDto) {
         Item item = itemDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No item with ID " + id + " was found"));
         modelMapper.map(itemDto, item);
-        Item updatedItem = itemDao.update(item);
+        Item updatedItem = itemDao.save(item);
         return modelMapper.map(updatedItem, ItemDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (itemDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No item with ID " + id + " was found");
+    public void deleteById(Long id) {
+        itemDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(ItemDto itemDto) {
-        if (itemDao.delete(modelMapper.map(itemDto, Item.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such item was found");
+    public void delete(ItemDto itemDto) {
+        itemDao.delete(modelMapper.map(itemDto, Item.class));
     }
 
     public List<ItemDto> getAll() {

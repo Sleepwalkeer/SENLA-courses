@@ -21,7 +21,7 @@ public class CredentialsServiceImpl implements CredentialsService {
     private final ModelMapper modelMapper;
 
 
-    public CredentialsDto getById(Integer id) {
+    public CredentialsDto getById(Long id) {
         Credentials credentials = credentialsDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No credentials with ID " + id + " was found"));
         return modelMapper.map(credentials, CredentialsDto.class);
@@ -38,27 +38,21 @@ public class CredentialsServiceImpl implements CredentialsService {
         credentialsDao.save(credentials);
     }
 
-    public CredentialsDto update(Integer id, CredentialsDto credentialsDto) {
+    public CredentialsDto update(Long id, CredentialsDto credentialsDto) {
         Credentials credentials = credentialsDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No credentials with ID " + id + " was found"));
         modelMapper.map(credentialsDto, credentials);
-        Credentials updatedCredentials = credentialsDao.update(credentials);
+        Credentials updatedCredentials = credentialsDao.save(credentials);
         return modelMapper.map(updatedCredentials, CredentialsDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (credentialsDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No credentials with ID " + id + " were found");
+    public void deleteById(Long id) {
+        credentialsDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(CredentialsDto credentialsDto) {
-        if (credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such credentials were found");
+
+    public void delete(CredentialsDto credentialsDto) {
+        credentialsDao.delete(modelMapper.map(credentialsDto, Credentials.class));
     }
 
     public List<CredentialsDto> getAll() {

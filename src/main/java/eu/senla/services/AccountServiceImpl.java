@@ -19,8 +19,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountDao accountDao;
     private final ModelMapper modelMapper;
 
-
-    public AccountDto getById(Integer id) {
+    //TODO разберись с тем будешь ли проверять на invalidIdDelete или нет
+    public AccountDto getById(Long id) {
         Account account = accountDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
         return modelMapper.map(account, AccountDto.class);
@@ -37,28 +37,24 @@ public class AccountServiceImpl implements AccountService {
         accountDao.save(account);
     }
 
-    public AccountDto update(Integer id, AccountDto accountDto) {
+    public AccountDto update(Long id, AccountDto accountDto) {
         Account account = accountDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
         modelMapper.map(accountDto, account);
-        Account updatedAccount = accountDao.update(account);
+        Account updatedAccount = accountDao.save(account);
         return modelMapper.map(updatedAccount, AccountDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (accountDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No account with ID " + id + " was found");
+    public void deleteById(Long id) {
+        accountDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(AccountDto accountDto) {
-        if (accountDao.delete(modelMapper.map(accountDto, Account.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such account was found");
+
+    public void delete(AccountDto accountDto) {
+        accountDao.delete(modelMapper.map(accountDto, Account.class));
+
     }
+
     public List<AccountDto> getAll() {
         try {
             List<Account> accounts = accountDao.findAll();

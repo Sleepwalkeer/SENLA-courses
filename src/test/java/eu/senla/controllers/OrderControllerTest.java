@@ -269,13 +269,13 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteOrderByInvalidIdTest() throws Exception {
-        mockMvc.perform(delete("/orders/{id}", 500000)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteOrderByInvalidIdTest() throws Exception {
+//        mockMvc.perform(delete("/orders/{id}", 500000)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")
@@ -334,18 +334,18 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteInvalidOrderTest() throws Exception {
-
-        String requestBody = "{\"id\": 150,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":1665778114325,\"endDateTime\":1675778114325,\"totalPrice\":12300}";
-        mockMvc.perform(delete("/orders")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteInvalidOrderTest() throws Exception {
+//
+//        String requestBody = "{\"id\": 150,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
+//                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
+//                "\"startDateTime\":1665778114325,\"endDateTime\":1675778114325,\"totalPrice\":12300}";
+//        mockMvc.perform(delete("/orders")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")

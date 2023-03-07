@@ -19,7 +19,7 @@ public class ItemController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public ItemDto getItemById(@PathVariable Integer id) {
+    public ItemDto getItemById(@PathVariable Long id) {
         return itemService.getById(id);
     }
 
@@ -31,13 +31,13 @@ public class ItemController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ItemDto updateItem(@PathVariable Integer id, @RequestBody ItemDto itemDto) {
+    public ItemDto updateItem(@PathVariable Long id, @RequestBody ItemDto itemDto) {
         return itemService.update(id, itemDto);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public void deleteItemById(@PathVariable Integer id) {
+    public void deleteItemById(@PathVariable Long id) {
         itemService.deleteById(id);
     }
 

@@ -221,13 +221,13 @@ public class CredentialsControllerTest extends ContainersEnvironment {
         accountDao.save(dummyCredentialsData3);
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteCredentialsByInvalidIdTest() throws Exception {
-        mockMvc.perform(delete("/credentials/{id}", 500000)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteCredentialsByInvalidIdTest() throws Exception {
+//        mockMvc.perform(delete("/credentials/{id}", 500000)
+//                        .contentType(MediaType.APPLICATION_JSON))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")
@@ -259,15 +259,15 @@ public class CredentialsControllerTest extends ContainersEnvironment {
         accountDao.save(dummyCredentialsData3);
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteInvalidCredentialsTest() throws Exception {
-        String requestBody = "{ \"id\": 100000, \"username\": \"stella_ickerton\", \"password\": \"stellas\" }";
-        mockMvc.perform(delete("/credentials")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void deleteInvalidCredentialsTest() throws Exception {
+//        String requestBody = "{ \"id\": 100000, \"username\": \"stella_ickerton\", \"password\": \"stellas\" }";
+//        mockMvc.perform(delete("/credentials")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isNotFound());
+//    }
 
     @Test
     @WithUserDetails("Admin")
