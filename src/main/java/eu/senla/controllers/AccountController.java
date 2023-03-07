@@ -5,6 +5,7 @@ import eu.senla.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,50 +16,41 @@ import java.util.List;
 @RequestMapping("/accounts")
 public class AccountController {
     private final AccountService accountService;
-    // private final ObjectMapper objectMapper;
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
-        AccountDto accountDto = accountService.getById(id);
-        return ResponseEntity.ok(accountDto);
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
+    public AccountDto getAccountById(@PathVariable Long id) {
+        return accountService.getById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Void> createAccount(@RequestBody AccountDto accountDto) {
+    @PreAuthorize("hasAuthority('write')")
+    public void createAccount(@RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
-        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @RequestBody AccountDto accountDto) {
-        AccountDto updatedAccountDto = accountService.update(id, accountDto);
-        if (updatedAccountDto == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updatedAccountDto);
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
+    public AccountDto updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
+        return accountService.update(id, accountDto);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteAccountById(@PathVariable Integer id) {
+    @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
+    public void deleteAccountById(@PathVariable Long id) {
         accountService.deleteById(id);
-        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteAccount(@RequestBody AccountDto accountDto) {
+    @PreAuthorize("hasAuthority('write')|| #accountDto.id == authentication.principal.id")
+    public void deleteAccount(@RequestBody AccountDto accountDto) {
         accountService.delete(accountDto);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDto>> getAllAccounts() {
-        List<AccountDto> accountDtos = accountService.getAll();
-        return ResponseEntity.ok(accountDtos);
-    }
-
-    @GetMapping("/hello")
-    public String HelloWorld() {
-        return "Hello World";
+    @PreAuthorize("hasAuthority('write')")
+    public List<AccountDto> getAllAccounts() {
+        return accountService.getAll();
     }
 }

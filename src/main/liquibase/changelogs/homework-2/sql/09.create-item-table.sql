@@ -1,3 +1,3 @@
 CREATE TABLE item (
-     id serial primary key
+     id bigserial primary key
 );

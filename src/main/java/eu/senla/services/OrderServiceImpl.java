@@ -20,7 +20,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderDao orderDao;
     private final ModelMapper modelMapper;
 
-    public OrderDto getById(Integer id) {
+    public OrderDto getById(Long id) {
         Order order = orderDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
         return modelMapper.map(order, OrderDto.class);
@@ -37,27 +37,20 @@ public class OrderServiceImpl implements OrderService {
         orderDao.save(order);
     }
 
-    public OrderDto update(Integer id, OrderDto orderDto) {
+    public OrderDto update(Long id, OrderDto orderDto) {
         Order order = orderDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
         modelMapper.map(orderDto, order);
-        Order updatedOrder = orderDao.update(order);
+        Order updatedOrder = orderDao.save(order);
         return modelMapper.map(updatedOrder, OrderDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (orderDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No order with ID " + id + " was found");
+    public void deleteById(Long id) {
+        orderDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(OrderDto orderDto) {
-        if (orderDao.delete(modelMapper.map(orderDto, Order.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such order was found");
+    public void delete(OrderDto orderDto) {
+        orderDao.delete(modelMapper.map(orderDto, Order.class));
     }
 
     public List<OrderDto> getAll() {

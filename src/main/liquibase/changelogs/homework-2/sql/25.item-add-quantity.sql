@@ -1,2 +1,2 @@
 ALTER TABLE item
-ADD COLUMN quantity smallint NOT NULL;
+ADD COLUMN quantity int NOT NULL;

@@ -6,9 +6,13 @@ import eu.senla.entities.Account;
 import eu.senla.entities.Category;
 import eu.senla.exceptions.BadRequestException;
 import eu.senla.exceptions.DatabaseAccessException;
+import eu.senla.exceptions.InsufficientPrivilegesException;
 import eu.senla.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final ModelMapper modelMapper;
 
 
-    public CategoryDto getById(Integer id) {
+    public CategoryDto getById(Long id) {
         Category category = categoryDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
         return modelMapper.map(category, CategoryDto.class);
@@ -35,27 +39,20 @@ public class CategoryServiceImpl implements CategoryService {
         categoryDao.save(category);
     }
 
-    public CategoryDto update(Integer id, CategoryDto categoryDto) {
+    public CategoryDto update(Long id, CategoryDto categoryDto) {
         Category category = categoryDao.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
         modelMapper.map(categoryDto, category);
-        Category updatedCategory = categoryDao.update(category);
+        Category updatedCategory = categoryDao.save(category);
         return modelMapper.map(updatedCategory, CategoryDto.class);
     }
 
-    public boolean deleteById(Integer id) {
-        if (categoryDao.deleteById(id)){
-            return true;
-        }
-        else throw new NotFoundException("No category with ID " + id + " was found");
+    public void deleteById(Long id) {
+        categoryDao.deleteById(id);
     }
 
-    @Override
-    public boolean delete(CategoryDto categoryDto) {
-        if (categoryDao.delete(modelMapper.map(categoryDto, Category.class))){
-            return true;
-        }
-        else throw new NotFoundException("No such category was found");
+    public void delete(CategoryDto categoryDto) {
+        categoryDao.delete(modelMapper.map(categoryDto, Category.class));
     }
 
     public List<CategoryDto> getAll() {

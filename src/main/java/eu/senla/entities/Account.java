@@ -18,7 +18,7 @@ public class Account {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "first_name", length = 25, nullable = false)
     private String firstName;

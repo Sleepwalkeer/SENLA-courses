@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,12 +43,12 @@ public class AccountServiceTest {
 
     @Test
     public void createTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
+        Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
 
-        doNothing().when(accountDao).save(account);
+        when(accountDao.save(account)).thenReturn(account);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
         accountService.create(accountDto);
@@ -57,130 +58,105 @@ public class AccountServiceTest {
 
     @Test
     public void createWithInvalidDataTest() {
-        AccountDto accountDto = AccountDto.builder().id(1).firstName("Bill").secondName("Stark").build();
+        AccountDto accountDto = AccountDto.builder().id(1L).firstName("Bill").secondName("Stark").build();
         Assertions.assertThrows(BadRequestException.class, () -> accountService.create(accountDto));
     }
 
     @Test
     public void getByIdTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
+        Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
 
-        when(accountDao.findById(1)).thenReturn(Optional.ofNullable(account));
+        when(accountDao.findById(1L)).thenReturn(Optional.ofNullable(account));
         when(modelMapper.map(account, AccountDto.class)).thenReturn(accountDto);
 
-        AccountDto accountDtoRetrieved = accountService.getById(1);
+        AccountDto accountDtoRetrieved = accountService.getById(1L);
 
-        verify(accountDao).findById(1);
+        verify(accountDao).findById(1L);
         Assertions.assertNotNull(accountDto);
         Assertions.assertEquals(accountDto, accountDtoRetrieved);
     }
 
     @Test
     public void getByInvalidIdTest() {
-        when(accountDao.findById(1)).thenReturn(Optional.empty());
+        when(accountDao.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountService.getById(1));
-        verify(accountDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> accountService.getById(1L));
+        verify(accountDao).findById(1L);
     }
 
     @Test
     public void updateTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
+        Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
 
-        when(accountDao.update(account)).thenReturn(account);
-        when(accountDao.findById(1)).thenReturn(Optional.ofNullable(account));
+        when(accountDao.save(account)).thenReturn(account);
+        when(accountDao.findById(1L)).thenReturn(Optional.ofNullable(account));
         when(modelMapper.map(account, AccountDto.class)).thenReturn(accountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
-        AccountDto accountDtoRetrieved = accountService.update(1, accountDto);
+        AccountDto accountDtoRetrieved = accountService.update(1L, accountDto);
 
 
-        verify(accountDao).findById(1);
-        verify(accountDao).update(account);
+        verify(accountDao).findById(1L);
+        verify(accountDao).save(account);
         Assertions.assertEquals(accountDto, accountDtoRetrieved);
     }
 
     @Test
     public void updateNonExistentAccountTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
+        Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
 
-        when(accountDao.update(account)).thenReturn(account);
-        when(accountDao.findById(1)).thenReturn(Optional.empty());
+        when(accountDao.save(account)).thenReturn(account);
+        when(accountDao.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(account, AccountDto.class)).thenReturn(accountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
-        Assertions.assertThrows(NotFoundException.class, () -> accountService.update(1, accountDto));
-        verify(accountDao).findById(1);
+        Assertions.assertThrows(NotFoundException.class, () -> accountService.update(1L, accountDto));
+        verify(accountDao).findById(1L);
     }
 
 
     @Test
     public void deleteTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
+        Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
 
-        when(accountDao.delete(account)).thenReturn(true);
+        doNothing().when(accountDao).delete(account);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
-        Assertions.assertTrue(accountService.delete(accountDto));
+        accountService.delete(accountDto);
         verify(accountDao).delete(account);
     }
 
     @Test
-    public void deleteNonExistentAccountTest() {
-        Account account = Account.builder().id(1).credentials(Credentials.builder().password("test").username("test").build())
-                .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-        AccountDto accountDto = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("test").username("test").build())
-                .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
-
-        when(accountDao.delete(account)).thenReturn(false);
-        when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
-
-        Assertions.assertThrows(NotFoundException.class,()-> accountService.delete(accountDto));
-        verify(accountDao).delete(account);
-    }
-
-    @Test
-    @Transactional
     public void deleteByIdTest() {
-        when(accountDao.deleteById(1)).thenReturn(true);
-
-        Assertions.assertTrue(accountService.deleteById(1));
-        verify(accountDao).deleteById(1);
+        doNothing().when(accountDao).deleteById(1L);
+        accountService.deleteById(1L);
+        verify(accountDao).deleteById(1L);
     }
-
-    @Test
-    public void deleteByNonExistentIdTest() {
-        when(accountDao.deleteById(1)).thenReturn(false);
-
-        Assertions.assertThrows(NotFoundException.class,()-> accountService.deleteById(1));
-        verify(accountDao).deleteById(1);
-    }
-
     @Test
     public void getAllTest() {
-        AccountDto accountDto1 = AccountDto.builder().id(1).credentials(CredentialsDto.builder().password("tost").username("tost").build())
+        AccountDto accountDto1 = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("tost").username("tost").build())
                 .email("blablacar@gmail.com").phone("+375331234").firstName("Billy").secondName("StarkWall").build();
-        AccountDto accountDto2 = AccountDto.builder().id(2).credentials(CredentialsDto.builder().password("test").username("test").build())
+        AccountDto accountDto2 = AccountDto.builder().id(2L).credentials(CredentialsDto.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
         List<AccountDto> accountDtos = new ArrayList<>();
         accountDtos.add(accountDto1);
         accountDtos.add(accountDto2);
 
-        Account account1 = Account.builder().id(1).credentials(Credentials.builder().password("tost").username("tost").build())
+        Account account1 = Account.builder().id(1L).credentials(Credentials.builder().password("tost").username("tost").build())
                 .email("blablacar@gmail.com").phone("+375331234").firstName("Billy").secondName("StarkWall").build();
-        Account account2 = Account.builder().id(2).credentials(Credentials.builder().password("test").username("test").build())
+        Account account2 = Account.builder().id(2L).credentials(Credentials.builder().password("test").username("test").build())
                 .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
         List<Account> accounts = new ArrayList<>();
         accounts.add(account1);

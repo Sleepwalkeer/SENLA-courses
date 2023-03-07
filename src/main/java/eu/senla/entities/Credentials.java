@@ -17,13 +17,15 @@ public class Credentials {
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    private Long id;
 
     @Column(name = "username", length = 30, nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", length = 30, nullable = false)
+    @Column(name = "password", length = 255, nullable = false)
     private String password;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
 }

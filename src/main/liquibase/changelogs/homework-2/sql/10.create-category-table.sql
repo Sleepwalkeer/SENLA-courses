@@ -1,3 +1,3 @@
 CREATE TABLE category (
-     id serial primary key
+     id bigserial primary key
 );

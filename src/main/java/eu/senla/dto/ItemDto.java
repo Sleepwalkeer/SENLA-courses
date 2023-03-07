@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 public class ItemDto {
 
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
     private CategoryDto category;
     private String name;
     private BigDecimal price;

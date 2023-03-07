@@ -1,22 +1,24 @@
 package eu.senla.services;
 
 import eu.senla.dto.OrderDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Transactional
 public interface OrderService {
+
     List<OrderDto> getAll();
 
-    OrderDto getById(Integer id);
+    OrderDto getById(Long id);
 
     void create(OrderDto orderDto);
 
-    OrderDto update(Integer id, OrderDto orderDto);
+    OrderDto update(Long id, OrderDto orderDto);
 
-    boolean delete(OrderDto orderDto);
+    void delete(OrderDto orderDto);
 
-    boolean deleteById(Integer id);
+    void deleteById(Long id);
 
 }

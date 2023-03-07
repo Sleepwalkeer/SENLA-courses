@@ -2,19 +2,24 @@ package eu.senla.dao;
 
 import eu.senla.configuration.Config;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.SecurityConfigurationTest;
+import eu.senla.configuration.ServletConfigurationTest;
 import eu.senla.entities.Category;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class})
+@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@WebAppConfiguration
 public class CategoryDaoTest extends ContainersEnvironment {
     @Autowired
     CategoryDao categoryDao;
@@ -23,9 +28,9 @@ public class CategoryDaoTest extends ContainersEnvironment {
     @Test
     public void findyByIdTest() {
         fillFindByIdDummyData();
-        Category category = Category.builder().id(1).build();
+        Category category = Category.builder().id(1L).build();
 
-        Optional<Category> categoryFromDb = categoryDao.findById(1);
+        Optional<Category> categoryFromDb = categoryDao.findById(1L);
         Assertions.assertEquals(category.getId(), categoryFromDb.get().getId());
     }
     private void fillFindByIdDummyData() {
@@ -35,8 +40,8 @@ public class CategoryDaoTest extends ContainersEnvironment {
 
     @Test
     public void updateTest() {
-        Category category = Category.builder().id(1).name("updatedNewestVersion").build();
-        Category categoryFromDb = categoryDao.update(category);
+        Category category = Category.builder().id(1L).name("updatedNewestVersion").build();
+        Category categoryFromDb = categoryDao.save(category);
         Assertions.assertEquals(category.getName(), categoryFromDb.getName());
     }
 
@@ -48,19 +53,19 @@ public class CategoryDaoTest extends ContainersEnvironment {
     @Test
     public void deleteByIdTest() {
         fillDeleteByIdDummyData();
-        categoryDao.deleteById(4);
-        Assertions.assertFalse(categoryDao.findById(4).isPresent());
+        categoryDao.deleteById(4L);
+        Assertions.assertFalse(categoryDao.findById(4L).isPresent());
     }
 
     @Test
     public void addInvalidDataTest() {
         Category category = Category.builder().build();
-        Assertions.assertThrows(PersistenceException.class, () -> categoryDao.save(category));
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> categoryDao.save(category));
     }
 
     @Test
     public void findByInvalidIdTest() {
-        Assertions.assertFalse(categoryDao.findById(-4).isPresent());
+        Assertions.assertFalse(categoryDao.findById(-4L).isPresent());
     }
 
     private void fillDeleteByIdDummyData() {
