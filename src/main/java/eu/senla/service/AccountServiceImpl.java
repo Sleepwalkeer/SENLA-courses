@@ -38,10 +38,13 @@ public class AccountServiceImpl implements AccountService {
             throw new BadRequestException("Credentials are required");
         }
         if (accountDto.getFirstName() == null || accountDto.getSecondName() == null) {
-            throw new BadRequestException("First and second names are required");
+            throw new BadRequestException("First and second name is required");
         }
-        if(!patternMatches(accountDto.getEmail())){
+        if(!emailPatternMatches(accountDto.getEmail())){
             throw new BadRequestException("Email is invalid");
+        }
+        if(phonePatternMatches(accountDto.getPhone())){
+            throw new BadRequestException("Phone number is invalid");
         }
         CredentialsDto credentials = accountDto.getCredentials();
         credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
@@ -80,10 +83,17 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    private static boolean patternMatches(String email) {
+    private static boolean emailPatternMatches(String email) {
        String regexPattern = "^(.+)@(\\S+)$";
         return Pattern.compile(regexPattern)
                 .matcher(email)
+                .matches();
+    }
+
+    private static boolean phonePatternMatches(String phone){
+        String regexPattern = "^(\\+375|80)(29|25|44|33)(\\d{3})(\\d{2})(\\d{2})$";
+        return  Pattern.compile(regexPattern)
+                .matcher(phone)
                 .matches();
     }
 }
