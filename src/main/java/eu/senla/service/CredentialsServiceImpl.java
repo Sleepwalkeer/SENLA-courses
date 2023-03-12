@@ -1,13 +1,17 @@
 package eu.senla.service;
 
-import eu.senla.repository.CredentialsRepository;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.entity.Credentials;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.CredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,12 +58,14 @@ public class CredentialsServiceImpl implements CredentialsService {
         credentialsRepository.delete(modelMapper.map(credentialsDto, Credentials.class));
     }
 
-    public List<CredentialsDto> getAll() {
+    public List<CredentialsDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         try {
-            List<Credentials> credentialss = credentialsRepository.findAll();
-            return credentialss.stream()
-                    .map(credentials -> modelMapper.map(credentials, CredentialsDto.class))
-                    .collect(Collectors.toList());
+            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+            Page<Credentials> credentialsPage = credentialsRepository.findAll(paging);
+
+            return credentialsPage.getContent()
+                    .stream()
+                    .map(credentials -> modelMapper.map(credentials, CredentialsDto.class)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new DatabaseAccessException("Unable to access database");
         }

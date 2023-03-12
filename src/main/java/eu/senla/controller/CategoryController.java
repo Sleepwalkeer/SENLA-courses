@@ -49,7 +49,10 @@ public class CategoryController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('read')")
-    public List<CategoryDto> getAllCategories() {
-        return categoryService.getAll();
+    public List<CategoryDto> getAllCategories(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return categoryService.getAll(pageNo, pageSize, sortBy);
     }
 }

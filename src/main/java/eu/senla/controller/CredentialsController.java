@@ -49,7 +49,10 @@ public class CredentialsController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public List<CredentialsDto> getAllCredentials() {
-        return credentialsService.getAll();
+    public List<CredentialsDto> getAllCredentials(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return credentialsService.getAll(pageNo, pageSize, sortBy);
     }
 }

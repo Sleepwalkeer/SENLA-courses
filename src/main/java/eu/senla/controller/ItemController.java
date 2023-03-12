@@ -48,7 +48,10 @@ public class ItemController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('read')")
-    public List<ItemDto> getAllItems() {
-        return itemService.getAll();
+    public List<ItemDto> getAllItems(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return itemService.getAll(pageNo,pageSize, sortBy);
     }
 }

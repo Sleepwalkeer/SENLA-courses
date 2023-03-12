@@ -1,6 +1,6 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.Config;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -29,7 +29,7 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class CredentialsControllerTest extends ContainersEnvironment {
     @Autowired
@@ -132,21 +132,22 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void updateCredentialsTest() throws Exception {
         fillUpdateCredentialsDummyData();
-        String requestBody = "{ \"id\": 6, \"username\": \"stella_ickerton\", \"password\": \"stellas\" , \"role\" : \"USER\" }";
-
-        this.mockMvc.perform(put("/credentials/{id}", 6)
+        Credentials credsForUpdate = accountRepository.findByEmail("updCredsTest").get().getCredentials();
+        String requestBody = "{\"id\":\"" + credsForUpdate.getId() +
+                "\", \"username\": \"Ssdfs2\", \"password\": \"Sldsfee\" , \"role\" : \"USER\" }";
+        this.mockMvc.perform(put("/credentials/{id}", credsForUpdate.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(6))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("stella_ickerton"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("stellas"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(credsForUpdate.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username").value("Ssdfs2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("Sldsfee"));
     }
 
     private void fillUpdateCredentialsDummyData() {
-        Account dummyCredentialsData = Account.builder().firstName("updCreds").secondName("updCreds")
-                .phone("updCreds").email("updCreds")
-                .credentials(Credentials.builder().username("updCreds").password("updCreds").role(Role.USER).build()).build();
+        Account dummyCredentialsData = Account.builder().firstName("updCredsTest").secondName("updCredsTest")
+                .phone("updCredsTest").email("updCredsTest")
+                .credentials(Credentials.builder().username("updCredsTest").password("updCredsTest").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
     }
 

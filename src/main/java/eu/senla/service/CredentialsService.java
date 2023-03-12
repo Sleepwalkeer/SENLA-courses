@@ -7,7 +7,7 @@ import java.util.List;
 
 @Transactional
 public interface CredentialsService {
-    List<CredentialsDto> getAll();
+    List<CredentialsDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
 
     CredentialsDto getById(Long id);
 

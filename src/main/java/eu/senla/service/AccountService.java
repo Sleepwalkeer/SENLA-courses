@@ -7,7 +7,7 @@ import java.util.List;
 
 @Transactional
 public interface AccountService {
-    List<AccountDto> getAll();
+    List<AccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
 
     AccountDto getById(Long id);
 

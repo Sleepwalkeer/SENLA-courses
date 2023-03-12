@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import liquibase.integration.spring.SpringLiquibase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 @EnableJpaRepositories("eu.senla.repository")
 @Configuration
 @ComponentScan(
@@ -28,7 +30,7 @@ import javax.sql.DataSource;
         }
 )
 @PropertySource("classpath:applicationTest.properties")
-public class Config {
+public class ContextConfigurationTest {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
@@ -61,7 +63,7 @@ public class Config {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean entityManagerFactory = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactory.setDataSource(dataSource());
-        entityManagerFactory.setPackagesToScan("eu.senla.entities");
+        entityManagerFactory.setPackagesToScan("eu.senla.entity");
         entityManagerFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         return entityManagerFactory;

@@ -7,7 +7,7 @@ import java.util.List;
 
 @Transactional
 public interface CategoryService {
-    List<CategoryDto> getAll();
+    List<CategoryDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
 
     CategoryDto getById(Long id);
 

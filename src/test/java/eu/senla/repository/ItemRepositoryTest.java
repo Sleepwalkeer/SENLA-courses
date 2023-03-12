@@ -1,6 +1,6 @@
 package eu.senla.repository;
 
-import eu.senla.configuration.Config;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -19,7 +19,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class ItemRepositoryTest extends ContainersEnvironment {
     @Autowired
@@ -70,8 +70,9 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     @Test
     public void deleteByIdTest() {
         fillDeleteItemByIdDummyData();
-        itemRepository.deleteById(5L);
-        Assertions.assertFalse(itemRepository.findById(5L).isPresent());
+        Long id = itemRepository.findByName("itemDelById15").get().getId();
+        itemRepository.deleteById(id);
+        Assertions.assertFalse(itemRepository.findById(id).isPresent());
     }
 
     private void fillDeleteItemByIdDummyData() {

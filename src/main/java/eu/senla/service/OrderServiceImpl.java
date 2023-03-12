@@ -1,13 +1,17 @@
 package eu.senla.service;
 
-import eu.senla.repository.OrderRepository;
 import eu.senla.dto.OrderDto;
 import eu.senla.entity.Order;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,12 +57,14 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.delete(modelMapper.map(orderDto, Order.class));
     }
 
-    public List<OrderDto> getAll() {
+    public List<OrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         try {
-            List<Order> orders = orderRepository.findAll();
-            return orders.stream()
-                    .map(order -> modelMapper.map(order, OrderDto.class))
-                    .collect(Collectors.toList());
+            Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            Page<Order> orderPage = orderRepository.findAll(paging);
+
+            return orderPage.getContent()
+                    .stream()
+                    .map(order -> modelMapper.map(order, OrderDto.class)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new DatabaseAccessException("Unable to access database");
         }

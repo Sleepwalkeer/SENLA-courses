@@ -20,7 +20,11 @@ public class AccountController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
     public AccountDto getAccountById(@PathVariable Long id) {
-        return accountService.getById(id);
+
+        log.info("Incoming request: GET /accounts/" + id);
+        AccountDto response = accountService.getById(id);
+        log.info("Outgoing response: {}", response);
+        return response;
     }
 
     @PostMapping
@@ -49,7 +53,10 @@ public class AccountController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public List<AccountDto> getAllAccounts() {
-        return accountService.getAll();
+    public List<AccountDto> getAllAccounts(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return accountService.getAll(pageNo, pageSize, sortBy);
     }
 }

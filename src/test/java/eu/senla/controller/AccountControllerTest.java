@@ -1,6 +1,6 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.Config;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -29,7 +29,7 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class AccountControllerTest extends ContainersEnvironment {
     @Autowired
@@ -71,7 +71,7 @@ public class AccountControllerTest extends ContainersEnvironment {
         if (accountRepository.findByEmail("updaccAuth1").isEmpty()) {
             Account updateAccAuth = Account.builder().firstName("updaccUser").secondName("updaccAuth1")
                     .phone("updaccAuth1").email("updaccAuth1")
-                    .credentials(Credentials.builder().username("user4").password("updaccAuth1").role(Role.USER).build()).build();
+                    .credentials(Credentials.builder().username("updaccUser").password("updaccAuth1").role(Role.USER).build()).build();
             accountRepository.save(updateAccAuth);
         }
         if (accountRepository.findByEmail("delaccAuth1").isEmpty()) {

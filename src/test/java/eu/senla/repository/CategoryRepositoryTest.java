@@ -1,6 +1,6 @@
 package eu.senla.repository;
 
-import eu.senla.configuration.Config;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -17,7 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class CategoryRepositoryTest extends ContainersEnvironment {
     @Autowired

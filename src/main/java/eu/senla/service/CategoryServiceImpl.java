@@ -1,13 +1,17 @@
 package eu.senla.service;
 
-import eu.senla.repository.CategoryRepository;
 import eu.senla.dto.CategoryDto;
 import eu.senla.entity.Category;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,12 +54,14 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.delete(modelMapper.map(categoryDto, Category.class));
     }
 
-    public List<CategoryDto> getAll() {
+    public List<CategoryDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         try {
-            List<Category> categorys = categoryRepository.findAll();
-            return categorys.stream()
-                    .map(category -> modelMapper.map(category, CategoryDto.class))
-                    .collect(Collectors.toList());
+            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+            Page<Category> categoryPage = categoryRepository.findAll(paging);
+
+            return categoryPage.getContent()
+                    .stream()
+                    .map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new DatabaseAccessException("Unable to access database");
         }

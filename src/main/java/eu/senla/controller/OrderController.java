@@ -49,8 +49,11 @@ public class OrderController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public List<OrderDto> getAllOrders() {
-        return orderService.getAll();
+    public List<OrderDto> getAllOrders(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return orderService.getAll(pageNo, pageSize, sortBy);
     }
 }
 

@@ -1,13 +1,17 @@
 package eu.senla.service;
 
-import eu.senla.repository.ItemRepository;
 import eu.senla.dto.ItemDto;
 import eu.senla.entity.Item;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -60,12 +64,14 @@ public class ItemServiceImpl implements ItemService {
         itemRepository.delete(modelMapper.map(itemDto, Item.class));
     }
 
-    public List<ItemDto> getAll() {
+    public List<ItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         try {
-            List<Item> items = itemRepository.findAll();
-            return items.stream()
-                    .map(item -> modelMapper.map(item, ItemDto.class))
-                    .collect(Collectors.toList());
+            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
+            Page<Item> itemPage = itemRepository.findAll(paging);
+
+            return itemPage.getContent()
+                    .stream()
+                    .map(item -> modelMapper.map(item, ItemDto.class)).collect(Collectors.toList());
         } catch (Exception e) {
             throw new DatabaseAccessException("Unable to access database");
         }

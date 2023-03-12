@@ -1,6 +1,6 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.Config;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -29,7 +29,7 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Config.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
 public class ItemControllerTest extends ContainersEnvironment {
     @Autowired
