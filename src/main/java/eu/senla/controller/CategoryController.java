@@ -2,6 +2,7 @@ package eu.senla.controller;
 
 import eu.senla.dto.CategoryDto;
 import eu.senla.service.CategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,13 +26,13 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createCategory(@RequestBody CategoryDto categoryDto) {
+    public void createCategory(@Valid  @RequestBody CategoryDto categoryDto) {
         categoryService.create(categoryDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public CategoryDto updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@PathVariable Long id,@Valid @RequestBody CategoryDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
@@ -43,7 +44,7 @@ public class CategoryController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')")
-    public void deleteCategory(@RequestBody CategoryDto categoryDto) {
+    public void deleteCategory(@Valid @RequestBody CategoryDto categoryDto) {
         categoryService.delete(categoryDto);
     }
 

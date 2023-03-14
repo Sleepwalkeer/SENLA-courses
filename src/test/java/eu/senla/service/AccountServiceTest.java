@@ -15,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,8 @@ public class AccountServiceTest {
     private AccountRepository accountRepository;
     @Mock
     private ModelMapper modelMapper;
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private AccountServiceImpl accountService;
 
@@ -39,12 +43,13 @@ public class AccountServiceTest {
     @Test
     public void createTest() {
         Account account = Account.builder().id(1L).credentials(Credentials.builder().password("test").username("test").build())
-                .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
+                .email("blabla@gmail.com").phone("+375 33 123 41 24").firstName("Bill").secondName("Stark").build();
         AccountDto accountDto = AccountDto.builder().id(1L).credentials(CredentialsDto.builder().password("test").username("test").build())
-                .email("blabla@gmail.com").phone("+375331234124").firstName("Bill").secondName("Stark").build();
+                .email("blabla@gmail.com").phone("+375 33 123 41 24").firstName("Bill").secondName("Stark").build();
 
         when(accountRepository.save(account)).thenReturn(account);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
+        when(passwordEncoder.encode(accountDto.getCredentials().getPassword())).thenReturn("test");
 
         accountService.create(accountDto);
 
@@ -157,23 +162,26 @@ public class AccountServiceTest {
         List<Account> accounts = new ArrayList<>();
         accounts.add(account1);
         accounts.add(account2);
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        Page<Account> accountPage = new PageImpl<>(accounts, paging, accounts.size());
 
-        when(accountRepository.findAll()).thenReturn(accounts);
+        when(accountRepository.findAll(paging)).thenReturn(accountPage);
         when(modelMapper.map(eq(account1), eq(AccountDto.class)))
                 .thenReturn(accountDto1);
         when(modelMapper.map(eq(account2), eq(AccountDto.class)))
                 .thenReturn(accountDto2);
 
-        List<AccountDto> retrievedAccountDtos = accountService.getAll();
+        List<AccountDto> retrievedAccountDtos = accountService.getAll(1, 2, "id");
 
-        verify(accountRepository).findAll();
+        verify(accountRepository).findAll(paging);
         Assertions.assertIterableEquals(accountDtos, retrievedAccountDtos);
     }
 
     @Test
     public void getAllWithDatabaseAccessExceptionTest() {
-        when(accountRepository.findAll()).thenThrow(new RuntimeException());
-        Assertions.assertThrows(DatabaseAccessException.class, () -> accountService.getAll());
-        verify(accountRepository).findAll();
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        when(accountRepository.findAll(paging)).thenThrow(new RuntimeException());
+        Assertions.assertThrows(DatabaseAccessException.class, () -> accountService.getAll(1, 2, "id"));
+        verify(accountRepository).findAll(paging);
     }
 }

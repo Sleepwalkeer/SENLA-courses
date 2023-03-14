@@ -303,4 +303,34 @@
         </preConditions>
         <sqlFile encoding="utf8" path="./sql/31.credentials-add-role.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="account-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/32.account-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="category-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="category"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/33.category-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/34.item-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
 </databaseChangeLog> 

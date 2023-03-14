@@ -25,28 +25,19 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
 
     @Test
     public void findyByIdTest() {
-        fillFindByIdDummyData();
+        Category dummyData = Category.builder().name("catDaoFindById").discount(0F).build();
+        categoryRepository.save(dummyData);
         Category category = Category.builder().id(1L).build();
 
         Optional<Category> categoryFromDb = categoryRepository.findById(1L);
         Assertions.assertEquals(category.getId(), categoryFromDb.get().getId());
     }
 
-    private void fillFindByIdDummyData() {
-        Category category = Category.builder().name("catDaoFindById").build();
-        categoryRepository.save(category);
-    }
-
     @Test
     public void updateTest() {
-        Category category = Category.builder().id(1L).name("updatedNewestVersion").build();
+        Category category = Category.builder().id(1L).name("updatedNewestVersion").discount(0F).build();
         Category categoryFromDb = categoryRepository.save(category);
         Assertions.assertEquals(category.getName(), categoryFromDb.getName());
-    }
-
-    private void fillUpdateDummyData() {
-        Category category = Category.builder().name("catDaoUpdate").build();
-        categoryRepository.save(category);
     }
 
     @Test
@@ -68,16 +59,16 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillDeleteByIdDummyData() {
-        Category category = Category.builder().name("catDaoDelete").build();
+        Category category = Category.builder().name("catDaoDelete").discount(0F).build();
         categoryRepository.save(category);
 
-        Category category1 = Category.builder().name("catDaoDelete1").build();
+        Category category1 = Category.builder().name("catDaoDelete1").discount(0F).build();
         categoryRepository.save(category1);
 
-        Category category2 = Category.builder().name("catDaoDelete2").build();
+        Category category2 = Category.builder().name("catDaoDelete2").discount(0F).build();
         categoryRepository.save(category2);
 
-        Category category3 = Category.builder().name("catDaoDelete3").build();
+        Category category3 = Category.builder().name("catDaoDelete3").discount(0F).build();
         categoryRepository.save(category3);
     }
 }

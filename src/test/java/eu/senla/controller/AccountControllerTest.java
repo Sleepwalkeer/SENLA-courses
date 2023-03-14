@@ -52,13 +52,13 @@ public class AccountControllerTest extends ContainersEnvironment {
     public void fillDummyAuthorizationData() {
         if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
-                    .phone("+3758232734").email("kfgkzsf")
+                    .phone("+3758232734").email("kfgkzsf").discount(0F)
                     .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountRepository.save(admin);
         }
         if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
-                    .phone("+375823274").email("kfgkzsfdf")
+                    .phone("+375823274").email("kfgkzsfdf").discount(0F)
                     .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountRepository.save(user2);
         }
@@ -70,13 +70,13 @@ public class AccountControllerTest extends ContainersEnvironment {
         }
         if (accountRepository.findByEmail("updaccAuth1").isEmpty()) {
             Account updateAccAuth = Account.builder().firstName("updaccUser").secondName("updaccAuth1")
-                    .phone("updaccAuth1").email("updaccAuth1")
+                    .phone("updaccAuth1").email("updaccAuth1").discount(0F)
                     .credentials(Credentials.builder().username("updaccUser").password("updaccAuth1").role(Role.USER).build()).build();
             accountRepository.save(updateAccAuth);
         }
         if (accountRepository.findByEmail("delaccAuth1").isEmpty()) {
             Account dellAccAuth = Account.builder().firstName("delaccAuth1").secondName("delaccAuth1")
-                    .phone("delaccAuth1").email("delaccAuth1")
+                    .phone("delaccAuth1").email("delaccAuth1").discount(0F)
                     .credentials(Credentials.builder().username("delaccUser").password("delaccAuth1").role(Role.USER).build()).build();
             accountRepository.save(dellAccAuth);
         }
@@ -109,8 +109,9 @@ public class AccountControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void CreateAccountTest() throws Exception {
-        String requestBody = "{\"firstName\":\"Mallory\",\"secondName\":\"Cyber\",\"phone\":\"113\",\"email\":\"113\"" +
-                ",\"credentials\":{ \"username\": \"Mallory\", \"password\": \"ultrasuperpass\" , \"role\" : \"USER\" }}";
+        String requestBody = "{\"firstName\":\"Mallory\",\"secondName\":\"Cyber\"," +
+                "\"phone\":\"+375296338624\",\"email\":\"testmail@mail.ru\",\"credentials\":" +
+                "{ \"username\": \"Mallory\", \"password\": \"ultrasuperpass\" , \"role\" : \"USER\" },\"discount\":\"0\"}";
 
         this.mockMvc.perform(post("/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +137,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
         String requestBody = "{\"id\":\"4\",\"firstName\":\"updaccnew\",\"secondName\":\"updaccnew\",\"phone\":\"updaccnew\"," +
                 "\"email\":\"updaccnew\",\"credentials\":{\"id\":\"4\", \"username\": \"updaccnew\"," +
-                " \"password\": \"updaccnew\" , \"role\" : \"USER\" }}";
+                " \"password\": \"updaccnew\" , \"role\" : \"USER\" },\"discount\":\"0\"}";
         this.mockMvc.perform(put("/accounts/{id}", 4)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -172,7 +173,7 @@ public class AccountControllerTest extends ContainersEnvironment {
         String requestBody = "{\"id\":\"" + accountForUpdate.getId() + "\",\"firstName\":\"updaccnewAuth1\"," +
                 "\"secondName\":\"updaccnewAuth1\",\"phone\":\"updaccAuth1\"," +
                 "\"email\":\"updaccAuth1\",\"credentials\":{\"id\":\"" + accountForUpdate.getId() +
-                "\", \"username\": \"Sleep2\", \"password\": \"Sleep\" , \"role\" : \"USER\" }}";
+                "\", \"username\": \"Sleep2\", \"password\": \"Sleep\" , \"role\" : \"USER\" },\"discount\":\"0\"}";
 
         this.mockMvc.perform(put("/accounts/{id}", accountForUpdate.getId())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -211,19 +212,19 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     private void fillDeleteAccountByIdDummyData() {
         Account dummyCredentialsData = Account.builder().firstName("deleteaccid").secondName("deleteaccid")
-                .phone("deleteaccid").email("deleteaccid")
+                .phone("deleteaccid").email("deleteaccid").discount(0F)
                 .credentials(Credentials.builder().username("deleteaccid").password("deleteaccid").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
         Account dummyCredentialsData1 = Account.builder().firstName("deleteaccid11").secondName("deleteaccid11")
-                .phone("deleteaccid11").email("deleteaccid11")
+                .phone("deleteaccid11").email("deleteaccid11").discount(0F)
                 .credentials(Credentials.builder().username("deleteaccid11").password("deleteaccid11").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData1);
         Account dummyCredentialsData2 = Account.builder().firstName("deleteaccid22").secondName("deleteaccid22")
-                .phone("deleteaccid22").email("deleteaccid22")
+                .phone("deleteaccid22").email("deleteaccid22").discount(0F)
                 .credentials(Credentials.builder().username("deleteaccid22").password("deleteaccid22").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData2);
         Account dummyCredentialsData3 = Account.builder().firstName("deleteaccid33").secondName("deleteaccid33")
-                .phone("deleteaccid33").email("deleteaccid33")
+                .phone("deleteaccid33").email("deleteaccid33").discount(0F)
                 .credentials(Credentials.builder().username("deleteaccid33").password("deleteaccid33").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData3);
     }
@@ -251,19 +252,19 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     private void fillDeleteAccountDummyData() {
         Account dummyCredentialsData = Account.builder().firstName("deleteacc").secondName("deleteacc")
-                .phone("deleteacc").email("deleteacc")
+                .phone("deleteacc").email("deleteacc").discount(0F)
                 .credentials(Credentials.builder().username("deleteacc").password("deleteacc").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
         Account dummyCredentialsData1 = Account.builder().firstName("deleteacc11").secondName("deleteacc11")
-                .phone("deleteacc11").email("deleteacc11")
+                .phone("deleteacc11").email("deleteacc11").discount(0F)
                 .credentials(Credentials.builder().username("deleteacc11").password("deleteacc11").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData1);
         Account dummyCredentialsData2 = Account.builder().firstName("deleteacc22").secondName("deleteacc22")
-                .phone("deleteacc22").email("deleteacc22")
+                .phone("deleteacc22").email("deleteacc22").discount(0F)
                 .credentials(Credentials.builder().username("deleteacc22").password("deleteacc22").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData2);
         Account dummyCredentialsData3 = Account.builder().firstName("deleteacc33").secondName("deleteacc33")
-                .phone("deleteacc33").email("deleteacc33")
+                .phone("deleteacc33").email("deleteacc33").discount(0F)
                 .credentials(Credentials.builder().username("deleteacc33").password("deleteacc33").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData3);
     }

@@ -30,7 +30,7 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     @Test
     public void findyByIdTest() {
         fillFindByIdItemDummyData();
-        Item item = Item.builder()
+        Item item = Item.builder().discount(0F)
                 .id(1L).category(Category.builder().id(1L).name("Construction equipment").build())
                 .name("Jackhammer").price(new BigDecimal(750)).quantity(8).build();
 
@@ -39,9 +39,9 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillFindByIdItemDummyData() {
-        Category category = Category.builder().name("findItemDao").build();
+        Category category = Category.builder().name("findItemDao").discount(0F).build();
         categoryRepository.save(category);
-        Item jackhammer = Item.builder()
+        Item jackhammer = Item.builder().discount(0F)
                 .category(Category.builder().id(1L).name("findItemDao").build())
                 .name("findItemDao").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
@@ -59,9 +59,9 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillUpdateItemDummyData() {
-        Category category = Category.builder().name("updItemDao").build();
+        Category category = Category.builder().name("updItemDao").discount(0F).build();
         categoryRepository.save(category);
-        Item jackhammer = Item.builder()
+        Item jackhammer = Item.builder().discount(0F)
                 .category(Category.builder().id(1L).name("updItemDao").build())
                 .name("updItemDao").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
@@ -76,32 +76,32 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillDeleteItemByIdDummyData() {
-        Category category = Category.builder().name("deleteByIdDaoItem").build();
+        Category category = Category.builder().name("deleteByIdDaoItem").discount(0F).build();
         categoryRepository.save(category);
 
-        Category category1 = Category.builder().name("deleteById2DaoItem").build();
+        Category category1 = Category.builder().name("deleteById2DaoItem").discount(0F).build();
         categoryRepository.save(category1);
 
         Item jackhammer = Item.builder()
-                .category(Category.builder().id(1L).build())
+                .category(Category.builder().id(1L).build()).discount(0F)
                 .name("itemDelById11").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
-        Item angleGrinder = Item.builder()
+        Item angleGrinder = Item.builder().discount(0F)
                 .category(Category.builder().id(1L).name("Construction equipment").build())
                 .name("itemDelById12").price(new BigDecimal(600)).quantity(15).build();
         itemRepository.save(angleGrinder);
 
-        Item twoBedApp = Item.builder()
+        Item twoBedApp = Item.builder().discount(0F)
                 .category(Category.builder().id(1L).name("Real estate").build())
                 .name("itemDelById13").price(new BigDecimal(3450)).quantity(2).build();
         itemRepository.save(twoBedApp);
 
-        Item lamborghini = Item.builder()
+        Item lamborghini = Item.builder().discount(0F)
                 .category(Category.builder().id(2L).name("Vehicles").build())
                 .name("itemDelById14").price(new BigDecimal(6300)).quantity(1).build();
         itemRepository.save(lamborghini);
 
-        Item itemForDeletion = Item.builder()
+        Item itemForDeletion = Item.builder().discount(0F)
                 .category(Category.builder().id(1L).name("Real estate").build())
                 .name("itemDelById15").price(new BigDecimal(345032)).quantity(232).build();
         itemRepository.save(itemForDeletion);
@@ -109,7 +109,7 @@ public class ItemRepositoryTest extends ContainersEnvironment {
 
     @Test
     public void addInvalidDataTest() {
-        Item item = Item.builder()
+        Item item = Item.builder().discount(0F)
                 .category(Category.builder().id(3L).name("Real estate").build()).price(new BigDecimal(3450)).quantity(2).build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> itemRepository.save(item));
     }

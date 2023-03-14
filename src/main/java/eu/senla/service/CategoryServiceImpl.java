@@ -31,9 +31,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public void create(CategoryDto categoryDto) {
-        if (categoryDto.getName() == null || categoryDto.getName().isEmpty()) {
-            throw new BadRequestException("Category name is required");
-        }
         Category category = modelMapper.map(categoryDto, Category.class);
         categoryRepository.save(category);
     }
@@ -55,15 +52,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     public List<CategoryDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
-        try {
-            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
-            Page<Category> categoryPage = categoryRepository.findAll(paging);
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Category> categoryPage = categoryRepository.findAll(paging);
 
-            return categoryPage.getContent()
-                    .stream()
-                    .map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new DatabaseAccessException("Unable to access database");
-        }
+        return categoryPage.getContent()
+                .stream()
+                .map(category -> modelMapper.map(category, CategoryDto.class)).collect(Collectors.toList());
     }
 }

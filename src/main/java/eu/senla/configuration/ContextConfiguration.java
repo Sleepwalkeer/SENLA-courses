@@ -40,6 +40,18 @@ public class ContextConfiguration {
     @Value("${spring.liquibase.change-log}")
     private String changelog;
 
+    @Value("${hibernate.hbm2ddl.auto}")
+    private String hibernateHbm2ddl;
+
+    @Value("${hibernate.dialect}")
+    private String hibernateDialect;
+
+    @Value("${hibernate.show_sql}")
+    private String hibernateShowSql;
+
+    @Value("${hibernate.format_sql}")
+    private String hibernateFormatSql;
+
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -75,10 +87,10 @@ public class ContextConfiguration {
     @Bean
     Properties additionalProperties() {
         Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.setProperty("hibernate.show_sql", "true");
-        properties.setProperty("hibernate.format_sql", "true");
+        properties.setProperty("hibernate.hbm2ddl.auto", hibernateHbm2ddl);
+        properties.setProperty("hibernate.dialect", hibernateDialect);
+        properties.setProperty("hibernate.show_sql", hibernateShowSql);
+        properties.setProperty("hibernate.format_sql", hibernateFormatSql);
 
         return properties;
     }

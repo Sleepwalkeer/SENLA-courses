@@ -22,4 +22,7 @@ public class Category {
 
     @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
+
+    @Column(name = "discount",columnDefinition = "real default 0")
+    private Float discount = 0F;
 }

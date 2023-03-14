@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@NamedEntityGraph(name = "graph.Order.itemsCategory",
+@NamedEntityGraph(name = "graph.Order.allFields",
         attributeNodes = {
                 @NamedAttributeNode(value = "items", subgraph = "subgraph.category"),
                 @NamedAttributeNode(value = "customer", subgraph = "subgraph.credentials"),

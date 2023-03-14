@@ -1,5 +1,6 @@
 package eu.senla.service;
 
+import eu.senla.entity.Order;
 import eu.senla.repository.CredentialsRepository;
 import eu.senla.dto.CredentialsDto;
 import eu.senla.entity.Credentials;
@@ -13,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,22 +142,26 @@ public class CredentialsServiceTest {
         credentialsList.add(credentials1);
         credentialsList.add(credentials2);
 
-        when(credentialsRepository.findAll()).thenReturn(credentialsList);
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        Page<Credentials> credentialsPage = new PageImpl<>(credentialsList,paging,credentialsList.size());
+
+        when(credentialsRepository.findAll(paging)).thenReturn(credentialsPage);
         when(modelMapper.map(eq(credentials1), eq(CredentialsDto.class)))
                 .thenReturn(credentialsDto1);
         when(modelMapper.map(eq(credentials2), eq(CredentialsDto.class)))
                 .thenReturn(credentialsDto2);
 
-        List<CredentialsDto> retrievedCredentialsDtos = credentialsService.getAll();
+        List<CredentialsDto> retrievedCredentialsDtos = credentialsService.getAll(1,2,"id");
 
-        verify(credentialsRepository).findAll();
+        verify(credentialsRepository).findAll(paging);
         Assertions.assertIterableEquals(credentialsDtos, retrievedCredentialsDtos);
     }
 
     @Test
     public void getAllWithDatabaseAccessExceptionTest() {
-        when(credentialsRepository.findAll()).thenThrow(new RuntimeException());
-        Assertions.assertThrows(DatabaseAccessException.class, () -> credentialsService.getAll());
-        verify(credentialsRepository).findAll();
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        when(credentialsRepository.findAll(paging)).thenThrow(new RuntimeException());
+        Assertions.assertThrows(DatabaseAccessException.class, () -> credentialsService.getAll(1,2,"id"));
+        verify(credentialsRepository).findAll(paging);
     }
 }

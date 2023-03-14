@@ -52,31 +52,31 @@ public class CredentialsControllerTest extends ContainersEnvironment {
     public void fillDummyAuthorizationData() {
         if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
-                    .phone("+3758232734").email("kfgkzsf")
+                    .phone("+3758232734").email("kfgkzsf").discount(0F)
                     .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountRepository.save(admin);
         }
         if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
-                    .phone("+375823274").email("kfgkzsfdf")
+                    .phone("+375823274").email("kfgkzsfdf").discount(0F)
                     .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountRepository.save(user2);
         }
         if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
-                    .phone("+375823wer").email("kfgkzsddgd")
+                    .phone("+375823wer").email("kfgkzsddgd").discount(0F)
                     .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountRepository.save(user3);
         }
         if (accountRepository.findByEmail("updaccAuth11").isEmpty()) {
             Account updateAccAuth = Account.builder().firstName("updaccAuth11").secondName("updaccAuth11")
-                    .phone("updaccAuth11").email("updaccAuth11")
+                    .phone("updaccAuth11").email("updaccAuth11").discount(0F)
                     .credentials(Credentials.builder().username("updaccAuth11").password("updaccAuth11").role(Role.USER).build()).build();
             accountRepository.save(updateAccAuth);
         }
         if (accountRepository.findByEmail("delaccAuth11").isEmpty()) {
             Account dellAccAuth = Account.builder().firstName("delaccAuth11").secondName("delaccAuth11")
-                    .phone("delaccAuth11").email("delaccAuth11")
+                    .phone("delaccAuth11").email("delaccAuth11").discount(0F)
                     .credentials(Credentials.builder().username("delaccAuth11").password("delaccAuth11").role(Role.USER).build()).build();
             accountRepository.save(dellAccAuth);
         }
@@ -146,7 +146,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
 
     private void fillUpdateCredentialsDummyData() {
         Account dummyCredentialsData = Account.builder().firstName("updCredsTest").secondName("updCredsTest")
-                .phone("updCredsTest").email("updCredsTest")
+                .phone("updCredsTest").email("updCredsTest").discount(0F)
                 .credentials(Credentials.builder().username("updCredsTest").password("updCredsTest").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
     }
@@ -206,19 +206,19 @@ public class CredentialsControllerTest extends ContainersEnvironment {
 
     private void fillDeleteByIdCredentialsDummyData() {
         Account dummyCredentialsData = Account.builder().firstName("deleteCredsid").secondName("deleteCredsid")
-                .phone("deleteCredsid").email("deleteCredsid")
+                .phone("deleteCredsid").email("deleteCredsid").discount(0F)
                 .credentials(Credentials.builder().username("deleteCredsid").password("deleteCredsid").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
         Account dummyCredentialsData1 = Account.builder().firstName("deleteCredsid11").secondName("deleteCredsid11")
-                .phone("deleteCredsid11").email("deleteCredsid11")
+                .phone("deleteCredsid11").email("deleteCredsid11").discount(0F)
                 .credentials(Credentials.builder().username("deleteCredsid11").password("deleteCredsid11").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData1);
         Account dummyCredentialsData2 = Account.builder().firstName("deleteCredsid22").secondName("deleteCredsid22")
-                .phone("deleteCredsid22").email("deleteCredsid22")
+                .phone("deleteCredsid22").email("deleteCredsid22").discount(0F)
                 .credentials(Credentials.builder().username("deleteCredsid22").password("deleteCredsid22").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData2);
         Account dummyCredentialsData3 = Account.builder().firstName("deleteCredsid33").secondName("deleteCredsid33")
-                .phone("deleteCredsid33").email("deleteCredsid33")
+                .phone("deleteCredsid33").email("deleteCredsid33").discount(0F)
                 .credentials(Credentials.builder().username("deleteCredsid33").password("deleteCredsid33").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData3);
     }
@@ -244,19 +244,19 @@ public class CredentialsControllerTest extends ContainersEnvironment {
 
     private void fillDeleteCredentialsDummyData() {
         Account dummyCredentialsData = Account.builder().firstName("deleteCreds").secondName("deleteCreds")
-                .phone("deleteCreds").email("deleteCreds")
+                .phone("deleteCreds").email("deleteCreds").discount(0F)
                 .credentials(Credentials.builder().username("deleteCreds").password("deleteCreds").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData);
         Account dummyCredentialsData1 = Account.builder().firstName("deleteCreds11").secondName("deleteCreds11")
-                .phone("deleteCreds11").email("deleteCreds11")
+                .phone("deleteCreds11").email("deleteCreds11").discount(0F)
                 .credentials(Credentials.builder().username("deleteCreds11").password("deleteCreds11").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData1);
         Account dummyCredentialsData2 = Account.builder().firstName("deleteCreds22").secondName("deleteCreds22")
-                .phone("deleteCreds22").email("deleteCreds22")
+                .phone("deleteCreds22").email("deleteCreds22").discount(0F)
                 .credentials(Credentials.builder().username("deleteCreds22").password("deleteCreds22").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData2);
         Account dummyCredentialsData3 = Account.builder().firstName("deleteCreds33").secondName("deleteCreds33")
-                .phone("deleteCreds33").email("deleteCreds33")
+                .phone("deleteCreds33").email("deleteCreds33").discount(0F)
                 .credentials(Credentials.builder().username("deleteCreds33").password("deleteCreds33").role(Role.USER).build()).build();
         accountRepository.save(dummyCredentialsData3);
     }

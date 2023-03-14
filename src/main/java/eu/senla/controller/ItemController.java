@@ -2,6 +2,7 @@ package eu.senla.controller;
 
 import eu.senla.dto.ItemDto;
 import eu.senla.service.ItemService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,13 +25,13 @@ public class ItemController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createItem(@RequestBody ItemDto itemDto) {
+    public void createItem(@Valid  @RequestBody ItemDto itemDto) {
         itemService.create(itemDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public ItemDto updateItem(@PathVariable Long id, @RequestBody ItemDto itemDto) {
+    public ItemDto updateItem(@PathVariable Long id, @Valid @RequestBody ItemDto itemDto) {
         return itemService.update(id, itemDto);
     }
 
@@ -42,7 +43,7 @@ public class ItemController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')")
-    public void deleteItem(@RequestBody ItemDto itemDto) {
+    public void deleteItem(@Valid @RequestBody ItemDto itemDto) {
         itemService.delete(itemDto);
     }
 

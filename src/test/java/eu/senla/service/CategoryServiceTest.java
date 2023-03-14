@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,23 +139,26 @@ public class CategoryServiceTest {
         List<Category> categories = new ArrayList<>();
         categories.add(category1);
         categories.add(category2);
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        Page<Category> categoryPage = new PageImpl<>(categories,paging,categories.size());
 
-        when(categoryRepository.findAll()).thenReturn(categories);
+        when(categoryRepository.findAll(paging)).thenReturn(categoryPage);
         when(modelMapper.map(eq(category1), eq(CategoryDto.class)))
                 .thenReturn(categoryDto1);
         when(modelMapper.map(eq(category2), eq(CategoryDto.class)))
                 .thenReturn(categoryDto2);
 
-        List<CategoryDto> retrievedCategoryDtos = categoryService.getAll();
+        List<CategoryDto> retrievedCategoryDtos = categoryService.getAll(1,2,"id");
 
-        verify(categoryRepository).findAll();
+        verify(categoryRepository).findAll(paging);
         Assertions.assertIterableEquals(categoryDtos, retrievedCategoryDtos);
     }
 
     @Test
     public void getAllWithDatabaseAccessExceptionTest() {
-        when(categoryRepository.findAll()).thenThrow(new RuntimeException());
-        Assertions.assertThrows(DatabaseAccessException.class, () -> categoryService.getAll());
-        verify(categoryRepository).findAll();
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        when(categoryRepository.findAll(paging)).thenThrow(new RuntimeException());
+        Assertions.assertThrows(DatabaseAccessException.class, () -> categoryService.getAll(1,2,"id"));
+        verify(categoryRepository).findAll(paging);
     }
 }

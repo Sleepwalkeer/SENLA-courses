@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,11 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     CategoryRepository categoryRepository;
 
     @Test
+    @Transactional
     public void updateTest() {
         fillUpdateDummyData();
+
+        Order order1 = orderRepository.findOrderById(1L);
         Optional<Order> orderOptional = orderRepository.findById(1L);
         Order order = orderOptional.get();
         order.setEndDateTime(new Timestamp(1675855790625L));
@@ -46,24 +50,24 @@ public class OrderRepositoryTest extends ContainersEnvironment {
 
     private void fillUpdateDummyData() {
         Account customer = Account.builder().firstName("orderDaoUpd").secondName("orderDaoUpd")
-                .phone("orderDaoUpd").email("orderDaoUpd")
+                .phone("orderDaoUpd").email("orderDaoUpd").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoUpd").password("orderDaoUpd").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoUpd1").secondName("orderDaoUpd1")
-                .phone("orderDaoUpd1").email("orderDaoUpd1")
+                .phone("orderDaoUpd1").email("orderDaoUpd1").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoUpd1").password("orderDaoUpd1").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer1);
 
-        Category category = Category.builder().name("orderDaoUpd").build();
+        Category category = Category.builder().name("orderDaoUpd").discount(0F).build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("Excavator2").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
 
@@ -72,7 +76,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
         Order order = Order.builder().customer(accountRepository.findById(1L).get())
                 .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665778114323L))
                 .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
-        orderRepository.save(order);
+         Order ordertest = orderRepository.save(order);
+        System.out.println();
     }
 
     @Test
@@ -91,24 +96,24 @@ public class OrderRepositoryTest extends ContainersEnvironment {
 
     private void fillFindByIdDummyData() {
         Account customer = Account.builder().firstName("orderDaoFind").secondName("orderDaoFind")
-                .phone("orderDaoFind").email("orderDaoFind")
+                .phone("orderDaoFind").email("orderDaoFind").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoFind").password("orderDaoFind").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoFind1").secondName("orderDaoFind1")
-                .phone("orderDaoFind1").email("orderDaoFind1")
+                .phone("orderDaoFind1").email("orderDaoFind1").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoFind1").password("orderDaoFind1").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer1);
 
-        Category category = Category.builder().name("orderDaoFind").build();
+        Category category = Category.builder().name("orderDaoFind").discount(0F).build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("Excavator1").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
 
@@ -130,41 +135,41 @@ public class OrderRepositoryTest extends ContainersEnvironment {
 
     private void fillDeleteByIdDummyData() {
         Account customer = Account.builder().firstName("orderDaoDel").secondName("orderDaoDel")
-                .phone("orderDaoDel").email("orderDaoDel")
+                .phone("orderDaoDel").email("orderDaoDel").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoDel").password("orderDaoDel").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer);
 
         Account customer1 = Account.builder().firstName("orderDaoDel1").secondName("orderDaoDel1")
-                .phone("orderDaoDel1").email("orderDaoDel1")
+                .phone("orderDaoDel1").email("orderDaoDel1").discount(0F)
                 .credentials(Credentials.builder().username("orderDaoDel1").password("orderDaoDel1").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer1);
 
-        Category category = Category.builder().name("orderDaoDel").build();
+        Category category = Category.builder().name("orderDaoDel").discount(0F).build();
         categoryRepository.save(category);
 
-        Category category1 = Category.builder().name("orderDaoDel1").build();
+        Category category1 = Category.builder().name("orderDaoDel1").discount(0F).build();
         categoryRepository.save(category1);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("Excavator").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
         Item angleGrinder = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("Drilling machine").price(new BigDecimal(600)).quantity(15).build();
         itemRepository.save(angleGrinder);
 
         Item twoBedApp = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("4-bedroom app").price(new BigDecimal(4235)).quantity(2).build();
         itemRepository.save(twoBedApp);
 
         Item lamborghini = Item.builder()
-                .category(categoryRepository.findById(2L).get())
+                .category(categoryRepository.findById(2L).get()).discount(0F)
                 .name("Porsche").price(new BigDecimal(7200)).quantity(1).build();
         itemRepository.save(lamborghini);
 
@@ -216,6 +221,7 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     @Test
     public void getLazyAssociationsWithoutTransactionalTest() {
         fillGetLazyDummyData();
+
         Optional<Order> orderOptional = orderRepository.findById(1L);
         Order order = orderOptional.get();
         List<Item> items = order.getItems();
@@ -224,26 +230,31 @@ public class OrderRepositoryTest extends ContainersEnvironment {
 
     private void fillGetLazyDummyData() {
         Account customer = Account.builder().firstName("ordDaoLazy").secondName("ordDaoLazy")
-                .phone("ordDaoLazy").email("ordDaoLazy")
+                .phone("ordDaoLazy").email("ordDaoLazy").discount(0F)
                 .credentials(Credentials.builder().username("ordDaoLazy").password("ordDaoLazy").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer);
 
         Account customer1 = Account.builder().firstName("ordDaoLazy1").secondName("ordDaoLazy1")
-                .phone("ordDaoLazy1").email("ordDaoLazy1")
+                .phone("ordDaoLazy1").email("ordDaoLazy1").discount(0F)
                 .credentials(Credentials.builder().username("ordDaoLazy1").password("ordDaoLazy1").role(Role.USER)
                         .build())
                 .build();
         accountRepository.save(customer1);
 
-        Category category = Category.builder().name("ordDaoLazy").build();
+        Category category = Category.builder().name("ordDaoLazy").discount(0F).build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get())
+                .category(categoryRepository.findById(1L).get()).discount(0F)
                 .name("Excavator3").price(new BigDecimal(750)).quantity(8).build();
         itemRepository.save(jackhammer);
+
+        Item excavator = Item.builder()
+                .category(categoryRepository.findById(1L).get()).discount(0F)
+                .name("Excavator").price(new BigDecimal(750)).quantity(8).build();
+        itemRepository.save(excavator);
 
         List<Item> items = itemRepository.findAll();
 
@@ -252,6 +263,13 @@ public class OrderRepositoryTest extends ContainersEnvironment {
         Order order = Order.builder().customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build()).items(items).startDateTime(new Timestamp(1665778114323L))
                 .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
+
+        List<Long> itemIds = new ArrayList<>();
+        for (Item item : items) {
+            itemIds.add(item.getId());
+        }
+        List<Item> itemchiki = itemRepository.findByIdIn(itemIds);
+
         orderRepository.save(order);
         System.out.println("xttrrr");
     }

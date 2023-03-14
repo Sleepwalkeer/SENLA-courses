@@ -2,6 +2,7 @@ package eu.senla.controller;
 
 import eu.senla.dto.CredentialsDto;
 import eu.senla.service.CredentialsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,13 +26,13 @@ public class CredentialsController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createCredentials(@RequestBody CredentialsDto credentialsDto) {
+    public void createCredentials(@Valid  @RequestBody CredentialsDto credentialsDto) {
         credentialsService.create(credentialsDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public CredentialsDto updateCredentials(@PathVariable Long id, @RequestBody CredentialsDto credentialsDto) {
+    public CredentialsDto updateCredentials(@PathVariable Long id, @Valid @RequestBody CredentialsDto credentialsDto) {
         return credentialsService.update(id, credentialsDto);
     }
 
@@ -43,7 +44,7 @@ public class CredentialsController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')|| #credentialsDto.id == authentication.principal.id")
-    public void deleteCredentials(@RequestBody CredentialsDto credentialsDto) {
+    public void deleteCredentials(@Valid @RequestBody CredentialsDto credentialsDto) {
         credentialsService.delete(credentialsDto);
     }
 

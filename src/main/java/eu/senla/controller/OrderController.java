@@ -2,6 +2,7 @@ package eu.senla.controller;
 
 import eu.senla.dto.OrderDto;
 import eu.senla.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,13 +26,13 @@ public class OrderController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public void createOrder(@RequestBody OrderDto orderDto) {
+    public void createOrder(@Valid  @RequestBody OrderDto orderDto) {
         orderService.create(orderDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public OrderDto updateOrder(@PathVariable Long id, @RequestBody OrderDto orderDto) {
+    public OrderDto updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDto orderDto) {
         return orderService.update(id, orderDto);
     }
 
@@ -43,7 +44,7 @@ public class OrderController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')")
-    public void deleteOrder(@RequestBody OrderDto orderDto) {
+    public void deleteOrder(@Valid @RequestBody OrderDto orderDto) {
         orderService.delete(orderDto);
     }
 

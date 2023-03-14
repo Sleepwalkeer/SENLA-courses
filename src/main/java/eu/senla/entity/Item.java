@@ -33,4 +33,7 @@ public class Item {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @Column(name = "discount",columnDefinition = "real default 0")
+    private Float discount = 0F;
+
 }

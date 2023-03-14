@@ -2,6 +2,7 @@ package eu.senla.controller;
 
 import eu.senla.dto.AccountDto;
 import eu.senla.service.AccountService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,13 +30,13 @@ public class AccountController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('read')")
-    public void createAccount(@RequestBody AccountDto accountDto) {
+    public void createAccount(@Valid @RequestBody AccountDto accountDto) {
         accountService.create(accountDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public AccountDto updateAccount(@PathVariable Long id, @RequestBody AccountDto accountDto) {
+    public AccountDto updateAccount(@PathVariable Long id,@Valid @RequestBody AccountDto accountDto) {
         return accountService.update(id, accountDto);
     }
 
@@ -47,7 +48,7 @@ public class AccountController {
 
     @DeleteMapping
     @PreAuthorize("hasAuthority('write')|| #accountDto.id == authentication.principal.id")
-    public void deleteAccount(@RequestBody AccountDto accountDto) {
+    public void deleteAccount(@Valid @RequestBody AccountDto accountDto) {
         accountService.delete(accountDto);
     }
 

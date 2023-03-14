@@ -52,19 +52,19 @@ public class CategoryControllerTest extends ContainersEnvironment {
     public void fillDummyAuthorizationData() {
         if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
-                    .phone("+3758232734").email("kfgkzsf")
+                    .phone("+3758232734").email("kfgkzsf").discount(0F)
                     .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountRepository.save(admin);
         }
         if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
-                    .phone("+375823274").email("kfgkzsfdf")
+                    .phone("+375823274").email("kfgkzsfdf").discount(0F)
                     .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountRepository.save(user2);
         }
         if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
-                    .phone("+375823wer").email("kfgkzsddgd")
+                    .phone("+375823wer").email("kfgkzsddgd").discount(0F)
                     .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountRepository.save(user3);
         }
@@ -73,7 +73,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void createCategoryTest() throws Exception {
-        String requestBody = "{\"name\": \"create\"}";
+        String requestBody = "{\"name\": \"create\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -83,7 +83,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User2")
     public void createCategoryWithUnauthorizedUserTest() throws Exception {
-        String requestBody = "{\"name\": \"create\"}";
+        String requestBody = "{\"name\": \"create\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -93,7 +93,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void getCategoryByIdTest() throws Exception {
-        String dummyData = "{\"name\": \"getByIdData\"}";
+        String dummyData = "{\"name\": \"getByIdData\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));
@@ -117,12 +117,12 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void updateCategoryTest() throws Exception {
-        String dummyData = "{\"name\": \"updateData\"}";
+        String dummyData = "{\"name\": \"updateData\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));
 
-        String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
+        String requestBody = "{\"id\":1,\"name\":\"Apartments\",\"discount\":\"0\"}";
 
         this.mockMvc.perform(put("/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -136,7 +136,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User3")
     public void updateCategoryWithUnauthorizedUserTest() throws Exception {
-        String requestBody = "{\"id\":1,\"name\":\"Apartments\"}";
+        String requestBody = "{\"id\":1,\"name\":\"Apartments\",\"discount\":\"0\"}";
 
         this.mockMvc.perform(put("/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -147,7 +147,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void updateInvalidCategoryTest() throws Exception {
-        String updateRequestBody = "{\"id\":7000,\"name\":\"Electronics\"}";
+        String updateRequestBody = "{\"id\":7000,\"name\":\"Electronics\",\"discount\":\"0\"}";
 
         this.mockMvc.perform(put("/categories/{id}", 7000)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -168,12 +168,12 @@ public class CategoryControllerTest extends ContainersEnvironment {
     private void fillDeleteCategoryByIdDummyData() throws Exception {
 
         String[] deleteCategories = {
-                "{\"name\": \"deleteByIdData\"}",
-                "{\"name\": \"deleteByIdData1\"}",
-                "{\"name\": \"deleteByIdData2\"}",
-                "{\"name\": \"deleteByIdData3\"}",
-                "{\"name\": \"deleteByIdData4\"}",
-                "{\"name\": \"deleteByIdData5\"}"
+                "{\"name\": \"deleteByIdData\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByIdData1\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByIdData2\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByIdData3\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByIdData4\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByIdData5\",\"discount\":\"0\"}"
         };
         for (String category : deleteCategories) {
             this.mockMvc.perform(post("/categories")
@@ -215,12 +215,12 @@ public class CategoryControllerTest extends ContainersEnvironment {
     private void fillDeleteCategoryDummyData() throws Exception {
 
         String[] deleteCategories = {
-                "{\"name\": \"deleteByData\"}",
-                "{\"name\": \"deleteByData1\"}",
-                "{\"name\": \"deleteByData2\"}",
-                "{\"name\": \"deleteByData3\"}",
-                "{\"name\": \"deleteByData4\"}",
-                "{\"name\": \"deleteByData5\"}"
+                "{\"name\": \"deleteByData\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByData1\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByData2\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByData3\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByData4\",\"discount\":\"0\"}",
+                "{\"name\": \"deleteByData5\",\"discount\":\"0\"}"
         };
         for (String category : deleteCategories) {
             this.mockMvc.perform(post("/categories")
@@ -234,7 +234,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
 //    @WithUserDetails("Admin")
 //    public void deleteInvalidCategoryTest() throws Exception {
 //
-//        String deleteRequestBody = "{\"id\":100000000,\"name\":\"Apartments\"}";
+//        String deleteRequestBody = "{\"id\":100000000,\"name\":\"Apartments\","discount":"0"}";
 //        mockMvc.perform(delete("/categories")
 //                        .contentType(MediaType.APPLICATION_JSON)
 //                        .content(deleteRequestBody))
@@ -245,7 +245,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void getAllCategoriesTest() throws Exception {
         fillGetALlCategoriesDummyData();
-        String dummyData = "{\"name\": \"getAllData\"}";
+        String dummyData = "{\"name\": \"getAllData\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));
@@ -256,7 +256,7 @@ public class CategoryControllerTest extends ContainersEnvironment {
     }
 
     private void fillGetALlCategoriesDummyData() throws Exception {
-        String dummyData = "{\"name\": \"getAll\"}";
+        String dummyData = "{\"name\": \"getAll\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));

@@ -1,4 +1,4 @@
-package eu.senla.interceptor;
+package eu.senla.utils.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

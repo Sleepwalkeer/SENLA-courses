@@ -31,12 +31,6 @@ public class CredentialsServiceImpl implements CredentialsService {
     }
 
     public void create(CredentialsDto credentialsDto) {
-        if (credentialsDto.getPassword() == null || credentialsDto.getPassword().isEmpty()) {
-            throw new BadRequestException("Password is required");
-        }
-        if (credentialsDto.getUsername() == null || credentialsDto.getUsername().isEmpty()) {
-            throw new BadRequestException("Username is required");
-        }
         Credentials credentials = modelMapper.map(credentialsDto, Credentials.class);
         credentialsRepository.save(credentials);
     }
@@ -59,15 +53,11 @@ public class CredentialsServiceImpl implements CredentialsService {
     }
 
     public List<CredentialsDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
-        try {
-            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
-            Page<Credentials> credentialsPage = credentialsRepository.findAll(paging);
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Credentials> credentialsPage = credentialsRepository.findAll(paging);
 
-            return credentialsPage.getContent()
-                    .stream()
-                    .map(credentials -> modelMapper.map(credentials, CredentialsDto.class)).collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new DatabaseAccessException("Unable to access database");
-        }
+        return credentialsPage.getContent()
+                .stream()
+                .map(credentials -> modelMapper.map(credentials, CredentialsDto.class)).collect(Collectors.toList());
     }
 }

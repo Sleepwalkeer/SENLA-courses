@@ -4,6 +4,7 @@ import eu.senla.dto.AuthenticationRequestDto;
 import eu.senla.service.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequestDto request) {
+    public ResponseEntity<?> authenticate(@Valid  @RequestBody AuthenticationRequestDto request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 

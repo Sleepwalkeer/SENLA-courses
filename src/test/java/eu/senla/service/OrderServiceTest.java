@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -179,23 +180,27 @@ public class OrderServiceTest {
         List<Order> orders = new ArrayList<>();
         orders.add(order1);
         orders.add(order2);
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        Page<Order> orderPage = new PageImpl<>(orders,paging,orders.size());
 
-        when(orderRepository.findAll()).thenReturn(orders);
+
+        when(orderRepository.findAll(paging)).thenReturn(orderPage);
         when(modelMapper.map(eq(order1), eq(OrderDto.class)))
                 .thenReturn(orderDto1);
         when(modelMapper.map(eq(order2), eq(OrderDto.class)))
                 .thenReturn(orderDto2);
 
-        List<OrderDto> retrievedOrderDtos = orderService.getAll();
+        List<OrderDto> retrievedOrderDtos = orderService.getAll(1,2,"id");
 
-        verify(orderRepository).findAll();
+        verify(orderRepository).findAll(paging);
         Assertions.assertIterableEquals(orderDtos, retrievedOrderDtos);
     }
 
     @Test
     public void getAllWithDatabaseAccessExceptionTest() {
-        when(orderRepository.findAll()).thenThrow(new RuntimeException());
-        Assertions.assertThrows(DatabaseAccessException.class, () -> orderService.getAll());
-        verify(orderRepository).findAll();
+        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
+        when(orderRepository.findAll(paging)).thenThrow(new RuntimeException());
+        Assertions.assertThrows(DatabaseAccessException.class, () -> orderService.getAll(1,2,"id"));
+        verify(orderRepository).findAll(paging);
     }
 }

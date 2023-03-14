@@ -52,19 +52,19 @@ public class ItemControllerTest extends ContainersEnvironment {
     public void fillDummyAuthorizationData() {
         if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
             Account admin = Account.builder().firstName("Admin").secondName("Admin")
-                    .phone("+3758232734").email("kfgkzsf")
+                    .phone("+3758232734").email("kfgkzsf").discount(0F)
                     .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
             accountRepository.save(admin);
         }
         if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
             Account user2 = Account.builder().firstName("User2").secondName("user2")
-                    .phone("+375823274").email("kfgkzsfdf")
+                    .phone("+375823274").email("kfgkzsfdf").discount(0F)
                     .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
             accountRepository.save(user2);
         }
         if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
             Account user3 = Account.builder().firstName("User3").secondName("user3")
-                    .phone("+375823wer").email("kfgkzsddgd")
+                    .phone("+375823wer").email("kfgkzsddgd").discount(0F)
                     .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
             accountRepository.save(user3);
         }
@@ -82,12 +82,12 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     private void fillGetItemByIdDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"getByIddata11\"}";
+        String dummyCategoryData = "{\"name\": \"getByIddata11\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getItemByIddata\",\"price\":\"1\",\"quantity\":\"1\"}";
+        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getItemByIddata\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dummyItemData))
@@ -98,12 +98,13 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void createItemTest() throws Exception {
-        String dummyCategoryData = "{\"name\": \"createdata11\"}";
+        String dummyCategoryData = "{\"name\": \"createdata11\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
-        String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\",\"price\":\"1\",\"quantity\":\"1\"}";
+        String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\"," +
+                "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -136,7 +137,8 @@ public class ItemControllerTest extends ContainersEnvironment {
     public void updateItemTest() throws Exception {
         fillUpdateItemTestDummyData();
 
-        String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"},\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
+        String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\",\"discount\":\"0\"}," +
+                "\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\",\"discount\":\"0\"}";
         this.mockMvc.perform(put("/items/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -148,9 +150,6 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User2")
     public void updateItemWithUnauthorizedUserTest() throws Exception {
-
-        fillUpdateItemTestDummyData();
-
         String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"},\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
         this.mockMvc.perform(put("/items/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,11 +158,11 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     private void fillUpdateItemTestDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"updateDdata11\"}";
+        String dummyCategoryData = "{\"name\": \"updateDdata11\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"updateItem\",\"price\":\"12\",\"quantity\":\"1\"}";
+        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"updateItem\",\"price\":\"12\",\"quantity\":\"1\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyItemData));
@@ -183,7 +182,6 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void deleteItemByIdTest() throws Exception {
-
         fillDeleteItemByIdDummyData();
 
         mockMvc.perform(delete("/items/{id}", 4))
@@ -193,25 +191,22 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User3")
     public void deleteItemByIdWithUnauthorizedUserTest() throws Exception {
-
-        fillDeleteItemByIdDummyData();
-
         mockMvc.perform(delete("/items/{id}", 4))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     private void fillDeleteItemByIdDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"deleteByIdDdata11\"}";
+        String dummyCategoryData = "{\"name\": \"deleteByIdDdata11\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
         String[] dummyItemData = {
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata1\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata2\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata3\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata4\",\"price\":\"1\",\"quantity\":\"1\"}"
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata1\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata2\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata3\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata4\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}"
         };
 
         for (String dummyItemDatum : dummyItemData) {
@@ -258,17 +253,17 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     private void fillDeleteItemDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"deleteDdata11\"}";
+        String dummyCategoryData = "{\"name\": \"deleteDdata11\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
         String[] dummyItemData = {
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata1\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata2\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata3\",\"price\":\"1\",\"quantity\":\"1\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata4\",\"price\":\"1\",\"quantity\":\"1\"}"
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata1\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata2\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata3\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata4\",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}"
         };
 
         for (String dummyItemDatum : dummyItemData) {
@@ -300,12 +295,13 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     private void fillGetAllItemsWithDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"allitemscat\"}";
+        String dummyCategoryData = "{\"name\": \"allitemscat\",\"discount\":\"0\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getallItems\",\"price\":\"1\",\"quantity\":\"1\"}";
+        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getallItems\"," +
+                "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/items")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyItemData));

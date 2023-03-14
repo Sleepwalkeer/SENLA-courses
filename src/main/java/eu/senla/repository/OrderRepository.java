@@ -1,17 +1,18 @@
 package eu.senla.repository;
 
+import eu.senla.entity.Account;
+import eu.senla.entity.Item;
 import eu.senla.entity.Order;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.lang.NonNull;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
-@Repository
+import java.util.List;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
-//    Order findByIdEager(Integer id);
-//    List<Order> getOrdersWithMoreItemsThan(int itemCount);
 
-    @Override
-    Page<Order> findAll(@NonNull Pageable pageable);
+
+    @EntityGraph(value = "graph.Order.allFields", type = EntityGraph.EntityGraphType.LOAD)
+    Order findOrderById(Long id);
 }

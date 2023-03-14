@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
-
     private final PasswordEncoder passwordEncoder;
 
     //TODO разберись с тем будешь ли проверять на invalidIdDelete или нет
@@ -34,18 +33,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public void create(AccountDto accountDto) {
-        if (accountDto.getCredentials() == null) {
-            throw new BadRequestException("Credentials are required");
-        }
-        if (accountDto.getFirstName() == null || accountDto.getSecondName() == null) {
-            throw new BadRequestException("First and second name is required");
-        }
-        if(!emailPatternMatches(accountDto.getEmail())){
-            throw new BadRequestException("Email is invalid");
-        }
-        if(phonePatternMatches(accountDto.getPhone())){
-            throw new BadRequestException("Phone number is invalid");
-        }
         CredentialsDto credentials = accountDto.getCredentials();
         credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
         Account account = modelMapper.map(accountDto, Account.class);
@@ -71,29 +58,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public List<AccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
-        try {
-            Pageable paging = PageRequest.of(pageNo,pageSize, Sort.by(sortBy));
-            Page<Account>  accountPage = accountRepository.findAll(paging);
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Account> accountPage = accountRepository.findAll(paging);
 
-            return accountPage.getContent()
-                    .stream()
-                    .map(account -> modelMapper.map(account, AccountDto.class)).collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new DatabaseAccessException("Unable to access database");
-        }
-    }
-
-    private static boolean emailPatternMatches(String email) {
-       String regexPattern = "^(.+)@(\\S+)$";
-        return Pattern.compile(regexPattern)
-                .matcher(email)
-                .matches();
-    }
-
-    private static boolean phonePatternMatches(String phone){
-        String regexPattern = "^(\\+375|80)(29|25|44|33)(\\d{3})(\\d{2})(\\d{2})$";
-        return  Pattern.compile(regexPattern)
-                .matcher(phone)
-                .matches();
+        return accountPage.getContent()
+                .stream()
+                .map(account -> modelMapper.map(account, AccountDto.class)).collect(Collectors.toList());
     }
 }

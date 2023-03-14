@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import liquibase.integration.spring.SpringLiquibase;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -29,7 +28,7 @@ import javax.sql.DataSource;
                 )
         }
 )
-@PropertySource("classpath:applicationTest.properties")
+@PropertySource("classpath:application-test.properties")
 public class ContextConfigurationTest {
 
     @Value("${spring.datasource.driver-class-name}")
