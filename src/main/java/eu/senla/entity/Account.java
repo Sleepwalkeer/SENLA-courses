@@ -1,8 +1,6 @@
 package eu.senla.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -38,7 +36,8 @@ public class Account {
     @JoinColumn(name = "id")
     private Credentials credentials;
 
+    @Builder.Default
     @Column(name = "discount")
-    private Float discount;
+    private Float discount = 0F;
 
 }

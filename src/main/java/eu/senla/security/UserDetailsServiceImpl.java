@@ -1,7 +1,7 @@
 package eu.senla.security;
 
-import eu.senla.repository.CredentialsRepository;
 import eu.senla.entity.Credentials;
+import eu.senla.repository.CredentialsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

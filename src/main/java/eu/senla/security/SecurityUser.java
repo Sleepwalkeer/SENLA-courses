@@ -16,6 +16,14 @@ public class SecurityUser implements UserDetails {
     private final String password;
     private final List<SimpleGrantedAuthority> authorities;
 
+    public static UserDetails fromCredentials(Credentials credentials) {
+        return new SecurityUser(
+                credentials.getId(),
+                credentials.getUsername(),
+                credentials.getPassword(),
+                credentials.getRole().getAuthorities().stream().toList()
+        );
+    }
 
     public Long getId() {
         return id;
@@ -54,14 +62,5 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public static UserDetails fromCredentials(Credentials credentials) {
-        return new SecurityUser(
-                credentials.getId(),
-                credentials.getUsername(),
-                credentials.getPassword(),
-                credentials.getRole().getAuthorities().stream().toList()
-        );
     }
 }

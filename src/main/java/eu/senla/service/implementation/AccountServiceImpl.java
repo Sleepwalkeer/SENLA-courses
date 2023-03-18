@@ -1,21 +1,23 @@
-package eu.senla.service;
+package eu.senla.service.implementation;
 
-import eu.senla.dto.CredentialsDto;
-import eu.senla.repository.AccountRepository;
-import eu.senla.dto.AccountDto;
+import eu.senla.dto.accountDto.CreateAccountDto;
+import eu.senla.dto.accountDto.ResponseAccountDto;
+import eu.senla.dto.accountDto.UpdateAccountDto;
+import eu.senla.dto.credentialsDto.CredentialsDto;
 import eu.senla.entity.Account;
-import eu.senla.exception.BadRequestException;
-import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.AccountRepository;
+import eu.senla.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,43 +28,38 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
 
     //TODO разберись с тем будешь ли проверять на invalidIdDelete или нет
-    public AccountDto getById(Long id) {
+    public ResponseAccountDto getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
-        return modelMapper.map(account, AccountDto.class);
+        return modelMapper.map(account, ResponseAccountDto.class);
     }
 
-    public void create(AccountDto accountDto) {
+    public ResponseAccountDto create(CreateAccountDto accountDto) {
         CredentialsDto credentials = accountDto.getCredentials();
         credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
         Account account = modelMapper.map(accountDto, Account.class);
         accountRepository.save(account);
+        return modelMapper.map(account, ResponseAccountDto.class);
     }
 
-    public AccountDto update(Long id, AccountDto accountDto) {
+    public ResponseAccountDto update(Long id, UpdateAccountDto accountDto) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
         modelMapper.map(accountDto, account);
         Account updatedAccount = accountRepository.save(account);
-        return modelMapper.map(updatedAccount, AccountDto.class);
+        return modelMapper.map(updatedAccount, ResponseAccountDto.class);
     }
 
     public void deleteById(Long id) {
         accountRepository.deleteById(id);
     }
 
-
-    public void delete(AccountDto accountDto) {
-        accountRepository.delete(modelMapper.map(accountDto, Account.class));
-
-    }
-
-    public List<AccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
+    public List<ResponseAccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Account> accountPage = accountRepository.findAll(paging);
 
         return accountPage.getContent()
                 .stream()
-                .map(account -> modelMapper.map(account, AccountDto.class)).collect(Collectors.toList());
+                .map(account -> modelMapper.map(account, ResponseAccountDto.class)).collect(Collectors.toList());
     }
 }

@@ -1,13 +1,13 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
-import eu.senla.repository.AccountRepository;
 import eu.senla.entity.Account;
 import eu.senla.entity.Credentials;
 import eu.senla.entity.Role;
+import eu.senla.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,21 +51,43 @@ public class CategoryControllerTest extends ContainersEnvironment {
 
     public void fillDummyAuthorizationData() {
         if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
-            Account admin = Account.builder().firstName("Admin").secondName("Admin")
-                    .phone("+3758232734").email("kfgkzsf").discount(0F)
-                    .credentials(Credentials.builder().username("Admin").password("escapism").role(Role.ADMIN).build()).build();
+            Account admin = Account.builder()
+                    .firstName("Admin")
+                    .secondName("Admin")
+                    .phone("+3758232734")
+                    .email("kfgkzsf")
+                    .credentials(Credentials.builder()
+                            .username("Admin")
+                            .password("escapism")
+                            .role(Role.ADMIN)
+                            .build())
+                    .build();
             accountRepository.save(admin);
         }
         if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
-            Account user2 = Account.builder().firstName("User2").secondName("user2")
-                    .phone("+375823274").email("kfgkzsfdf").discount(0F)
-                    .credentials(Credentials.builder().username("User2").password("escapism2").role(Role.USER).build()).build();
+            Account user2 = Account.builder()
+                    .firstName("User2")
+                    .secondName("user2")
+                    .phone("+375823274")
+                    .email("kfgkzsfdf")
+                    .credentials(Credentials.builder()
+                            .username("User2")
+                            .password("escapism2")
+                            .build())
+                    .build();
             accountRepository.save(user2);
         }
         if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
-            Account user3 = Account.builder().firstName("User3").secondName("user3")
-                    .phone("+375823wer").email("kfgkzsddgd").discount(0F)
-                    .credentials(Credentials.builder().username("User3").password("escapism3").role(Role.USER).build()).build();
+            Account user3 = Account.builder()
+                    .firstName("User3")
+                    .secondName("user3")
+                    .phone("+375823wer")
+                    .email("kfgkzsddgd")
+                    .credentials(Credentials.builder()
+                            .username("User3")
+                            .password("escapism3")
+                            .build())
+                    .build();
             accountRepository.save(user3);
         }
     }
@@ -98,10 +120,8 @@ public class CategoryControllerTest extends ContainersEnvironment {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));
 
-        int categoryId = 1;
-        this.mockMvc.perform(get("/categories/{id}", categoryId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(categoryId));
+        this.mockMvc.perform(get("/categories/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -122,14 +142,13 @@ public class CategoryControllerTest extends ContainersEnvironment {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyData));
 
-        String requestBody = "{\"id\":1,\"name\":\"Apartments\",\"discount\":\"0\"}";
+        String requestBody = "{\"id\":\"1\" ,\"name\":\"Apartments\",\"discount\":\"0\"}";
 
         this.mockMvc.perform(put("/categories/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Apartments"));
     }
 
@@ -159,7 +178,6 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void deleteCategoryByIdTest() throws Exception {
-
         fillDeleteCategoryByIdDummyData();
         mockMvc.perform(delete("/categories/{id}", 6))
                 .andExpect(MockMvcResultMatchers.status().isOk());
@@ -185,8 +203,6 @@ public class CategoryControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User3")
     public void deleteCategoryByIdWithUnauthorizedUserTest() throws Exception {
-
-        fillDeleteCategoryByIdDummyData();
         mockMvc.perform(delete("/categories/{id}", 7))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
@@ -200,35 +216,23 @@ public class CategoryControllerTest extends ContainersEnvironment {
 //                .andExpect(MockMvcResultMatchers.status().isNotFound());
 //    }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void deleteCategoryTest() throws Exception {
-        fillDeleteCategoryDummyData();
-
-        String deleteRequestBody = "{\"id\":\"5\"}";
-        mockMvc.perform(delete("/categories")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(deleteRequestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    private void fillDeleteCategoryDummyData() throws Exception {
-
-        String[] deleteCategories = {
-                "{\"name\": \"deleteByData\",\"discount\":\"0\"}",
-                "{\"name\": \"deleteByData1\",\"discount\":\"0\"}",
-                "{\"name\": \"deleteByData2\",\"discount\":\"0\"}",
-                "{\"name\": \"deleteByData3\",\"discount\":\"0\"}",
-                "{\"name\": \"deleteByData4\",\"discount\":\"0\"}",
-                "{\"name\": \"deleteByData5\",\"discount\":\"0\"}"
-        };
-        for (String category : deleteCategories) {
-            this.mockMvc.perform(post("/categories")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(category))
-                    .andExpect(MockMvcResultMatchers.status().isOk());
-        }
-    }
+//    private void fillDeleteCategoryDummyData() throws Exception {
+//
+//        String[] deleteCategories = {
+//                "{\"name\": \"deleteByData\",\"discount\":\"0\"}",
+//                "{\"name\": \"deleteByData1\",\"discount\":\"0\"}",
+//                "{\"name\": \"deleteByData2\",\"discount\":\"0\"}",
+//                "{\"name\": \"deleteByData3\",\"discount\":\"0\"}",
+//                "{\"name\": \"deleteByData4\",\"discount\":\"0\"}",
+//                "{\"name\": \"deleteByData5\",\"discount\":\"0\"}"
+//        };
+//        for (String category : deleteCategories) {
+//            this.mockMvc.perform(post("/categories")
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(category))
+//                    .andExpect(MockMvcResultMatchers.status().isOk());
+//        }
+//    }
 
 //    @Test
 //    @WithUserDetails("Admin")

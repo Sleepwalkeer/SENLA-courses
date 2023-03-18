@@ -1,9 +1,8 @@
 package eu.senla.controller;
 
 import eu.senla.dto.AuthenticationRequestDto;
-import eu.senla.service.AuthenticationServiceImpl;
+import eu.senla.service.implementation.AuthenticationServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +21,13 @@ public class AuthenticationController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@Valid  @RequestBody AuthenticationRequestDto request) {
+    public ResponseEntity<?> authenticate(@Valid @RequestBody AuthenticationRequestDto request) {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        authenticationService.logout(request, response);
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        authenticationService.logout(request);
+        return ResponseEntity.ok(authenticationService.logout(request));
     }
 }

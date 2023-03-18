@@ -1,8 +1,11 @@
-package eu.senla.dto;
+package eu.senla.dto.accountDto;
 
-import jakarta.persistence.Column;
+import eu.senla.dto.credentialsDto.CredentialsDto;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter
@@ -11,23 +14,20 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class AccountDto {
+public class CreateAccountDto {
 
-    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank(message = "First name cannot be empty")
-    @Size(min = 2,max = 25, message = "First name cannot exceed 25 characters")
+    @Size(max = 25, message = "First name cannot exceed 25 characters")
     private String firstName;
 
     @NotBlank(message = "Second name cannot be empty")
-    @Size(min = 2,max = 25, message = "Second name cannot exceed 25 characters")
+    @Size(max = 25, message = "Second name cannot exceed 25 characters")
     private String secondName;
 
     @NotBlank(message = "Phone number must be specified")
-    @Size(min = 2,max = 20, message = "phone number cannot exceed 20 characters (whitespaces included)")
-    @Pattern(regexp = "^(\\+375|80)(29|25|44|33)(\\d{7})$")
+    @Pattern(regexp = "^(\\+375|80)(29|25|44|33)(\\d{7})$", message = "Phone number is invalid")
     private String phone;
     //TODO ПРОВЕРЬ РЕГУЛЯРКИ
 
@@ -37,9 +37,6 @@ public class AccountDto {
     private String email;
 
     @NotNull(message = "Credentials must be specified")
+    @Valid
     private CredentialsDto credentials;
-
-    @Min(value = 0L, message = "discount cannot be negative")
-    @Max(value = 1L, message = "discount cannot be more than 1")
-    private Float discount;
 }

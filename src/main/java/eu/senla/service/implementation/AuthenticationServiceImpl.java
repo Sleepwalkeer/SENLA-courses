@@ -1,27 +1,33 @@
-package eu.senla.service;
+package eu.senla.service.implementation;
 
-import eu.senla.repository.CredentialsRepository;
 import eu.senla.dto.AuthenticationRequestDto;
 import eu.senla.entity.Credentials;
+import eu.senla.repository.CredentialsRepository;
 import eu.senla.security.JwtTokenProvider;
+import eu.senla.service.AuthenticationService;
+import eu.senla.service.JwtTokenBlacklistService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final CredentialsRepository credentialsRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
+    private final JwtTokenBlacklistService jwtTokenBlacklistService;
+
+    @Value("${jwt.header}")
+    private String authorizationHeader;
 
 
     @Override
@@ -38,8 +44,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void logout(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, null);
+    public String logout(HttpServletRequest request) {
+        String token = getTokenFromRequest(request);
+        jwtTokenBlacklistService.blacklistToken(token);
+        return "Logged out successfully.";
+
+    }
+
+    private String getTokenFromRequest(HttpServletRequest request) {
+        return request.getHeader(authorizationHeader);
     }
 }

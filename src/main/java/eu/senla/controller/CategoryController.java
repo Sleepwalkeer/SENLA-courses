@@ -1,6 +1,8 @@
 package eu.senla.controller;
 
-import eu.senla.dto.CategoryDto;
+import eu.senla.dto.categoryDto.CategoryDto;
+import eu.senla.dto.categoryDto.CreateCategoryDto;
+import eu.senla.dto.categoryDto.ResponseCategoryDto;
 import eu.senla.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,19 +22,19 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('read')")
-    public CategoryDto getCategoryById(@PathVariable Long id) {
+    public ResponseCategoryDto getCategoryById(@PathVariable Long id) {
         return categoryService.getById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createCategory(@Valid  @RequestBody CategoryDto categoryDto) {
+    public void createCategory(@Valid @RequestBody CreateCategoryDto categoryDto) {
         categoryService.create(categoryDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write')")
-    public CategoryDto updateCategory(@PathVariable Long id,@Valid @RequestBody CategoryDto categoryDto) {
+    public ResponseCategoryDto updateCategory(@PathVariable Long id, @Valid @RequestBody CategoryDto categoryDto) {
         return categoryService.update(id, categoryDto);
     }
 
@@ -42,17 +44,11 @@ public class CategoryController {
         categoryService.deleteById(id);
     }
 
-    @DeleteMapping
-    @PreAuthorize("hasAuthority('write')")
-    public void deleteCategory(@Valid @RequestBody CategoryDto categoryDto) {
-        categoryService.delete(categoryDto);
-    }
-
     @GetMapping
     @PreAuthorize("hasAuthority('read')")
-    public List<CategoryDto> getAllCategories(
+    public List<ResponseCategoryDto> getAllCategories(
             @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         return categoryService.getAll(pageNo, pageSize, sortBy);
     }

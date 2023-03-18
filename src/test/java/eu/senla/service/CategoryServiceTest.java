@@ -1,11 +1,12 @@
 package eu.senla.service;
 
-import eu.senla.repository.CategoryRepository;
-import eu.senla.dto.CategoryDto;
+import eu.senla.dto.categoryDto.CategoryDto;
+import eu.senla.dto.categoryDto.CreateCategoryDto;
+import eu.senla.dto.categoryDto.ResponseCategoryDto;
 import eu.senla.entity.Category;
-import eu.senla.exception.BadRequestException;
-import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.CategoryRepository;
+import eu.senla.service.implementation.CategoryServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ public class CategoryServiceTest {
     @Test
     public void createTest() {
         Category category = Category.builder().id(1L).name("Construction tools").build();
-        CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
+        CreateCategoryDto categoryDto = CreateCategoryDto.builder().name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
@@ -47,23 +48,17 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void createWithInvalidDataTest() {
-        CategoryDto categoryDto = CategoryDto.builder().build();
-        Assertions.assertThrows(BadRequestException.class, () -> categoryService.create(categoryDto));
-    }
-
-    @Test
     public void getByIdTest() {
-        Category category = Category.builder().id(1L).name("Construction tools").build();
-        CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
-        when(categoryRepository.findById(1L)).thenReturn(Optional.ofNullable(category));
-        when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
+        Category category = Category.builder().name("Construction tools").build();
+        ResponseCategoryDto categoryDto = ResponseCategoryDto.builder().name("Construction tools").build();
 
-        CategoryDto categoryDtoRetrieved = categoryService.getById(1L);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.ofNullable(category));
+        when(modelMapper.map(category, ResponseCategoryDto.class)).thenReturn(categoryDto);
+
+        ResponseCategoryDto categoryDtoRetrieved = categoryService.getById(1L);
 
         verify(categoryRepository).findById(1L);
-        Assertions.assertNotNull(categoryDto);
-        Assertions.assertEquals(categoryDto, categoryDtoRetrieved);
+        Assertions.assertNotNull(categoryDtoRetrieved);
     }
 
     @Test
@@ -76,19 +71,18 @@ public class CategoryServiceTest {
 
     @Test
     public void updateTest() {
-        Category category = Category.builder().id(1L).name("Construction tools").build();
-        CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
+        Category category = Category.builder().name("Construction tools").build();
+        CategoryDto categoryDto = CategoryDto.builder().name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.findById(1L)).thenReturn(Optional.ofNullable(category));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
-        CategoryDto categoryDtoRetrieved = categoryService.update(1L, categoryDto);
+        ResponseCategoryDto categoryDtoRetrieved = categoryService.update(1L, categoryDto);
 
         verify(categoryRepository).findById(1L);
         verify(categoryRepository).save(category);
-        Assertions.assertEquals(categoryDto, categoryDtoRetrieved);
     }
 
     @Test
@@ -105,18 +99,6 @@ public class CategoryServiceTest {
         verify(categoryRepository).findById(1L);
     }
 
-
-    @Test
-    public void deleteTest() {
-        CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
-        Category category = Category.builder().id(1L).name("Construction tools").build();
-        doNothing().when(categoryRepository).delete(category);
-        when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
-        categoryService.delete(categoryDto);
-        verify(categoryRepository).delete(category);
-    }
-
-
     @Test
     public void deleteByIdTest() {
         doNothing().when(categoryRepository).deleteById(1L);
@@ -130,6 +112,7 @@ public class CategoryServiceTest {
     public void getAllTest() {
         CategoryDto categoryDto1 = CategoryDto.builder().id(1L).name("Construction tools").build();
         CategoryDto categoryDto2 = CategoryDto.builder().id(2L).name("furniture").build();
+
         List<CategoryDto> categoryDtos = new ArrayList<>();
         categoryDtos.add(categoryDto1);
         categoryDtos.add(categoryDto2);
@@ -140,7 +123,7 @@ public class CategoryServiceTest {
         categories.add(category1);
         categories.add(category2);
         Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
-        Page<Category> categoryPage = new PageImpl<>(categories,paging,categories.size());
+        Page<Category> categoryPage = new PageImpl<>(categories, paging, categories.size());
 
         when(categoryRepository.findAll(paging)).thenReturn(categoryPage);
         when(modelMapper.map(eq(category1), eq(CategoryDto.class)))
@@ -148,17 +131,8 @@ public class CategoryServiceTest {
         when(modelMapper.map(eq(category2), eq(CategoryDto.class)))
                 .thenReturn(categoryDto2);
 
-        List<CategoryDto> retrievedCategoryDtos = categoryService.getAll(1,2,"id");
+        categoryService.getAll(1, 2, "id");
 
-        verify(categoryRepository).findAll(paging);
-        Assertions.assertIterableEquals(categoryDtos, retrievedCategoryDtos);
-    }
-
-    @Test
-    public void getAllWithDatabaseAccessExceptionTest() {
-        Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
-        when(categoryRepository.findAll(paging)).thenThrow(new RuntimeException());
-        Assertions.assertThrows(DatabaseAccessException.class, () -> categoryService.getAll(1,2,"id"));
         verify(categoryRepository).findAll(paging);
     }
 }

@@ -1,7 +1,8 @@
-package eu.senla.dto;
+package eu.senla.dto.orderDto;
 
+import eu.senla.dto.accountDto.AccountDto;
+import eu.senla.dto.itemDto.ItemDto;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -16,10 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class OrderDto {
 
-    @EqualsAndHashCode.Include
     private Long id;
 
     @NotNull(message = "Customer must be specified")
@@ -29,7 +28,7 @@ public class OrderDto {
     private AccountDto worker;
 
     @NotEmpty(message = "List of rented items cannot be empty")
-    private List<ItemDto> itemList;
+    private List<ItemDto> items;
 
     @NotNull(message = "Start DateTime must be specified")
     private Timestamp startDateTime;

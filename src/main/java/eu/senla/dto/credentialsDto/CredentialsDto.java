@@ -1,4 +1,4 @@
-package eu.senla.dto;
+package eu.senla.dto.credentialsDto;
 
 import eu.senla.entity.Role;
 import jakarta.validation.constraints.NotBlank;
@@ -11,10 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CredentialsDto {
 
-    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank(message = "Username must be specified")
@@ -25,5 +23,6 @@ public class CredentialsDto {
     @Size(min = 5, max = 30, message = "Password must be at least 5 characters long")
     private String password;
 
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 }

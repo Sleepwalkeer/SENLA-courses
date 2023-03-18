@@ -19,15 +19,7 @@ import javax.sql.DataSource;
 @EnableAspectJAutoProxy
 @EnableJpaRepositories("eu.senla.repository")
 @Configuration
-@ComponentScan(
-        basePackages = {"eu.senla"},
-        excludeFilters = {
-                @ComponentScan.Filter(
-                        type = FilterType.REGEX,
-                        pattern = "eu\\.senla\\.configuration\\..*"
-                )
-        }
-)
+@ComponentScan(basePackages = {"eu.senla"})
 @PropertySource("classpath:application-test.properties")
 public class ContextConfigurationTest {
 

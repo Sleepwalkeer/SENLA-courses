@@ -1,14 +1,17 @@
-package eu.senla.service;
+package eu.senla.service.implementation;
 
-import eu.senla.dto.OrderDto;
+import eu.senla.dto.orderDto.CreateOrderDto;
+import eu.senla.dto.orderDto.ResponseOrderDto;
+import eu.senla.dto.orderDto.UpdateOrderDto;
 import eu.senla.entity.Item;
 import eu.senla.entity.Order;
 import eu.senla.exception.BadRequestException;
-import eu.senla.exception.DatabaseAccessException;
 import eu.senla.exception.ItemOutOfStockException;
 import eu.senla.exception.NotFoundException;
+import eu.senla.repository.AccountRepository;
 import eu.senla.repository.ItemRepository;
 import eu.senla.repository.OrderRepository;
+import eu.senla.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -22,60 +25,75 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
-
     private final ItemRepository itemRepository;
+    private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
 
 
-    public OrderDto getById(Long id) {
+    public ResponseOrderDto getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
-        return modelMapper.map(order, OrderDto.class);
+        return modelMapper.map(order, ResponseOrderDto.class);
     }
 
-    public void create(OrderDto orderDto) {
+
+    public ResponseOrderDto create(CreateOrderDto orderDto) {
         if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
             throw new BadRequestException("Start DateTime cannot be later than end DateTime");
         }
         Order order = modelMapper.map(orderDto, Order.class);
-        order = orderRepository.save(order);
-        order.setTotalPrice(evaluateTotalPrice(order));
+
+        List<Long> itemIds = order.getItems().stream().map(Item::getId).toList();
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        order.setItems(items);
+        order.setCustomer(accountRepository.findById(order.getCustomer().getId()).get());
+        order.setTotalPrice(calculateTotalPrice(order));
         orderRepository.save(order);
-        decrementOrderItemQuantities(order.getItems());
+        decrementQuantityEveryItem(order.getItems());
+        return modelMapper.map(order, ResponseOrderDto.class);
     }
 
-    public OrderDto update(Long id, OrderDto orderDto) {
+    public ResponseOrderDto update(Long id, UpdateOrderDto orderDto) {
+        if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
+            throw new BadRequestException("Start DateTime cannot be later than end DateTime");
+        }
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
         modelMapper.map(orderDto, order);
+
+        //МОЖЕТ EXIST BY ID?
+
+        List<Long> itemIds = order.getItems().stream().map(Item::getId).toList();
+        List<Item> items = itemRepository.findByIdIn(itemIds);
+        order.setItems(items);
+        order.setCustomer(accountRepository.findById(order.getCustomer().getId()).get());
+
+        order.setTotalPrice(calculateTotalPrice(order));
+
         Order updatedOrder = orderRepository.save(order);
-        return modelMapper.map(updatedOrder, OrderDto.class);
+        return modelMapper.map(updatedOrder, ResponseOrderDto.class);
     }
 
     public void deleteById(Long id) {
         orderRepository.deleteById(id);
     }
 
-    public void delete(OrderDto orderDto) {
-        orderRepository.delete(modelMapper.map(orderDto, Order.class));
-    }
 
-    public List<OrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
+    public List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Order> orderPage = orderRepository.findAll(paging);
 
         return orderPage.getContent()
                 .stream()
-                .map(order -> modelMapper.map(order, OrderDto.class)).collect(Collectors.toList());
+                .map(order -> modelMapper.map(order, ResponseOrderDto.class)).collect(Collectors.toList());
     }
 
-    private BigDecimal evaluateTotalPrice(Order order) {
+    private BigDecimal calculateTotalPrice(Order order) {
         float customerDiscount = order.getCustomer().getDiscount();
         BigDecimal totalPricePerDay = BigDecimal.ZERO;
         for (Item item : order.getItems()) {
@@ -87,11 +105,10 @@ public class OrderServiceImpl implements OrderService {
             //Stream.of(first, second, third).max(Integer::compareTo).get()
         }
         Duration rentDuration = Duration.between(order.getStartDateTime().toInstant(), order.getEndDateTime().toInstant());
-        BigDecimal totalPrice = totalPricePerDay.multiply(BigDecimal.valueOf(rentDuration.toDays()));
-        return totalPrice;
+        return totalPricePerDay.multiply(BigDecimal.valueOf(rentDuration.toDays()));
     }
 
-    private void decrementOrderItemQuantities(List<Item> items) {
+    private void decrementQuantityEveryItem(List<Item> items) {
         List<Long> itemIds = new ArrayList<>();
         for (Item item : items) {
             if (item.getQuantity() < 1) {

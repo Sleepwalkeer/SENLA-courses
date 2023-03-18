@@ -26,6 +26,7 @@ public class Credentials {
     private String password;
 
     @Enumerated(value = EnumType.STRING)
-    private Role role;
+    @Builder.Default
+    private Role role = Role.USER;
 
 }

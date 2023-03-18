@@ -55,6 +55,7 @@ public class Order {
 
     @Column(name = "end_datetime", nullable = false)
     private Timestamp endDateTime;
+    //TODO поменяй на LocalDateTime
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;

@@ -1,6 +1,8 @@
 package eu.senla.controller;
 
-import eu.senla.dto.AccountDto;
+import eu.senla.dto.accountDto.CreateAccountDto;
+import eu.senla.dto.accountDto.ResponseAccountDto;
+import eu.senla.dto.accountDto.UpdateAccountDto;
 import eu.senla.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,23 +22,19 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public AccountDto getAccountById(@PathVariable Long id) {
-
-        log.info("Incoming request: GET /accounts/" + id);
-        AccountDto response = accountService.getById(id);
-        log.info("Outgoing response: {}", response);
-        return response;
+    public ResponseAccountDto getAccountById(@PathVariable Long id) {
+        return accountService.getById(id);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('read')")
-    public void createAccount(@Valid @RequestBody AccountDto accountDto) {
-        accountService.create(accountDto);
+    public ResponseAccountDto createAccount(@Valid @RequestBody CreateAccountDto accountDto) {
+        return accountService.create(accountDto);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('write') || #id == authentication.principal.id")
-    public AccountDto updateAccount(@PathVariable Long id,@Valid @RequestBody AccountDto accountDto) {
+    public ResponseAccountDto updateAccount(@PathVariable Long id, @Valid @RequestBody UpdateAccountDto accountDto) {
         return accountService.update(id, accountDto);
     }
 
@@ -46,17 +44,11 @@ public class AccountController {
         accountService.deleteById(id);
     }
 
-    @DeleteMapping
-    @PreAuthorize("hasAuthority('write')|| #accountDto.id == authentication.principal.id")
-    public void deleteAccount(@Valid @RequestBody AccountDto accountDto) {
-        accountService.delete(accountDto);
-    }
-
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public List<AccountDto> getAllAccounts(
+    public List<ResponseAccountDto> getAllAccounts(
             @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         return accountService.getAll(pageNo, pageSize, sortBy);
     }

@@ -23,6 +23,11 @@ public class RestExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
+    @ExceptionHandler(JwtAuthenticationException.class)
+    public ResponseEntity<String> handleJwtAuthenticationException(JwtAuthenticationException ex) {
+        log.error("Access denied");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
@@ -31,22 +36,15 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map> handleValidationExceptions(MethodArgumentNotValidException ex){
-        Map<String,String> errors = new HashMap<>();
+    public ResponseEntity<Map> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName,errorMessage);
+            errors.put(fieldName, errorMessage);
         });
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-    }
-
-    @ExceptionHandler(DatabaseAccessException.class)
-    public ResponseEntity<String> handleDatabaseAccessException(DatabaseAccessException ex) {
-        log.error("Service Unavailable Exception");
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(ex.getMessage());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -64,9 +62,9 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(ItemOutOfStockException.class)
-    public ResponseEntity<String> handleItemOutOfStockException(ItemOutOfStockException ex){
+    public ResponseEntity<String> handleItemOutOfStockException(ItemOutOfStockException ex) {
         log.error(ex.getMessage());
-        return  ResponseEntity.status(HttpStatus.CONFLICT)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage() + " Please, remove this item from your order");
     }
 }

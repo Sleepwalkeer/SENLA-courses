@@ -7,9 +7,9 @@ public enum Permission {
     PERMISSION_READ("read"),
     PERMISSION_WRITE("write");
 
+    private final String permission;
+
     public String getPermission() {
         return permission;
     }
-
-    private final String permission;
 }

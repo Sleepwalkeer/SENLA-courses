@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "item")
 public class Item {
+
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +31,12 @@ public class Item {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
+    @Builder.Default
     @Column(name = "quantity", nullable = false)
-    private Integer quantity;
+    private Integer quantity = 0;
 
-    @Column(name = "discount",columnDefinition = "real default 0")
+    @Builder.Default
+    @Column(name = "discount")
     private Float discount = 0F;
 
 }

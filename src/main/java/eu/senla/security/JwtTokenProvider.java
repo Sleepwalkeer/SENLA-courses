@@ -1,12 +1,12 @@
 package eu.senla.security;
 
 import eu.senla.exception.JwtAuthenticationException;
+import eu.senla.service.JwtTokenBlacklistService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +22,7 @@ import java.util.Date;
 @PropertySource("classpath:application.properties")
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
+    private final JwtTokenBlacklistService jwtTokenBlacklistService;
 
     @Value("${jwt.header}")
     private String authorizationHeader;
@@ -54,10 +55,12 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
+            boolean isTokenExpired = claimsJws.getBody().getExpiration().before(new Date());
+            boolean isTokenBlacklisted = jwtTokenBlacklistService.isTokenBlacklisted(token);
+            return !isTokenBlacklisted && !isTokenExpired;
 
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is invalid or expired", HttpStatus.UNAUTHORIZED);
+            throw new JwtAuthenticationException("JWT token is invalid or expired");
         }
     }
 

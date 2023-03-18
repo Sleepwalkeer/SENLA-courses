@@ -1,6 +1,8 @@
 package eu.senla.controller;
 
-import eu.senla.dto.OrderDto;
+import eu.senla.dto.orderDto.CreateOrderDto;
+import eu.senla.dto.orderDto.ResponseOrderDto;
+import eu.senla.dto.orderDto.UpdateOrderDto;
 import eu.senla.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,40 +21,34 @@ public class OrderController {
 
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('read')")
-    public OrderDto getOrderById(@PathVariable Long id) {
+    @PreAuthorize("hasAuthority('write') or @orderAccessControlService.isOrderAccessibleByUser(#id, authentication.principal.id)")
+    public ResponseOrderDto getOrderById(@PathVariable Long id) {
         return orderService.getById(id);
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public void createOrder(@Valid  @RequestBody OrderDto orderDto) {
-        orderService.create(orderDto);
+    @PreAuthorize("hasAuthority('write') or #orderDto.customer.id == authentication.principal.id")
+    public ResponseOrderDto createOrder(@Valid @RequestBody CreateOrderDto orderDto) {
+        return orderService.create(orderDto);
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('write') || #orderDto.customer.id == authentication.principal.id")
-    public OrderDto updateOrder(@PathVariable Long id, @Valid @RequestBody OrderDto orderDto) {
+    @PreAuthorize("hasAuthority('write') or #orderDto.customer.id == authentication.principal.id")
+    public ResponseOrderDto updateOrder(@PathVariable Long id, @Valid @RequestBody UpdateOrderDto orderDto) {
         return orderService.update(id, orderDto);
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('write')")
+    @PreAuthorize("hasAuthority('write') or @orderAccessControlService.isOrderAccessibleByUser(#id, authentication.principal.id)")
     public void deleteOrderById(@PathVariable Long id) {
         orderService.deleteById(id);
     }
 
-    @DeleteMapping
-    @PreAuthorize("hasAuthority('write')")
-    public void deleteOrder(@Valid @RequestBody OrderDto orderDto) {
-        orderService.delete(orderDto);
-    }
-
     @GetMapping
     @PreAuthorize("hasAuthority('write')")
-    public List<OrderDto> getAllOrders(
+    public List<ResponseOrderDto> getAllOrders(
             @RequestParam(defaultValue = "0") Integer pageNo,
-            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         return orderService.getAll(pageNo, pageSize, sortBy);
     }

@@ -1,4 +1,4 @@
-package eu.senla.dto;
+package eu.senla.dto.categoryDto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -12,10 +12,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CategoryDto {
 
-    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank(message = "category name must be specified")
@@ -24,5 +22,6 @@ public class CategoryDto {
 
     @Min(value = 0L, message = "discount cannot be negative")
     @Max(value = 1L, message = "discount cannot be more than 1")
-    private Float discount;
+    @Builder.Default
+    private Float discount = 0F;
 }

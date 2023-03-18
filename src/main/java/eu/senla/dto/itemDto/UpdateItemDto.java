@@ -1,6 +1,7 @@
-package eu.senla.dto;
+package eu.senla.dto.itemDto;
 
 
+import eu.senla.dto.categoryDto.CategoryIdDto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -12,14 +13,12 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class ItemDto {
+public class UpdateItemDto {
 
-    @EqualsAndHashCode.Include
     private Long id;
 
     @NotNull(message = "Category must be specified")
-    private CategoryDto category;
+    private CategoryIdDto category;
 
     @NotBlank(message = "Item name must be specified")
     @Size(max = 50, message = "Item name cannot exceed 50 characters")
@@ -29,9 +28,11 @@ public class ItemDto {
     private BigDecimal price;
 
     @Min(value = 0, message = "quantity cannot be less than 0")
-    private Integer quantity;
+    @Builder.Default
+    private Integer quantity = 0;
 
     @Min(value = 0, message = "discount cannot be negative")
     @Max(value = 1, message = "discount cannot be more than 1")
-    private Float discount;
+    @Builder.Default
+    private Float discount = 0F;
 }

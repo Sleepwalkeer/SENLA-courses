@@ -1,10 +1,11 @@
 package eu.senla.repository;
 
-import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.SecurityConfigurationTest;
-import eu.senla.configuration.ServletConfigurationTest;
-import eu.senla.entity.*;
+import eu.senla.configuration.ContextConfigurationTest;
+import eu.senla.entity.Account;
+import eu.senla.entity.Category;
+import eu.senla.entity.Item;
+import eu.senla.entity.Order;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,12 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class})
 @WebAppConfiguration
 public class OrderRepositoryTest extends ContainersEnvironment {
     @Autowired
@@ -39,8 +39,6 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     @Transactional
     public void updateTest() {
         fillUpdateDummyData();
-
-        Order order1 = orderRepository.findOrderById(1L);
         Optional<Order> orderOptional = orderRepository.findById(1L);
         Order order = orderOptional.get();
         order.setEndDateTime(new Timestamp(1675855790625L));
@@ -49,79 +47,65 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillUpdateDummyData() {
-        Account customer = Account.builder().firstName("orderDaoUpd").secondName("orderDaoUpd")
-                .phone("orderDaoUpd").email("orderDaoUpd").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoUpd").password("orderDaoUpd").role(Role.USER)
-                        .build())
+        Category category = Category.builder()
+                .name("orderDaoUpd")
                 .build();
-        accountRepository.save(customer);
-
-        Account customer1 = Account.builder().firstName("orderDaoUpd1").secondName("orderDaoUpd1")
-                .phone("orderDaoUpd1").email("orderDaoUpd1").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoUpd1").password("orderDaoUpd1").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer1);
-
-        Category category = Category.builder().name("orderDaoUpd").discount(0F).build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Excavator2").price(new BigDecimal(750)).quantity(8).build();
+                .name("Excavator2")
+                .price(new BigDecimal(750))
+                .quantity(8)
+                .category(Category.builder().id(1L).build())
+                .build();
         itemRepository.save(jackhammer);
 
         List<Item> items = itemRepository.findAll();
 
-        Order order = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
-         Order ordertest = orderRepository.save(order);
-        System.out.println();
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665778114323L))
+                .endDateTime(new Timestamp(1675778114323L))
+                .totalPrice(new BigDecimal(12200))
+                .build();
+        orderRepository.save(order);
     }
 
     @Test
     public void findyByIdTest() {
         fillFindByIdDummyData();
-        List<Item> items = itemRepository.findAll();
-        Order order = Order.builder().id(1L).customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
-
         Optional<Order> orderFromDb = orderRepository.findById(1L);
 
-        Assertions.assertEquals(order.getId(), orderFromDb.get().getId());
+        Assertions.assertEquals(1L, orderFromDb.get().getId());
 
     }
 
     private void fillFindByIdDummyData() {
-        Account customer = Account.builder().firstName("orderDaoFind").secondName("orderDaoFind")
-                .phone("orderDaoFind").email("orderDaoFind").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoFind").password("orderDaoFind").role(Role.USER)
-                        .build())
+        Category category = Category.builder()
+                .name("orderDaoFind")
                 .build();
-        accountRepository.save(customer);
-
-        Account customer1 = Account.builder().firstName("orderDaoFind1").secondName("orderDaoFind1")
-                .phone("orderDaoFind1").email("orderDaoFind1").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoFind1").password("orderDaoFind1").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer1);
-
-        Category category = Category.builder().name("orderDaoFind").discount(0F).build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Excavator1").price(new BigDecimal(750)).quantity(8).build();
+                .category(Category.builder().id(1L).build())
+                .name("Excavator1")
+                .price(new BigDecimal(750))
+                .quantity(8)
+                .build();
         itemRepository.save(jackhammer);
 
         List<Item> items = itemRepository.findAll();
 
-        Order order = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665778114323L))
+                .endDateTime(new Timestamp(1675778114323L))
+                .totalPrice(new BigDecimal(12200))
+                .build();
         orderRepository.save(order);
     }
 
@@ -129,87 +113,71 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     @Transactional
     public void deleteByIdTest() {
         fillDeleteByIdDummyData();
-        orderRepository.deleteById(6L);
-        Assertions.assertFalse(orderRepository.findById(6L).isPresent());
+        orderRepository.deleteById(3L);
+        Assertions.assertFalse(orderRepository.findById(3L).isPresent());
     }
 
     private void fillDeleteByIdDummyData() {
-        Account customer = Account.builder().firstName("orderDaoDel").secondName("orderDaoDel")
-                .phone("orderDaoDel").email("orderDaoDel").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoDel").password("orderDaoDel").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer);
-
-        Account customer1 = Account.builder().firstName("orderDaoDel1").secondName("orderDaoDel1")
-                .phone("orderDaoDel1").email("orderDaoDel1").discount(0F)
-                .credentials(Credentials.builder().username("orderDaoDel1").password("orderDaoDel1").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer1);
-
-        Category category = Category.builder().name("orderDaoDel").discount(0F).build();
+        Category category = Category.builder().name("orderDaoDel").build();
         categoryRepository.save(category);
 
-        Category category1 = Category.builder().name("orderDaoDel1").discount(0F).build();
-        categoryRepository.save(category1);
-
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Excavator").price(new BigDecimal(750)).quantity(8).build();
+                .name("Excavator1")
+                .price(new BigDecimal(750))
+                .quantity(8)
+                .category(Category.builder().id(1L).build())
+                .build();
+
         itemRepository.save(jackhammer);
         Item angleGrinder = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Drilling machine").price(new BigDecimal(600)).quantity(15).build();
+                .name("Drilling machine")
+                .price(new BigDecimal(600))
+                .quantity(15)
+                .category(Category.builder().id(1L).build())
+                .build();
         itemRepository.save(angleGrinder);
-
-        Item twoBedApp = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("4-bedroom app").price(new BigDecimal(4235)).quantity(2).build();
-        itemRepository.save(twoBedApp);
-
-        Item lamborghini = Item.builder()
-                .category(categoryRepository.findById(2L).get()).discount(0F)
-                .name("Porsche").price(new BigDecimal(7200)).quantity(1).build();
-        itemRepository.save(lamborghini);
 
         List<Item> items = itemRepository.findAll();
 
-        Order order = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665778114323L))
+                .endDateTime(new Timestamp(1675778114323L))
+                .totalPrice(new BigDecimal(12200))
+                .build();
         orderRepository.save(order);
 
-        Order order1 = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(13600)).build();
+        Order order1 = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665733114323L))
+                .endDateTime(new Timestamp(1675278114323L))
+                .totalPrice(new BigDecimal(13600))
+                .build();
         orderRepository.save(order1);
 
-        Order order2 = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(14600)).build();
+        Order order2 = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665733114323L))
+                .endDateTime(new Timestamp(1675278114323L))
+                .totalPrice(new BigDecimal(14600))
+                .build();
         orderRepository.save(order2);
-
-        Order order3 = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(15600)).build();
-        orderRepository.save(order3);
-
-        Order order4 = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(16600)).build();
-        orderRepository.save(order4);
-
-        Order order5 = Order.builder().customer(accountRepository.findById(1L).get())
-                .worker(accountRepository.findById(2L).get()).items(items).startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(21600)).build();
-        orderRepository.save(order5);
     }
 
     @Test
     public void addInvalidDataTest() {
-        Order order = Order.builder().customer(Account.builder().id(1L).build()).worker(Account.builder().id(2L).build())
-                .endDateTime(new Timestamp(1675278114323L)).totalPrice(new BigDecimal(11600)).build();
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .endDateTime(new Timestamp(1675278114323L))
+                .totalPrice(new BigDecimal(11600))
+                .build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> orderRepository.save(order));
     }
 
@@ -229,48 +197,35 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillGetLazyDummyData() {
-        Account customer = Account.builder().firstName("ordDaoLazy").secondName("ordDaoLazy")
-                .phone("ordDaoLazy").email("ordDaoLazy").discount(0F)
-                .credentials(Credentials.builder().username("ordDaoLazy").password("ordDaoLazy").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer);
-
-        Account customer1 = Account.builder().firstName("ordDaoLazy1").secondName("ordDaoLazy1")
-                .phone("ordDaoLazy1").email("ordDaoLazy1").discount(0F)
-                .credentials(Credentials.builder().username("ordDaoLazy1").password("ordDaoLazy1").role(Role.USER)
-                        .build())
-                .build();
-        accountRepository.save(customer1);
-
-        Category category = Category.builder().name("ordDaoLazy").discount(0F).build();
+        Category category = Category.builder().name("ordDaoLazy").build();
         categoryRepository.save(category);
 
         Item jackhammer = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Excavator3").price(new BigDecimal(750)).quantity(8).build();
+                .category(Category.builder().id(1L).build())
+                .name("Excavator3")
+                .price(new BigDecimal(750))
+                .quantity(8)
+                .build();
         itemRepository.save(jackhammer);
 
         Item excavator = Item.builder()
-                .category(categoryRepository.findById(1L).get()).discount(0F)
-                .name("Excavator").price(new BigDecimal(750)).quantity(8).build();
+                .category(Category.builder().id(1L).build())
+                .name("Excavator")
+                .price(new BigDecimal(750))
+                .quantity(8)
+                .build();
         itemRepository.save(excavator);
 
         List<Item> items = itemRepository.findAll();
 
-        Account account = accountRepository.findById(1L).get();
-        Account account2 = accountRepository.findById(2L).get();
-        Order order = Order.builder().customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build()).items(items).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
-
-        List<Long> itemIds = new ArrayList<>();
-        for (Item item : items) {
-            itemIds.add(item.getId());
-        }
-        List<Item> itemchiki = itemRepository.findByIdIn(itemIds);
-
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(new Timestamp(1665778114323L))
+                .endDateTime(new Timestamp(1675778114323L))
+                .totalPrice(new BigDecimal(12200))
+                .build();
         orderRepository.save(order);
-        System.out.println("xttrrr");
     }
 }

@@ -1,9 +1,7 @@
 package eu.senla.repository;
 
-import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.SecurityConfigurationTest;
-import eu.senla.configuration.ServletConfigurationTest;
+import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.entity.Category;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
+@ContextConfiguration(classes = {ContextConfigurationTest.class})
 @WebAppConfiguration
 public class CategoryRepositoryTest extends ContainersEnvironment {
     @Autowired
@@ -25,17 +23,22 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
 
     @Test
     public void findyByIdTest() {
-        Category dummyData = Category.builder().name("catDaoFindById").discount(0F).build();
+        Category dummyData = Category.builder()
+                .name("catDaoFindById")
+                .build();
         categoryRepository.save(dummyData);
-        Category category = Category.builder().id(1L).build();
 
         Optional<Category> categoryFromDb = categoryRepository.findById(1L);
-        Assertions.assertEquals(category.getId(), categoryFromDb.get().getId());
+        Assertions.assertEquals(1L, categoryFromDb.get().getId());
     }
 
     @Test
     public void updateTest() {
-        Category category = Category.builder().id(1L).name("updatedNewestVersion").discount(0F).build();
+        Category category = Category.builder()
+                .id(1L)
+                .name("updatedNewestVersion")
+                .discount(0F)
+                .build();
         Category categoryFromDb = categoryRepository.save(category);
         Assertions.assertEquals(category.getName(), categoryFromDb.getName());
     }
@@ -43,8 +46,26 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
     @Test
     public void deleteByIdTest() {
         fillDeleteByIdDummyData();
-        categoryRepository.deleteById(4L);
-        Assertions.assertFalse(categoryRepository.findById(4L).isPresent());
+        Long id = categoryRepository.findByName("catDaoDelete2").get().getId();
+        categoryRepository.deleteById(id);
+        Assertions.assertFalse(categoryRepository.findById(id).isPresent());
+    }
+
+    private void fillDeleteByIdDummyData() {
+        Category category = Category.builder()
+                .name("catDaoDelete")
+                .build();
+        categoryRepository.save(category);
+
+        Category category1 = Category.builder()
+                .name("catDaoDelete1")
+                .build();
+        categoryRepository.save(category1);
+
+        Category category2 = Category.builder()
+                .name("catDaoDelete2")
+                .build();
+        categoryRepository.save(category2);
     }
 
     @Test
@@ -55,20 +76,7 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
 
     @Test
     public void findByInvalidIdTest() {
-        Assertions.assertFalse(categoryRepository.findById(-4L).isPresent());
+        Assertions.assertFalse(categoryRepository.findById(400L).isPresent());
     }
 
-    private void fillDeleteByIdDummyData() {
-        Category category = Category.builder().name("catDaoDelete").discount(0F).build();
-        categoryRepository.save(category);
-
-        Category category1 = Category.builder().name("catDaoDelete1").discount(0F).build();
-        categoryRepository.save(category1);
-
-        Category category2 = Category.builder().name("catDaoDelete2").discount(0F).build();
-        categoryRepository.save(category2);
-
-        Category category3 = Category.builder().name("catDaoDelete3").discount(0F).build();
-        categoryRepository.save(category3);
-    }
 }
