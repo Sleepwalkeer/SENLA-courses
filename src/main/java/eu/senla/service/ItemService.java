@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * The ItemService interface provides methods for managing items in the system.
  */
-@Transactional
 public interface ItemService {
     /**
      * Retrieves a list of all items, sorted and paginated as specified.
@@ -54,6 +53,7 @@ public interface ItemService {
      * Deletes an item with the specified ID.
      *
      * @param id The ID of the item to delete.
+     * @throws NotFoundException If no item is found with the specified ID.
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws NotFoundException;
 }

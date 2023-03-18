@@ -190,11 +190,11 @@ public class OrderControllerTest extends ContainersEnvironment {
         String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\",\"firstName\":\"updor\",\"discount\":\"0\"," +
                 "\"secondName\":\"updord\",\"phone\":\"updor\",\"email\":\"updor\"," +
                 "\"credentials\":{\"id\":\"1\", \"username\": \"updor\", \"password\":\"updor\",\"role\":\"USER\"}}" +
-                ",\"worker\":{\"id\":1,\"firstName\":\"updord\",\"discount\":\"0\"," +
+                ",\"worker\":{\"id\":\"1\",\"firstName\":\"updord\",\"discount\":\"0\"," +
                 "\"secondName\":\"updord\",\"phone\":\"updord\",\"email\":\"updord\"," +
                 "\"credentials\":{\"id\":\"1\", \"username\": \"updord\", \"password\":\"updord\",\"role\":\"USER\"}}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":1665778114200,\"endDateTime\":1675778114300,\"totalPrice\":17300}";
+                "\"startDateTime\":1665778114200,\"endDateTime\":1675778114300}";
         this.mockMvc.perform(put("/orders/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))

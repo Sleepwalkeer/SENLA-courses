@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * The CredentialsService interface provides methods for managing user credentials.
  */
-@Transactional
 public interface CredentialsService {
 
     /**
@@ -41,6 +40,7 @@ public interface CredentialsService {
      * Deletes a set of user credentials with the specified ID.
      *
      * @param id The ID of the credentials to delete.
+     * @throws NotFoundException If no credentials are found with the specified ID.
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws NotFoundException;
 }

@@ -75,13 +75,13 @@ public class CategoryServiceTest {
         CategoryDto categoryDto = CategoryDto.builder().name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(categoryRepository.existsById(1L)).thenReturn(true);
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
         ResponseCategoryDto categoryDtoRetrieved = categoryService.update(1L, categoryDto);
 
-        verify(categoryRepository).findById(1L);
+        verify(categoryRepository).existsById(1L);
         verify(categoryRepository).save(category);
     }
 
@@ -91,17 +91,18 @@ public class CategoryServiceTest {
         CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        when(categoryRepository.existsById(1L)).thenReturn(false);
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
         Assertions.assertThrows(NotFoundException.class, () -> categoryService.update(1L, categoryDto));
-        verify(categoryRepository).findById(1L);
+        verify(categoryRepository).existsById(1L);
     }
 
     @Test
     public void deleteByIdTest() {
         doNothing().when(categoryRepository).deleteById(1L);
+        when(categoryRepository.existsById(1L)).thenReturn(true);
         categoryService.deleteById(1L);
 
         verify(categoryRepository).deleteById(1L);

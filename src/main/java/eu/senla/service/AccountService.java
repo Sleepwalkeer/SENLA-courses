@@ -11,7 +11,6 @@ import java.util.List;
 /**
  * The AccountService interface provides methods for managing user accounts.
  */
-@Transactional
 public interface AccountService {
 
     /**
@@ -56,6 +55,7 @@ public interface AccountService {
      * Deletes a user account with the specified ID.
      *
      * @param id The ID of the account to delete.
+     * @throws NotFoundException if no account is found with the specified ID
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws NotFoundException;
 }

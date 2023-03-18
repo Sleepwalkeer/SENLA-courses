@@ -70,13 +70,13 @@ public class CredentialsServiceTest {
         CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
-        when(credentialsRepository.findById(1L)).thenReturn(Optional.ofNullable(credentials));
+        when(credentialsRepository.existsById(1L)).thenReturn(true);
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
         credentialsService.update(1L, credentialsDto);
 
-        verify(credentialsRepository).findById(1L);
+        verify(credentialsRepository).existsById(1L);
         verify(credentialsRepository).save(credentials);
     }
 
@@ -96,6 +96,7 @@ public class CredentialsServiceTest {
     @Test
     public void deleteByIdTest() {
         doNothing().when(credentialsRepository).deleteById(1L);
+        when(credentialsRepository.existsById(1L)).thenReturn(true);
         credentialsService.deleteById(1L);
         verify(credentialsRepository).deleteById(1L);
     }

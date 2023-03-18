@@ -119,13 +119,13 @@ public class ItemServiceTest {
                 .build();
 
         when(itemRepository.save(item)).thenReturn(item);
-        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(itemRepository.existsById(1L)).thenReturn(true);
         when(modelMapper.map(item, ResponseItemDto.class)).thenReturn(responseItemDto);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
         ResponseItemDto itemDtoRetrieved = itemService.update(1L, itemDto);
 
-        verify(itemRepository).findById(1L);
+        verify(itemRepository).existsById(1L);
         verify(itemRepository).save(item);
         Assertions.assertNotNull(itemDtoRetrieved);
     }
@@ -148,17 +148,18 @@ public class ItemServiceTest {
                 .build();
 
         when(itemRepository.save(item)).thenReturn(item);
-        when(itemRepository.findById(1L)).thenReturn(Optional.empty());
+        when(itemRepository.existsById(1L)).thenReturn(false);
         when(modelMapper.map(item, UpdateItemDto.class)).thenReturn(itemDto);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
         Assertions.assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
-        verify(itemRepository).findById(1L);
+        verify(itemRepository).existsById(1L);
     }
 
     @Test
     public void deleteByIdTest() {
         doNothing().when(itemRepository).deleteById(1L);
+        when(itemRepository.existsById(1L)).thenReturn(true);
         itemService.deleteById(1L);
         verify(itemRepository).deleteById(1L);
     }

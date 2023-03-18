@@ -135,17 +135,18 @@ public class OrderServiceTest {
                 .build();
 
         when(orderRepository.save(order)).thenReturn(order);
-        when(orderRepository.findById(1L)).thenReturn(Optional.empty());
+        when(orderRepository.existsById(1L)).thenReturn(false);
         when(modelMapper.map(order, UpdateOrderDto.class)).thenReturn(orderDto);
         when(modelMapper.map(orderDto, Order.class)).thenReturn(order);
 
         Assertions.assertThrows(NotFoundException.class, () -> orderService.update(1L, orderDto));
-        verify(orderRepository).findById(1L);
+        verify(orderRepository).existsById(1L);
     }
 
     @Test
     public void deleteByIdTest() {
         doNothing().when(orderRepository).deleteById(1L);
+        when(orderRepository.existsById(1L)).thenReturn(true);
         orderService.deleteById(1L);
 
         verify(orderRepository).deleteById(1L);

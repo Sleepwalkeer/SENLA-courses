@@ -4,14 +4,12 @@ import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
 import eu.senla.exception.NotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 /**
  * The CategoryService interface provides methods for managing categories of products.
  */
-@Transactional
 public interface CategoryService {
 
     /**
@@ -56,6 +54,7 @@ public interface CategoryService {
      * Deletes a product category with the specified ID.
      *
      * @param id The ID of the category to delete.
+     * @throws NotFoundException if no category is found with the specified ID
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws NotFoundException;
 }

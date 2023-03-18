@@ -3,6 +3,7 @@ package eu.senla.service.implementation;
 import eu.senla.dto.orderDto.CreateOrderDto;
 import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.dto.orderDto.UpdateOrderDto;
+import eu.senla.entity.Category;
 import eu.senla.entity.Item;
 import eu.senla.entity.Order;
 import eu.senla.exception.BadRequestException;
@@ -19,15 +20,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
@@ -41,6 +45,8 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(order, ResponseOrderDto.class);
     }
 
+
+    @Transactional
 
     public ResponseOrderDto create(CreateOrderDto orderDto) {
         if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
@@ -58,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(order, ResponseOrderDto.class);
     }
 
+    @Transactional
     public ResponseOrderDto update(Long id, UpdateOrderDto orderDto) {
         if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
             throw new BadRequestException("Start DateTime cannot be later than end DateTime");
@@ -79,8 +86,13 @@ public class OrderServiceImpl implements OrderService {
         return modelMapper.map(updatedOrder, ResponseOrderDto.class);
     }
 
+    @Transactional
     public void deleteById(Long id) {
-        orderRepository.deleteById(id);
+        if (orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+        } else {
+            throw new NotFoundException("No order with  ID " + id + " was found");
+        }
     }
 
 

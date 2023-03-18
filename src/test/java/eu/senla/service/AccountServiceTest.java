@@ -142,14 +142,14 @@ public class AccountServiceTest {
                 .build();
 
         when(accountRepository.save(account)).thenReturn(account);
-        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+        when(accountRepository.existsById(1L)).thenReturn(true);
         when(modelMapper.map(account, ResponseAccountDto.class)).thenReturn(responseAccountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
         ResponseAccountDto accountDtoRetrieved = accountService.update(1L, accountDto);
 
         Assertions.assertNotNull(accountDtoRetrieved);
-        verify(accountRepository).findById(1L);
+        verify(accountRepository).existsById(1L);
         verify(accountRepository).save(account);
     }
 
@@ -172,18 +172,19 @@ public class AccountServiceTest {
                 .build();
 
         when(accountRepository.save(account)).thenReturn(account);
-        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
+        when(accountRepository.existsById(1L)).thenReturn(false);
         when(modelMapper.map(account, UpdateAccountDto.class)).thenReturn(accountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
         Assertions.assertThrows(NotFoundException.class, () -> accountService.update(1L, accountDto));
-        verify(accountRepository).findById(1L);
+        verify(accountRepository).existsById(1L);
     }
 
 
     @Test
     public void deleteByIdTest() {
         doNothing().when(accountRepository).deleteById(1L);
+        when(accountRepository.existsById(1L)).thenReturn(true);
         accountService.deleteById(1L);
         verify(accountRepository).deleteById(1L);
     }

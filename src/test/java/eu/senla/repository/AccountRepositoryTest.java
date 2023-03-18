@@ -92,7 +92,6 @@ public class AccountRepositoryTest extends ContainersEnvironment {
                         .build())
                 .build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
-        System.out.println();
     }
 
     @Test

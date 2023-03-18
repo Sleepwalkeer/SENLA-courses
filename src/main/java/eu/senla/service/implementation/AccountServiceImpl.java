@@ -16,24 +16,27 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
-    //TODO разберись с тем будешь ли проверять на invalidIdDelete или нет
     public ResponseAccountDto getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
         return modelMapper.map(account, ResponseAccountDto.class);
     }
 
+    @Transactional
     public ResponseAccountDto create(CreateAccountDto accountDto) {
         CredentialsDto credentials = accountDto.getCredentials();
         credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
@@ -42,16 +45,25 @@ public class AccountServiceImpl implements AccountService {
         return modelMapper.map(account, ResponseAccountDto.class);
     }
 
+    @Transactional
     public ResponseAccountDto update(Long id, UpdateAccountDto accountDto) {
-        Account account = accountRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("No account with ID " + id + " was found"));
-        modelMapper.map(accountDto, account);
-        Account updatedAccount = accountRepository.save(account);
-        return modelMapper.map(updatedAccount, ResponseAccountDto.class);
+        if(accountRepository.existsById(id)){
+            Account account = modelMapper.map(accountDto, Account.class);
+            Account  updatedAccount = accountRepository.save(account);
+            return modelMapper.map(updatedAccount, ResponseAccountDto.class);
+        }
+        else {
+            throw  new NotFoundException("No account with ID " + id + " was found");
+        }
     }
 
+    @Transactional
     public void deleteById(Long id) {
-        accountRepository.deleteById(id);
+        if (accountRepository.existsById(id)) {
+            accountRepository.deleteById(id);
+        } else {
+            throw new NotFoundException("No account with ID " + id + " was found");
+        }
     }
 
     public List<ResponseAccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {

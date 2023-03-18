@@ -12,7 +12,6 @@ import java.util.List;
 /**
  * The OrderService interface provides methods for managing orders in the system.
  */
-@Transactional
 public interface OrderService {
 
     /**
@@ -58,6 +57,7 @@ public interface OrderService {
      * Deletes an order with the specified ID.
      *
      * @param id The ID of the order to delete.
+     * @throws NotFoundException   If no order is found with the specified ID.
      */
-    void deleteById(Long id);
+    void deleteById(Long id) throws NotFoundException;
 }

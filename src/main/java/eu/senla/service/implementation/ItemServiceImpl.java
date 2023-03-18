@@ -1,8 +1,11 @@
 package eu.senla.service.implementation;
 
+import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.itemDto.CreateItemDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
+import eu.senla.entity.Account;
+import eu.senla.entity.Item;
 import eu.senla.entity.Item;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.ItemRepository;
@@ -14,12 +17,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ModelMapper modelMapper;
@@ -31,22 +37,32 @@ public class ItemServiceImpl implements ItemService {
         return modelMapper.map(item, ResponseItemDto.class);
     }
 
+    @Transactional
     public ResponseItemDto create(CreateItemDto itemDto) {
         Item item = modelMapper.map(itemDto, Item.class);
         itemRepository.save(item);
         return modelMapper.map(item, ResponseItemDto.class);
     }
 
+    @Transactional
     public ResponseItemDto update(Long id, UpdateItemDto itemDto) {
-        Item item = itemRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("No item with ID " + id + " was found"));
-        modelMapper.map(itemDto, item);
-        Item updatedItem = itemRepository.save(item);
-        return modelMapper.map(updatedItem, ResponseItemDto.class);
+        if(itemRepository.existsById(id)){
+            Item item = modelMapper.map(itemDto, Item.class);
+            Item  updatedItem =itemRepository.save(item);
+            return modelMapper.map(updatedItem, ResponseItemDto.class);
+        }
+        else {
+            throw  new NotFoundException("No item with ID " + id + " was found");
+        }
     }
 
+    @Transactional
     public void deleteById(Long id) {
-        itemRepository.deleteById(id);
+        if (itemRepository.existsById(id)) {
+            itemRepository.deleteById(id);
+        } else {
+            throw new NotFoundException("No item with ID " + id + " was found");
+        }
     }
 
     public List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
