@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
 
     public List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification<Order> specification) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<Order> orderPage = orderRepository.findAll(specification,paging);
+        Page<Order> orderPage = orderRepository.findAll(paging);
         return orderPage.getContent()
                 .stream()
                 .map(order -> modelMapper.map(order, ResponseOrderDto.class))

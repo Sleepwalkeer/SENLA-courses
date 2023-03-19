@@ -1,23 +1,16 @@
 package eu.senla.controller;
 
-import com.google.common.base.Joiner;
 import eu.senla.dto.orderDto.CreateOrderDto;
 import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.dto.orderDto.UpdateOrderDto;
-import eu.senla.entity.Order;
 import eu.senla.service.OrderService;
-import eu.senla.utils.specification.OrderSpecificationsBuilder;
-import eu.senla.utils.specification.SearchOperation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/orders")
@@ -58,17 +51,8 @@ public class OrderController {
             @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(value = "search") String search) {
-
-        OrderSpecificationsBuilder builder = new OrderSpecificationsBuilder();
-        String operationSet = Joiner.on("|")
-                .join(SearchOperation.SIMPLE_OPERATION_SET);
-        Pattern pattern = Pattern.compile("(\\w+?)(" + operationSet + ")(\\p{Punct}?)(\\w+?)(\\p{Punct}?),");
-        Matcher matcher = pattern.matcher(search + ",");
-        while (matcher.find()) {
-            builder.with(matcher.group(1), matcher.group(2), matcher.group(4), matcher.group(3), matcher.group(5));
-        }
-        Specification<Order> spec = builder.build();
-        return orderService.getAll(pageNo, pageSize, sortBy, spec);
+        // ПОФИКСИИИ
+        return orderService.getAll(pageNo, pageSize, sortBy, null );
     }
 }
 

@@ -22,7 +22,7 @@ public interface ItemService {
      * @param sortBy   The field to sort the items by.
      * @return A list of ResponseItemDto objects containing information about the items.
      */
-    List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
+    List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification specification);
 
     /**
      * Retrieves information about a specific item.

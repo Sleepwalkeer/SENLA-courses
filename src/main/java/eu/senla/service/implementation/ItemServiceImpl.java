@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,9 +68,9 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
+    public List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification specification) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<Item> itemPage = itemRepository.findAll(paging);
+        Page<Item> itemPage = itemRepository.findAll(specification,paging);
 
         return itemPage.getContent()
                 .stream()

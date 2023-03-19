@@ -5,21 +5,21 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderSpecificationsBuilder {
+public class ItemSpecificationBuilder {
 
     private final List<SpecSearchCriteria> params;
 
-    public OrderSpecificationsBuilder() {
+    public ItemSpecificationBuilder() {
         params = new ArrayList<>();
     }
 
-    public final OrderSpecificationsBuilder with(String key, String operation, Object value,
-                                                String prefix, String suffix) {
+    public final ItemSpecificationBuilder with(String key, String operation, Object value,
+                                               String prefix, String suffix) {
         return with(null, key, operation, value, prefix, suffix);
     }
 
-    public final OrderSpecificationsBuilder with(String orPredicate, String key, String operation,
-                                                Object value, String prefix, String suffix) {
+    public final ItemSpecificationBuilder with(String orPredicate, String key, String operation,
+                                               Object value, String prefix, String suffix) {
         SearchOperation op = SearchOperation.getSimpleOperation(operation.charAt(0));
         if (op != null) {
             if (op == SearchOperation.EQUALITY) {
@@ -45,22 +45,22 @@ public class OrderSpecificationsBuilder {
         if (params.size() == 0)
             return null;
 
-        Specification result = new OrderSpecification(params.get(0));
+        Specification result = new ItemSpecification(params.get(0));
 
         for (int i = 1; i < params.size(); i++) {
             result = params.get(i).isOrPredicate()
-                    ? Specification.where(result).or(new OrderSpecification(params.get(i)))
-                    : Specification.where(result).and(new OrderSpecification(params.get(i)));
+                    ? Specification.where(result).or(new ItemSpecification(params.get(i)))
+                    : Specification.where(result).and(new ItemSpecification(params.get(i)));
         }
 
         return result;
     }
-    public final OrderSpecificationsBuilder with(OrderSpecification spec) {
+    public final ItemSpecificationBuilder with(ItemSpecification spec) {
         params.add(spec.getCriteria());
         return this;
     }
 
-    public final OrderSpecificationsBuilder with(SpecSearchCriteria criteria) {
+    public final ItemSpecificationBuilder with(SpecSearchCriteria criteria) {
         params.add(criteria);
         return this;
     }
