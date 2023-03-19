@@ -106,7 +106,6 @@ public class ItemRepositoryTest extends ContainersEnvironment {
     @Test
     public void addInvalidDataTest() {
         Item item = Item.builder()
-                .discount(0F)
                 .price(new BigDecimal(3450)).quantity(2).build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> itemRepository.save(item));
     }

@@ -9,6 +9,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -31,11 +32,11 @@ public class OrderDto {
     private List<ItemDto> items;
 
     @NotNull(message = "Start DateTime must be specified")
-    private Timestamp startDateTime;
+    private LocalDateTime startDateTime;
 
     @NotNull(message = "End DateTime must be specified")
-    private Timestamp endDateTime;
+    private LocalDateTime endDateTime;
 
-    @DecimalMin(value = "0.1", message = "Total price can not be less than $0.1")
+    @DecimalMin(value = "0.01", message = "Total price can not be less than $0.01")
     private BigDecimal totalPrice;
 }

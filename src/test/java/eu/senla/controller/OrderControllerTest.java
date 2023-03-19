@@ -122,7 +122,7 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":1665778114325,\"endDateTime\":1675778114325,\"totalPrice\":12300}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));
@@ -139,10 +139,10 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .content(dummyCategoryData));
 
         String[] dummyItemData = {
-                "{\"category\":{\"id\":1\"},\"name\":\"getord1\"," +
-                        "\"price\":1\"}",
-                "{\"category\":{\"id\":1\"},\"name\":\"getord1\"," +
-                        "\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
+                "{\"category\":{\"id\":\"1\"},\"name\":\"getordit1\"," +
+                        "\"price\":\"100\",\"quantity\":\"10\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"getorditem1\"," +
+                        "\"price\":\"100\",\"quantity\":\"10\",\"discount\":\"25\"}"
         };
         for (String dummyDatum : dummyItemData) {
             this.mockMvc.perform(post("/items")
@@ -151,8 +151,8 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
 
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1},{\"id\":2}]," +
-                "\"startDateTime\":1665778114323,\"endDateTime\":1675778114323}";
+                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -164,7 +164,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     public void createOrderUnauthorizedIdTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":1665778114323,\"endDateTime\":1675778114323,\"totalPrice\":12200}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -176,7 +176,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     public void createInvalidOrderTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":1667778114323,\"endDateTime\":1665778114323,\"totalPrice\":12200}";
+                "\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -187,20 +187,16 @@ public class OrderControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void updateOrderTest() throws Exception {
         fillUpdateOrderDummyData();
-        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\",\"firstName\":\"updor\",\"discount\":\"0\"," +
-                "\"secondName\":\"updord\",\"phone\":\"updor\",\"email\":\"updor\"," +
-                "\"credentials\":{\"id\":\"1\", \"username\": \"updor\", \"password\":\"updor\",\"role\":\"USER\"}}" +
-                ",\"worker\":{\"id\":\"1\",\"firstName\":\"updord\",\"discount\":\"0\"," +
-                "\"secondName\":\"updord\",\"phone\":\"updord\",\"email\":\"updord\"," +
-                "\"credentials\":{\"id\":\"1\", \"username\": \"updord\", \"password\":\"updord\",\"role\":\"USER\"}}," +
+        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
+                ",\"worker\":{\"id\":\"1\"}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":1665778114200,\"endDateTime\":1675778114300}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(put("/orders/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value("0"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value("525.0"));
     }
 
     private void fillUpdateOrderDummyData() throws Exception {
@@ -226,7 +222,7 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":1665778124325,\"endDateTime\":1675778124325,\"totalPrice\":12300}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));
@@ -235,13 +231,10 @@ public class OrderControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User3")
     public void updateOrderWithUnauthorizedUserTest() throws Exception {
-        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\",\"firstName\":\"updor\"," +
-                "\"secondName\":\"updord\",\"phone\":\"updor\",\"email\":\"updor\"," +
-                "\"credentials\":{\"id\":\"1\",\"username\":\"updor\",\"password\":\"updor\",\"role\":\"USER\"}}" +
-                ",\"worker\":{\"id\":1,\"firstName\":\"updord\",\"secondName\":\"updord\",\"phone\":\"updord\",\"email\":\"updord\"," +
-                "\"credentials\":{\"id\":\"1\", \"username\": \"updord\", \"password\": \"updord\" , \"role\" : \"USER\"  }}," +
+        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
+                ",\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":1665778114200,\"endDateTime\":1675778114300,\"totalPrice\":17300}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(put("/orders/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -253,7 +246,7 @@ public class OrderControllerTest extends ContainersEnvironment {
     public void updateInvalidOrderTest() throws Exception {
         String requestBody = "{\"id\": 25,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":1665778114325,\"endDateTime\":1675778114325,\"totalPrice\":12300}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(put("/orders/{id}", 25)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -269,21 +262,14 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     private void fillDeleteOrderByIdDummyData() throws Exception {
-        String dummyAccountData = "{\"firstName\":\"delidord\",\"secondName\":\"delidord\"" +
-                ",\"phone\":\"delidord\",\"email\":\"delidord\"," +
-                "\"credentials\":{ \"username\": \"delidord\", \"password\": \"delidord\" " +
-                ", \"role\" : \"USER\"  },\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyAccountData));
-        String dummyCategoryData = "{\"name\": \"delidord\",\"discount\":\"0\"}";
+        String dummyCategoryData = "{\"name\": \"delidordor\",\"discount\":\"0\"}";
         this.mockMvc.perform(post("/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(dummyCategoryData));
 
         String[] dummyItemData = {
-                "{\"category\":{\"id\":1\"},\"name\":\"delidord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}",
-                "{\"category\":{\"id\":1\"},\"name\":\"delidord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
+                "{\"category\":{\"id\":\"1\"},\"name\":\"delidordit1\",\"price\":\"1\",\"quantity\":\"10\",\"discount\":\"0\"}",
+                "{\"category\":{\"id\":\"1\"},\"name\":\"delidordit2\",\"price\":\"1\",\"quantity\":\"10\",\"discount\":\"0\"}"
         };
         for (String dummyDatum : dummyItemData) {
             this.mockMvc.perform(post("/items")
@@ -294,19 +280,19 @@ public class OrderControllerTest extends ContainersEnvironment {
         String[] orders = {
                 "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                         "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":1666778124325,\"endDateTime\":1675778124325,\"totalPrice\":12301}",
+                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
                 "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                         "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":1667778124325,\"endDateTime\":1675778124325,\"totalPrice\":12302}",
+                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
                 "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                         "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":1668778124325,\"endDateTime\":1675778124325,\"totalPrice\":12303}",
+                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
                 "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                         "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":1669778124325,\"endDateTime\":1675778124325,\"totalPrice\":12304}",
+                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
                 "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                         "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":1675778124325,\"endDateTime\":1675788124325,\"totalPrice\":12305}"
+                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}"
         };
         for (String order : orders) {
             this.mockMvc.perform(post("/orders")
@@ -417,7 +403,7 @@ public class OrderControllerTest extends ContainersEnvironment {
         }
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":1665778124325,\"endDateTime\":1675778124325,\"totalPrice\":12600}";
+                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody));

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -26,9 +27,9 @@ public class UpdateOrderDto {
     private List<ItemIdDto> items;
 
     @NotNull(message = "Start DateTime must be specified")
-    private Timestamp startDateTime;
+    private LocalDateTime startDateTime;
 
     @NotNull(message = "End DateTime must be specified")
-    private Timestamp endDateTime;
+    private LocalDateTime endDateTime;
 }
 

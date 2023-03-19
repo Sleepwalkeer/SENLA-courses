@@ -1,2 +1,2 @@
 ALTER TABLE item
-ADD COLUMN category_id integer  NOT NULL;
+ADD COLUMN category_id bigint NOT NULL;

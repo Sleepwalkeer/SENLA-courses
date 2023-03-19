@@ -3,6 +3,8 @@ package eu.senla.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -38,6 +40,6 @@ public class Account {
 
     @Builder.Default
     @Column(name = "discount")
-    private Float discount = 0F;
+    private BigDecimal discount = BigDecimal.ZERO;
 
 }

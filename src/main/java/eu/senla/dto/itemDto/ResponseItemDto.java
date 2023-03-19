@@ -17,5 +17,5 @@ public class ResponseItemDto {
     private ResponseCategoryDto category;
     private String name;
     private BigDecimal price;
-    private Float discount;
+    private BigDecimal discount;
 }

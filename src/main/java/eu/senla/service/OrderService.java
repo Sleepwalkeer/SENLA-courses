@@ -3,8 +3,10 @@ package eu.senla.service;
 import eu.senla.dto.orderDto.CreateOrderDto;
 import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.dto.orderDto.UpdateOrderDto;
+import eu.senla.entity.Order;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.NotFoundException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public interface OrderService {
      * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
      * @return A list of ResponseOrderDto objects containing information about the orders.
      */
-    List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
+    List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification<Order> specification);
 
     /**
      * Retrieves information about a specific order.

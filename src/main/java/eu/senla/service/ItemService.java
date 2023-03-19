@@ -3,7 +3,9 @@ package eu.senla.service;
 import eu.senla.dto.itemDto.CreateItemDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
+import eu.senla.entity.Item;
 import eu.senla.exception.NotFoundException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -56,4 +58,8 @@ public interface ItemService {
      * @throws NotFoundException If no item is found with the specified ID.
      */
     void deleteById(Long id) throws NotFoundException;
+
+    void decrementQuantityEveryItem(List<Item> items);
+
+    List<Item> findItemsByIds(List<Long> itemIds);
 }

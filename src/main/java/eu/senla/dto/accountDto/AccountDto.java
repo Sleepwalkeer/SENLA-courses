@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -37,8 +39,8 @@ public class AccountDto {
     @Valid
     private CredentialsDto credentials;
 
-    @Min(value = 0L, message = "discount cannot be negative")
-    @Max(value = 1L, message = "discount cannot be more than 1")
+    @DecimalMin(value = "0", message = "discount cannot be negative")
+    @DecimalMax(value = "99.99", message = "discount cannot be 100%")
     @Builder.Default
-    private Float discount = 0F;
+    private BigDecimal discount = BigDecimal.ZERO;
 }

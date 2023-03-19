@@ -1,10 +1,12 @@
 package eu.senla.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -51,11 +53,10 @@ public class Order {
 
 
     @Column(name = "start_datetime", nullable = false)
-    private Timestamp startDateTime;
+    private LocalDateTime startDateTime;
 
     @Column(name = "end_datetime", nullable = false)
-    private Timestamp endDateTime;
-    //TODO поменяй на LocalDateTime
+    private LocalDateTime endDateTime;
 
     @Column(name = "total_price")
     private BigDecimal totalPrice;

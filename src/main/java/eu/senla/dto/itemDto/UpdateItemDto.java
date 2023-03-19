@@ -31,8 +31,8 @@ public class UpdateItemDto {
     @Builder.Default
     private Integer quantity = 0;
 
-    @Min(value = 0, message = "discount cannot be negative")
-    @Max(value = 1, message = "discount cannot be more than 1")
+    @DecimalMin(value = "0", message = "discount cannot be negative")
+    @DecimalMax(value = "99.99", message = "discount cannot be 100%")
     @Builder.Default
-    private Float discount = 0F;
+    private BigDecimal discount = BigDecimal.ZERO;
 }

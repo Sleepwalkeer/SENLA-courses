@@ -2,6 +2,8 @@ package eu.senla.dto.accountDto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Builder
@@ -14,5 +16,5 @@ public class ResponseAccountDto {
     private String secondName;
     private String phone;
     private String email;
-    private Float discount;
+    private BigDecimal discount;
 }

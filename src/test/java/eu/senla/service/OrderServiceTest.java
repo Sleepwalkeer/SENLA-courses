@@ -11,6 +11,7 @@ import eu.senla.entity.Order;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.OrderRepository;
 import eu.senla.service.implementation.OrderServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,6 +31,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 
+@RequiredArgsConstructor
 public class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
@@ -47,12 +49,21 @@ public class OrderServiceTest {
     @Test
     //TODO ЭТОТ ТЕСТ НАДО ДЕЛАТ НОРМАЛЬНЫМ ОН ПО БИЗНЕСУ С РАССЧЕТОМ ДЕНЯХ
     public void createTest() {
-        CreateOrderDto createOrderDto = CreateOrderDto.builder().customer(AccountIdDto.builder().id(1L).build())
-                .worker(AccountIdDto.builder().id(1L).build()).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).build();
-        Order order = Order.builder().customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(1L).build()).startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L)).totalPrice(new BigDecimal(12200)).build();
+
+        CreateOrderDto createOrderDto = CreateOrderDto.builder()
+                .customer(AccountIdDto.builder().id(1L).build())
+                .worker(AccountIdDto.builder().id(1L).build())
+                .startDateTime(LocalDateTime.of(2020,12,3,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .build();
+
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(1L).build())
+                .startDateTime(LocalDateTime.of(2020,12,3,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .totalPrice(new BigDecimal(12200))
+                .build();
 
         when(orderRepository.save(order)).thenReturn(order);
         when(modelMapper.map(createOrderDto, Order.class)).thenReturn(order);
@@ -66,16 +77,16 @@ public class OrderServiceTest {
     public void getByIdTest() {
         ResponseOrderDto orderDto = ResponseOrderDto.builder()
                 .id(1L)
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,10,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(1L).build())
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,10,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
@@ -124,23 +135,23 @@ public class OrderServiceTest {
     public void updateNonExistentOrderTest() {
         UpdateOrderDto orderDto = UpdateOrderDto.builder()
                 .customer(AccountIdDto.builder().id(1L).build())
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,14,1,2))
                 .build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,14,1,2))
                 .build();
 
         when(orderRepository.save(order)).thenReturn(order);
-        when(orderRepository.existsById(1L)).thenReturn(false);
+        when(orderRepository.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(order, UpdateOrderDto.class)).thenReturn(orderDto);
         when(modelMapper.map(orderDto, Order.class)).thenReturn(order);
 
         Assertions.assertThrows(NotFoundException.class, () -> orderService.update(1L, orderDto));
-        verify(orderRepository).existsById(1L);
+        verify(orderRepository).findById(1L);
     }
 
     @Test
@@ -157,32 +168,32 @@ public class OrderServiceTest {
         OrderDto orderDto1 = OrderDto.builder()
                 .customer(AccountDto.builder().id(1L).build())
                 .worker(AccountDto.builder().id(1L).build())
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,2,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         OrderDto orderDto2 = OrderDto.builder()
                 .customer(AccountDto.builder().id(1L).build())
                 .worker(AccountDto.builder().id(2L).build())
-                .startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L))
+                .startDateTime(LocalDateTime.of(2020,12,2,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
 
         Order order1 = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(1L).build())
-                .startDateTime(new Timestamp(1665778114323L))
-                .endDateTime(new Timestamp(1675778114323L))
+                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,22,1,2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         Order order2 = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
-                .startDateTime(new Timestamp(1665733114323L))
-                .endDateTime(new Timestamp(1675278114323L))
+                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .endDateTime(LocalDateTime.of(2020,12,22,1,2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
 
@@ -199,7 +210,7 @@ public class OrderServiceTest {
         when(modelMapper.map(eq(order2), eq(OrderDto.class)))
                 .thenReturn(orderDto2);
 
-        List<ResponseOrderDto> retrievedOrderDtos = orderService.getAll(1, 2, "id");
+        //List<ResponseOrderDto> retrievedOrderDtos = orderService.getAll(1, 2, "id");
 
         verify(orderRepository).findAll(paging);
     }

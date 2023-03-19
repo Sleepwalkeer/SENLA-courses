@@ -37,7 +37,6 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
         Category category = Category.builder()
                 .id(1L)
                 .name("updatedNewestVersion")
-                .discount(0F)
                 .build();
         Category categoryFromDb = categoryRepository.save(category);
         Assertions.assertEquals(category.getName(), categoryFromDb.getName());

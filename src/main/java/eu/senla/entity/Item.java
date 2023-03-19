@@ -1,6 +1,7 @@
 package eu.senla.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -37,6 +38,6 @@ public class Item {
 
     @Builder.Default
     @Column(name = "discount")
-    private Float discount = 0F;
+    private BigDecimal discount = BigDecimal.ZERO;
 
 }

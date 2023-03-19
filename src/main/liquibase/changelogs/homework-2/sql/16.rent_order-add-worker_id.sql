@@ -1,2 +1,2 @@
 ALTER TABLE rent_order
-ADD COLUMN worker_id integer NOT NULL;
+ADD COLUMN worker_id bigint NOT NULL;

@@ -1,10 +1,9 @@
 package eu.senla.dto.categoryDto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,8 +17,8 @@ public class CreateCategoryDto {
     @Size(max = 50, message = "Category name cannot exceed 50 characters")
     private String name;
 
-    @Min(value = 0L, message = "discount cannot be negative")
-    @Max(value = 1L, message = "discount cannot be more than 1")
+    @DecimalMin(value = "0", message = "discount cannot be negative")
+    @DecimalMax(value = "99.99", message = "discount cannot be 100%")
     @Builder.Default
-    private Float discount = 0F;
+    private BigDecimal discount = BigDecimal.ZERO;
 }

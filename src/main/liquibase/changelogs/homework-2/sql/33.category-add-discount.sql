@@ -1,2 +1,2 @@
 ALTER TABLE category
-ADD COLUMN discount real default 0;
+    ADD COLUMN discount decimal default 0 CHECK ( discount >= 0 AND discount < 100);

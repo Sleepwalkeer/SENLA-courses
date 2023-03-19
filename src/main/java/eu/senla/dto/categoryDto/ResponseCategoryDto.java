@@ -2,6 +2,8 @@ package eu.senla.dto.categoryDto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Builder
 @Setter
@@ -10,5 +12,5 @@ import lombok.*;
 @ToString
 public class ResponseCategoryDto {
     private String name;
-    private Float discount;
+    private BigDecimal discount;
 }

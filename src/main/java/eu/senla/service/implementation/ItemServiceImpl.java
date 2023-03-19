@@ -7,6 +7,7 @@ import eu.senla.dto.itemDto.UpdateItemDto;
 import eu.senla.entity.Account;
 import eu.senla.entity.Item;
 import eu.senla.entity.Item;
+import eu.senla.exception.ItemOutOfStockException;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.ItemRepository;
 import eu.senla.service.ItemService;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,5 +74,21 @@ public class ItemServiceImpl implements ItemService {
         return itemPage.getContent()
                 .stream()
                 .map(item -> modelMapper.map(item, ResponseItemDto.class)).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void decrementQuantityEveryItem(List<Item> items) {
+        List<Long> itemIds = new ArrayList<>();
+        for (Item item : items) {
+            if (item.getQuantity() < 1) {
+                throw new ItemOutOfStockException("Item " + item.getName() + " is out of stock :(");
+            }
+            itemIds.add(item.getId());
+        }
+        itemRepository.decrementQuantityForItems(itemIds);
+    }
+
+    public List<Item> findItemsByIds(List<Long> itemIds) {
+        return itemRepository.findByIdIn(itemIds);
     }
 }
