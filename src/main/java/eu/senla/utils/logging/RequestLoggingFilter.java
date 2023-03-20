@@ -7,24 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import java.io.IOException;
 
 @Slf4j
 @Component
-public class RequestLoggingFilter extends GenericFilterBean implements Filter {
-
+public class RequestLoggingFilter extends GenericFilterBean {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String requestInfo = String.format("%s %s", httpRequest.getMethod(), httpRequest.getRequestURL().toString());
-        logger.info("Incoming Request : " + requestInfo);
-
-        chain.doFilter(request, response);
-
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-        String responseInfo = String.format("Status %d %s", httpResponse.getStatus(), HttpStatus.valueOf(httpResponse.getStatus()).getReasonPhrase());
-        logger.info("Outgoing Response : " + responseInfo);
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String method = request.getMethod();
+        String url = request.getRequestURL().toString();
+        log.info(String.format("Request: %s %s", method, url));
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 }

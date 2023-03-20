@@ -46,7 +46,6 @@ public class SecurityConfigurationTest {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/login").permitAll()
-                .requestMatchers("/auth/logout").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

@@ -20,8 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @RequiredArgsConstructor
-@Configuration
 @EnableWebSecurity
+@Configuration
 @EnableMethodSecurity(proxyTargetClass = true)
 public class SecurityConfiguration {
 
@@ -42,11 +42,6 @@ public class SecurityConfiguration {
                 .and()
                 .build();
     }
-
-//    @Override
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
