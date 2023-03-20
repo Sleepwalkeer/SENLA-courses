@@ -5,8 +5,6 @@ import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
 import eu.senla.entity.Item;
 import eu.senla.exception.NotFoundException;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,12 +15,12 @@ public interface ItemService {
     /**
      * Retrieves a list of all items, sorted and paginated as specified.
      *
-     * @param pageNo   The page number to retrieve.
-     * @param pageSize The number of items to include per page.
-     * @param sortBy   The field to sort the items by.
+     * @param pageNo   The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize The number of orders to include per page. Defaults to 5 if not provided.
+     * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
      * @return A list of ResponseItemDto objects containing information about the items.
      */
-    List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification specification);
+    List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
 
     /**
      * Retrieves information about a specific item.
@@ -59,7 +57,19 @@ public interface ItemService {
      */
     void deleteById(Long id) throws NotFoundException;
 
+    /**
+
+     Decrements the quantity of every item in the provided list by 1.
+     @param items The list of Item objects to decrement the quantity for.
+     */
+
     void decrementQuantityEveryItem(List<Item> items);
 
+    /**
+
+     Finds and returns a list of Item objects matching the provided list of item ids.
+     @param itemIds The list of item ids to search for.
+     @return A list of Item objects matching the provided item ids.
+     */
     List<Item> findItemsByIds(List<Long> itemIds);
 }

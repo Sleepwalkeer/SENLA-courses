@@ -3,13 +3,11 @@ package eu.senla.service;
 import eu.senla.dto.orderDto.CreateOrderDto;
 import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.dto.orderDto.UpdateOrderDto;
-import eu.senla.entity.Order;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.NotFoundException;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The OrderService interface provides methods for managing orders in the system.
@@ -24,7 +22,7 @@ public interface OrderService {
      * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
      * @return A list of ResponseOrderDto objects containing information about the orders.
      */
-    List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification<Order> specification);
+    List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
 
     /**
      * Retrieves information about a specific order.
@@ -62,4 +60,19 @@ public interface OrderService {
      * @throws NotFoundException   If no order is found with the specified ID.
      */
     void deleteById(Long id) throws NotFoundException;
+
+    /**
+     * Retrieves a list of orders, sorted and paginated as specified, with optional filtering based on provided parameters.
+     *
+     * @param pageNo     The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize   The number of orders to include per page. Defaults to 5 if not provided.
+     * @param sortBy     The field to sort the orders by. Defaults to "id" if not provided.
+     * @param filterParams A Map of filter parameters to apply to the query, where each key represents a field to filter on and the corresponding value is the value to filter for.
+     *                     Multiple filters can be applied at once by including multiple key-value pairs in the Map.
+     *                     If the filter parameter is not provided, no filtering will be applied.
+     * @return A list of ResponseOrderDto objects containing information about the orders.
+     */
+    List<ResponseOrderDto> getWithFilters(Integer pageNo, Integer pageSize, String sortBy, Map<String, String> filterParams);
+
+
 }

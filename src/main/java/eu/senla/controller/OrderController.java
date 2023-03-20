@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/orders")
@@ -49,10 +50,20 @@ public class OrderController {
     public List<ResponseOrderDto> getAllOrders(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(value = "search") String search) {
-        // ПОФИКСИИИ
-        return orderService.getAll(pageNo, pageSize, sortBy, null );
+            @RequestParam(defaultValue = "id") String sortBy) {
+        return orderService.getAll(pageNo, pageSize, sortBy);
     }
+
+    @GetMapping("/filter")
+    @PreAuthorize("hasAuthority('write')")
+    public List<ResponseOrderDto> getOrdersWithFilters(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(required = false) Map<String, String> filters) {
+        return orderService.getWithFilters(pageNo, pageSize, sortBy, filters);
+    }
+
+
 }
 

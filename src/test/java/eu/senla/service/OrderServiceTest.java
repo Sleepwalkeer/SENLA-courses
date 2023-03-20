@@ -210,7 +210,7 @@ public class OrderServiceTest {
         when(modelMapper.map(eq(order2), eq(OrderDto.class)))
                 .thenReturn(orderDto2);
 
-        //List<ResponseOrderDto> retrievedOrderDtos = orderService.getAll(1, 2, "id");
+        List<ResponseOrderDto> retrievedOrderDtos = orderService.getAll(1, 2, "id");
 
         verify(orderRepository).findAll(paging);
     }

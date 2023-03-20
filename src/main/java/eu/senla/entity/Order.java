@@ -53,9 +53,11 @@ public class Order {
 
 
     @Column(name = "start_datetime", nullable = false)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private LocalDateTime startDateTime;
 
     @Column(name = "end_datetime", nullable = false)
+    @Temporal(value = TemporalType.TIMESTAMP)
     private LocalDateTime endDateTime;
 
     @Column(name = "total_price")

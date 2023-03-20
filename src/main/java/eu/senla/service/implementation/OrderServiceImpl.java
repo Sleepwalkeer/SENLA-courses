@@ -11,6 +11,8 @@ import eu.senla.repository.AccountRepository;
 import eu.senla.repository.OrderRepository;
 import eu.senla.service.ItemService;
 import eu.senla.service.OrderService;
+import eu.senla.utils.specification.order.OrderSearchFilters;
+import eu.senla.utils.specification.order.OrderSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -90,8 +94,27 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public List<ResponseOrderDto> getWithFilters(Integer pageNo,
+                                                 Integer pageSize,
+                                                 String sortBy,
+                                                 Map<String, String> filterParams) {
+        Page<Order> orderPage;
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        if (!filterParams.isEmpty()) {
+            Specification<Order> spec = createSpecificationFromFilters(filterParams);
+            orderPage = orderRepository.findAll(spec, paging);
+        } else {
+            orderPage = orderRepository.findAll(paging);
+        }
+        return orderPage.getContent()
+                .stream()
+                .map(order -> modelMapper.map(order, ResponseOrderDto.class))
+                .collect(Collectors.toList());
+    }
 
-    public List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification<Order> specification) {
+
+    public List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Order> orderPage = orderRepository.findAll(paging);
         return orderPage.getContent()
@@ -130,5 +153,29 @@ public class OrderServiceImpl implements OrderService {
         }
         Duration rentDuration = Duration.between(order.getStartDateTime(), order.getEndDateTime());
         return totalPricePerDay.multiply(BigDecimal.valueOf(rentDuration.toDays()));
+    }
+
+    private Specification<Order> createSpecificationFromFilters(Map<String, String> filterParams) {
+
+        Specification<Order> spec = Specification.where(null);
+        for (Map.Entry<String, String> entry : filterParams.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+
+            switch (OrderSearchFilters.fromString(key)) {
+                case TOTAL_LESS_THAN -> spec = spec.and(OrderSpecifications.totalLessThan(new BigDecimal(value)));
+                case TOTAL_MORE_THAN -> spec = spec.and(OrderSpecifications.totalMoreThan(new BigDecimal(value)));
+                case CUSTOMER_ID_EQUALS -> spec = spec.and(OrderSpecifications.customerIdEquals(Long.parseLong(value)));
+                case WORKER_ID_EQUALS -> spec = spec.and(OrderSpecifications.workerIdEquals(Long.parseLong(value)));
+                case START_DATE_EARLIER_THAN -> spec = spec.and(OrderSpecifications.startDateTimeEarlierThan(LocalDateTime.parse(value)));
+                case START_DATE_LATER_THAN -> spec = spec.and(OrderSpecifications.startDateTimeLaterThan(LocalDateTime.parse(value)));
+                case END_DATE_EARLIER_THAN -> spec = spec.and(OrderSpecifications.endDateTimeEarlierThan(LocalDateTime.parse(value)));
+                case END_DATE_LATER_THAN -> spec = spec.and(OrderSpecifications.endDateTimeLaterThan(LocalDateTime.parse(value)));
+                case MORE_ITEMS_THAN -> spec = spec.and(OrderSpecifications.moreItemsThan(Integer.parseInt(value)));
+                case LESS_ITEMS_THAN -> spec = spec.and(OrderSpecifications.lessItemsThan(Integer.parseInt(value)));
+                case ITEM_COUNT -> spec = spec.and(OrderSpecifications.itemCount(Integer.parseInt(value)));
+            }
+        }
+        return spec;
     }
 }

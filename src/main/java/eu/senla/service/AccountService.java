@@ -16,9 +16,9 @@ public interface AccountService {
     /**
      * Retrieves a list of all user accounts, sorted and paginated according to the specified criteria.
      *
-     * @param pageNo   The page number of the results to retrieve.
-     * @param pageSize The number of results to include per page.
-     * @param sortBy   The field to sort the results by.
+     * @param pageNo   The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize The number of orders to include per page. Defaults to 5 if not provided.
+     * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
      * @return A List of ResponseAccountDto objects representing the user accounts that match the specified criteria.
      */
     List<ResponseAccountDto> getAll(Integer pageNo, Integer pageSize, String sortBy);

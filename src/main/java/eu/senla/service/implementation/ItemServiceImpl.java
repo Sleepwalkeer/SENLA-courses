@@ -1,11 +1,8 @@
 package eu.senla.service.implementation;
 
-import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.itemDto.CreateItemDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
-import eu.senla.entity.Account;
-import eu.senla.entity.Item;
 import eu.senla.entity.Item;
 import eu.senla.exception.ItemOutOfStockException;
 import eu.senla.exception.NotFoundException;
@@ -17,13 +14,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -49,13 +44,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ResponseItemDto update(Long id, UpdateItemDto itemDto) {
-        if(itemRepository.existsById(id)){
+        if (itemRepository.existsById(id)) {
             Item item = modelMapper.map(itemDto, Item.class);
-            Item  updatedItem =itemRepository.save(item);
+            Item updatedItem = itemRepository.save(item);
             return modelMapper.map(updatedItem, ResponseItemDto.class);
-        }
-        else {
-            throw  new NotFoundException("No item with ID " + id + " was found");
+        } else {
+            throw new NotFoundException("No item with ID " + id + " was found");
         }
     }
 
@@ -68,9 +62,9 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
-    public List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy, Specification specification) {
+    public List<ResponseItemDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<Item> itemPage = itemRepository.findAll(specification,paging);
+        Page<Item> itemPage = itemRepository.findAll(paging);
 
         return itemPage.getContent()
                 .stream()

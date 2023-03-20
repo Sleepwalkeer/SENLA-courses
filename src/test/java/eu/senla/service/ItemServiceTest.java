@@ -215,7 +215,7 @@ public class ItemServiceTest {
         when(modelMapper.map(eq(item2), eq(ItemDto.class)))
                 .thenReturn(itemDto2);
 
-       //List<ResponseItemDto> retrievedItemDtos = itemService.getAll(1, 2, "id");
+       List<ResponseItemDto> retrievedItemDtos = itemService.getAll(1, 2, "id");
 
         verify(itemRepository).findAll(paging);
     }

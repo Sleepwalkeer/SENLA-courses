@@ -19,19 +19,19 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-        log.error("Not Found Exception");
+        log.error("Not Found Exception " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }
 
     @ExceptionHandler(JwtAuthenticationException.class)
     public ResponseEntity<String> handleJwtAuthenticationException(JwtAuthenticationException ex) {
-        log.error("Access denied");
+        log.error("Access denied " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<String> handleBadRequestException(BadRequestException ex) {
-        log.error("Bad Request Exception");
+        log.error("Bad Request Exception " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
@@ -49,22 +49,38 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
-        log.error("Access Denied Exception");
+
+        log.error("Access Denied Exception" + ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body("You do not have sufficient privileges to perform this operation. " + ex.getMessage());
     }
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<String> handleAuthenticatonException(AuthenticationException ex) {
-        log.error("Authentication Exception");
+        System.out.println(getClass().getResource("/logback.xml"));
+        log.info("Hello, world!");
+        log.error("Authentication Exception " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body("Login failed. Invalid username or password. " + ex.getMessage());
     }
 
     @ExceptionHandler(ItemOutOfStockException.class)
     public ResponseEntity<String> handleItemOutOfStockException(ItemOutOfStockException ex) {
-        log.error(ex.getMessage());
+        log.error("ItemOutOfStockException " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage() + " Please, remove this item from your order");
+    }
+
+    @ExceptionHandler(InvalidFilterKeyException.class)
+    public ResponseEntity<String> handleInvalidFilterKeyException(InvalidFilterKeyException ex) {
+        log.error("Invalid filter key exception " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleAllExceptions(Exception ex) {
+        log.error("Unknown error occured " + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ex.getMessage() + "An internal error occurred");
     }
 }

@@ -15,9 +15,9 @@ public interface CategoryService {
     /**
      * Retrieves a list of all product categories, sorted and paginated according to the specified criteria.
      *
-     * @param pageNo   The page number of the results to retrieve.
-     * @param pageSize The number of results to include per page.
-     * @param sortBy   The field to sort the results by.
+     * @param pageNo   The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize The number of orders to include per page. Defaults to 5 if not provided.
+     * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
      * @return A List of ResponseCategoryDto objects representing the product categories that match the specified criteria.
      */
     List<ResponseCategoryDto> getAll(Integer pageNo, Integer pageSize, String sortBy);
