@@ -1,24 +1,33 @@
 package eu.senla.service.implementation;
 
+import eu.senla.dto.categoryDto.ResponseCategoryDto;
 import eu.senla.dto.itemDto.CreateItemDto;
+import eu.senla.dto.itemDto.ItemPopularityDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
+import eu.senla.entity.Category;
 import eu.senla.entity.Item;
+import eu.senla.exception.BadRequestException;
 import eu.senla.exception.ItemOutOfStockException;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.ItemRepository;
 import eu.senla.service.ItemService;
+import eu.senla.utils.converter.Converter;
+import eu.senla.utils.specification.category.CategorySpecifications;
+import eu.senla.utils.specification.item.ItemSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,6 +36,7 @@ import java.util.stream.Collectors;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final ModelMapper modelMapper;
+    private final Converter converter;
 
 
     public ResponseItemDto getById(Long id) {
@@ -85,5 +95,44 @@ public class ItemServiceImpl implements ItemService {
 
     public List<Item> findItemsByIds(List<Long> itemIds) {
         return itemRepository.findByIdIn(itemIds);
+    }
+
+
+    @Transactional
+    public void replenishItem(Long id, Map<String, Integer> quantity) {
+        if (itemRepository.existsById(id)) {
+            if (quantity.containsKey("quantity")) {
+                int amount = quantity.getOrDefault("quantity", 0);
+                if (amount <= 0) {
+                    throw new BadRequestException("The quantity to replenish must be greater than 0");
+                }
+                itemRepository.replenishItem(id, amount);
+            } else {
+                throw new BadRequestException("Invalid request body");
+            }
+        } else {
+            throw new BadRequestException("Item with the given ID does not exist");
+        }
+    }
+
+    public List<ItemPopularityDto> getItemsByPopularity(Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        Page<Object[]> itemPage = itemRepository.getItemsByPopularity(paging);
+        return converter.mapItemPopularityDto(itemPage);
+    }
+
+    public List<ResponseItemDto> getItemsWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams) {
+        Page<Item> itemPage;
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        if (!filterParams.isEmpty()) {
+            Specification<Item> spec = ItemSpecifications.createSpecificationFromFilters(filterParams);
+            itemPage = itemRepository.findAll(spec, paging);
+        } else {
+            itemPage = itemRepository.findAll(paging);
+        }
+        return itemPage.getContent()
+                .stream()
+                .map(item -> modelMapper.map(item, ResponseItemDto.class))
+                .collect(Collectors.toList());
     }
 }

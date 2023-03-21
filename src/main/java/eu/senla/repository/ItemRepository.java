@@ -1,7 +1,8 @@
 package eu.senla.repository;
 
 import eu.senla.entity.Item;
-import eu.senla.entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -12,7 +13,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository for managing items in the system.
+ * This interface represents a repository for storing and retrieving {@link Item} objects in a database.
+ * It extends the {@link JpaRepository} interface, which provides standard CRUD operations for JPA entities,
+ * and the {@link JpaSpecificationExecutor} interface, which allows querying based on specifications.
  */
 public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificationExecutor<Item> {
 
@@ -40,4 +43,16 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     @Modifying
     @Query("UPDATE Item i SET i.quantity = i.quantity - 1 WHERE i.id IN (:ids)")
     void decrementQuantityForItems(@Param("ids") List<Long> itemIds);
+
+    @Modifying
+    @Query("UPDATE Item i SET i.quantity = i.quantity + :quantity WHERE i.id = :itemId")
+    void replenishItem(@Param("itemId") Long itemId, @Param("quantity") int quantity);
+
+    @Query(value = "SELECT i.name, COUNT(oi.item_id) AS popularity " +
+            "FROM order_item oi " +
+            "JOIN Item i ON oi.item_id = i.id " +
+            "GROUP BY i.name " +
+            "ORDER BY popularity DESC, name ASC", nativeQuery = true)
+    Page<Object[]> getItemsByPopularity(Pageable pageable);
+
 }

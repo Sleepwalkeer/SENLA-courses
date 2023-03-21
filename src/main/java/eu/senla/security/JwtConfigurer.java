@@ -1,6 +1,5 @@
 package eu.senla.security;
 
-import eu.senla.utils.logging.RequestLoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

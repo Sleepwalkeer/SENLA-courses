@@ -28,6 +28,6 @@ public enum OrderSearchFilters {
                 return key;
             }
         }
-            throw new InvalidFilterKeyException("Invalid filter key: " + value);
+        throw new InvalidFilterKeyException("Invalid filter key: " + value);
     }
 }

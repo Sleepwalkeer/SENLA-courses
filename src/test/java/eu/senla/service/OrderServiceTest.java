@@ -53,15 +53,15 @@ public class OrderServiceTest {
         CreateOrderDto createOrderDto = CreateOrderDto.builder()
                 .customer(AccountIdDto.builder().id(1L).build())
                 .worker(AccountIdDto.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,3,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 3, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,3,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 3, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
@@ -77,16 +77,16 @@ public class OrderServiceTest {
     public void getByIdTest() {
         ResponseOrderDto orderDto = ResponseOrderDto.builder()
                 .id(1L)
-                .startDateTime(LocalDateTime.of(2020,12,10,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 10, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,10,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 10, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
@@ -135,14 +135,14 @@ public class OrderServiceTest {
     public void updateNonExistentOrderTest() {
         UpdateOrderDto orderDto = UpdateOrderDto.builder()
                 .customer(AccountIdDto.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,14,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 14, 1, 2))
                 .build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,14,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 14, 1, 2))
                 .build();
 
         when(orderRepository.save(order)).thenReturn(order);
@@ -168,32 +168,32 @@ public class OrderServiceTest {
         OrderDto orderDto1 = OrderDto.builder()
                 .customer(AccountDto.builder().id(1L).build())
                 .worker(AccountDto.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,2,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         OrderDto orderDto2 = OrderDto.builder()
                 .customer(AccountDto.builder().id(1L).build())
                 .worker(AccountDto.builder().id(2L).build())
-                .startDateTime(LocalDateTime.of(2020,12,2,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
 
         Order order1 = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,22,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 22, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
 
         Order order2 = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
-                .startDateTime(LocalDateTime.of(2020,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,22,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 22, 1, 2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
 

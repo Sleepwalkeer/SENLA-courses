@@ -33,8 +33,8 @@ public class CredentialsServiceTest {
 
     @Test
     public void createTest() {
-        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
@@ -46,8 +46,8 @@ public class CredentialsServiceTest {
 
     @Test
     public void getByIdTest() {
-        Credentials credentials = Credentials.builder().username("test").build();
-        ResponseCredentialsDto credentialsDto = ResponseCredentialsDto.builder().username("test").build();
+        Credentials credentials = Credentials.builder().username("RentalApplication").build();
+        ResponseCredentialsDto credentialsDto = ResponseCredentialsDto.builder().username("RentalApplication").build();
 
         when(credentialsRepository.findById(1L)).thenReturn(Optional.ofNullable(credentials));
         when(modelMapper.map(credentials, ResponseCredentialsDto.class)).thenReturn(credentialsDto);
@@ -66,8 +66,8 @@ public class CredentialsServiceTest {
 
     @Test
     public void updateTest() {
-        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
         when(credentialsRepository.existsById(1L)).thenReturn(true);
@@ -82,8 +82,8 @@ public class CredentialsServiceTest {
 
     @Test
     public void updateNonExistentCredentialsTest() {
-        Credentials credentials = Credentials.builder().id(1L).password("test").username("test").build();
-        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("test").username("test").build();
+        Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
         when(credentialsRepository.findById(1L)).thenReturn(Optional.empty());

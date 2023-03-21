@@ -3,10 +3,13 @@ package eu.senla.service;
 import eu.senla.dto.accountDto.CreateAccountDto;
 import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.accountDto.UpdateAccountDto;
+import eu.senla.dto.categoryDto.ResponseCategoryDto;
+import eu.senla.dto.orderDto.ResponseOrderDto;
+import eu.senla.entity.Account;
 import eu.senla.exception.NotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The AccountService interface provides methods for managing user accounts.
@@ -40,7 +43,6 @@ public interface AccountService {
      */
     ResponseAccountDto create(CreateAccountDto accountDto);
 
-
     /**
      * Updates an existing user account with the provided data.
      *
@@ -58,4 +60,24 @@ public interface AccountService {
      * @throws NotFoundException if no account is found with the specified ID
      */
     void deleteById(Long id) throws NotFoundException;
+
+    /**
+     * Increases the discount percentage for a customer account by 1, if the
+     * account's current discount is less than 30.
+     *
+     * @param account the account for which to increase the discount
+     */
+    void incrementCustomerDiscount(Account account);
+
+    /**
+     * Retrieves a list of caccounts, paginated as specified, with optional filtering based on provided parameters.
+     *
+     * @param pageNo       The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize     The number of orders to include per page. Defaults to 5 if not provided.
+     * @param filterParams A Map of filter parameters to apply to the query, where each key represents a field to filter on and the corresponding value is the value to filter for.
+     *                     Multiple filters can be applied at once by including multiple key-value pairs in the Map.
+     *                     If the filter parameter is not provided, no filtering will be applied.
+     * @return A list of ResponseItemDto objects containing information about the accounts.
+     */
+    List<ResponseAccountDto> getAccountsWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams);
 }

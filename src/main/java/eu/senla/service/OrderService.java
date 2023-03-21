@@ -57,22 +57,30 @@ public interface OrderService {
      * Deletes an order with the specified ID.
      *
      * @param id The ID of the order to delete.
-     * @throws NotFoundException   If no order is found with the specified ID.
+     * @throws NotFoundException If no order is found with the specified ID.
      */
     void deleteById(Long id) throws NotFoundException;
 
     /**
-     * Retrieves a list of orders, sorted and paginated as specified, with optional filtering based on provided parameters.
+     * Retrieves a list of orders, paginated as specified, with optional filtering based on provided parameters.
      *
-     * @param pageNo     The page number to retrieve. Defaults to 0 if not provided.
-     * @param pageSize   The number of orders to include per page. Defaults to 5 if not provided.
-     * @param sortBy     The field to sort the orders by. Defaults to "id" if not provided.
+     * @param pageNo       The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize     The number of orders to include per page. Defaults to 5 if not provided.
      * @param filterParams A Map of filter parameters to apply to the query, where each key represents a field to filter on and the corresponding value is the value to filter for.
      *                     Multiple filters can be applied at once by including multiple key-value pairs in the Map.
      *                     If the filter parameter is not provided, no filtering will be applied.
      * @return A list of ResponseOrderDto objects containing information about the orders.
      */
-    List<ResponseOrderDto> getWithFilters(Integer pageNo, Integer pageSize, String sortBy, Map<String, String> filterParams);
+    List<ResponseOrderDto> getOrdersWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams);
 
-
+    /**
+     * Retrieves a list of order DTOs for the customer with the specified id, sorted and paginated as specified.
+     *
+     * @param id the ID of the customer whose orders to retrieve
+     * @param pageNo   The page number to retrieve. Defaults to 0 if not provided.
+     * @param pageSize The number of orders to include per page. Defaults to 5 if not provided.
+     * @param sortBy   The field to sort the orders by. Defaults to "id" if not provided.
+     * @return A list of order DTOs for the customer, or an empty list if no orders are found.
+     */
+    List<ResponseOrderDto> getOrdersByCustomerId(Long id, Integer pageNo, Integer pageSize, String sortBy);
 }

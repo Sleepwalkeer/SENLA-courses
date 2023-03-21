@@ -1,10 +1,7 @@
 package eu.senla.service.implementation;
 
-import eu.senla.dto.credentialsDto.ResponseCredentialsDto;
 import eu.senla.dto.credentialsDto.CredentialsDto;
 import eu.senla.dto.credentialsDto.ResponseCredentialsDto;
-import eu.senla.entity.Credentials;
-import eu.senla.entity.Credentials;
 import eu.senla.entity.Credentials;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.CredentialsRepository;
@@ -13,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -40,12 +35,11 @@ public class CredentialsServiceImpl implements CredentialsService {
 
     @Transactional
     public void update(Long id, CredentialsDto credentialsDto) {
-        if(credentialsRepository.existsById(id)){
+        if (credentialsRepository.existsById(id)) {
             Credentials credentials = modelMapper.map(credentialsDto, Credentials.class);
             credentialsRepository.save(credentials);
-        }
-        else {
-            throw  new NotFoundException("No credentials with ID " + id + " was found");
+        } else {
+            throw new NotFoundException("No credentials with ID " + id + " was found");
         }
     }
 

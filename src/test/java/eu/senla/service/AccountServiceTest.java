@@ -50,8 +50,8 @@ public class AccountServiceTest {
                 .firstName("Bill")
                 .secondName("Stark")
                 .credentials(Credentials.builder()
-                        .password("test")
-                        .username("test")
+                        .password("RentalApplication")
+                        .username("RentalApplication")
                         .build())
                 .build();
         CreateAccountDto accountDto = CreateAccountDto.builder()
@@ -61,14 +61,14 @@ public class AccountServiceTest {
                 .firstName("Bill")
                 .secondName("Stark")
                 .credentials(CredentialsDto.builder()
-                        .password("test")
-                        .username("test")
+                        .password("RentalApplication")
+                        .username("RentalApplication")
                         .build())
                 .build();
 
         when(accountRepository.save(account)).thenReturn(account);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
-        when(passwordEncoder.encode(accountDto.getCredentials().getPassword())).thenReturn("test");
+        when(passwordEncoder.encode(accountDto.getCredentials().getPassword())).thenReturn("RentalApplication");
 
         accountService.create(accountDto);
 
@@ -134,7 +134,7 @@ public class AccountServiceTest {
 
         ResponseAccountDto responseAccountDto = ResponseAccountDto
                 .builder()
-                .email("test@gmail.com")
+                .email("RentalApplication@gmail.com")
                 .firstName("Bill")
                 .secondName("Stark")
                 .id(1L)

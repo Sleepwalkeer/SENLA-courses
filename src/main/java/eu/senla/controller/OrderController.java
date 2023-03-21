@@ -54,16 +54,13 @@ public class OrderController {
         return orderService.getAll(pageNo, pageSize, sortBy);
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/fltr")
     @PreAuthorize("hasAuthority('write')")
     public List<ResponseOrderDto> getOrdersWithFilters(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize,
-            @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(required = false) Map<String, String> filters) {
-        return orderService.getWithFilters(pageNo, pageSize, sortBy, filters);
+        return orderService.getOrdersWithFilters(pageNo, pageSize, filters);
     }
-
-
 }
 

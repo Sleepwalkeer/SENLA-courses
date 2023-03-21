@@ -9,12 +9,13 @@ import eu.senla.exception.BadRequestException;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.AccountRepository;
 import eu.senla.repository.OrderRepository;
+import eu.senla.service.AccountService;
 import eu.senla.service.ItemService;
 import eu.senla.service.OrderService;
-import eu.senla.utils.specification.order.OrderSearchFilters;
 import eu.senla.utils.specification.order.OrderSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,8 +36,13 @@ import java.util.stream.Stream;
 @Service
 @Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
+
+    @Value("${order_total_threshold}")
+    private BigDecimal ORDER_TOTAL_THRESHOLD;
     private final OrderRepository orderRepository;
     private final AccountRepository accountRepository;
+
+    private final AccountService accountService;
     private final ItemService itemService;
     private final ModelMapper modelMapper;
 
@@ -59,7 +64,14 @@ public class OrderServiceImpl implements OrderService {
         List<Item> items = itemService.findItemsByIds(itemIds);
         order.setItems(items);
         order.setCustomer(accountRepository.findById(order.getCustomer().getId()).get());
-        order.setTotalPrice(calculateTotalPrice(order));
+
+        BigDecimal totalPrice = calculateTotalPrice(order);
+        order.setTotalPrice(totalPrice);
+
+        if (totalPrice.compareTo(ORDER_TOTAL_THRESHOLD) >= 0) {
+            accountService.incrementCustomerDiscount(order.getCustomer());
+        }
+
         orderRepository.save(order);
         itemService.decrementQuantityEveryItem(order.getItems());
         return modelMapper.map(order, ResponseOrderDto.class);
@@ -94,15 +106,13 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    @Override
-    public List<ResponseOrderDto> getWithFilters(Integer pageNo,
-                                                 Integer pageSize,
-                                                 String sortBy,
-                                                 Map<String, String> filterParams) {
+    public List<ResponseOrderDto> getOrdersWithFilters(Integer pageNo,
+                                                       Integer pageSize,
+                                                       Map<String, String> filterParams) {
         Page<Order> orderPage;
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Pageable paging = PageRequest.of(pageNo, pageSize);
         if (!filterParams.isEmpty()) {
-            Specification<Order> spec = createSpecificationFromFilters(filterParams);
+            Specification<Order> spec = OrderSpecifications.createSpecificationFromFilters(filterParams);
             orderPage = orderRepository.findAll(spec, paging);
         } else {
             orderPage = orderRepository.findAll(paging);
@@ -113,6 +123,15 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ResponseOrderDto> getOrdersByCustomerId(Long id, Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+        Page<Order> orderPage = orderRepository.getAllByCustomer_Id(id, paging);
+        return orderPage.getContent()
+                .stream()
+                .map(order -> modelMapper.map(order, ResponseOrderDto.class))
+                .collect(Collectors.toList());
+    }
 
     public List<ResponseOrderDto> getAll(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
@@ -153,29 +172,5 @@ public class OrderServiceImpl implements OrderService {
         }
         Duration rentDuration = Duration.between(order.getStartDateTime(), order.getEndDateTime());
         return totalPricePerDay.multiply(BigDecimal.valueOf(rentDuration.toDays()));
-    }
-
-    private Specification<Order> createSpecificationFromFilters(Map<String, String> filterParams) {
-
-        Specification<Order> spec = Specification.where(null);
-        for (Map.Entry<String, String> entry : filterParams.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-
-            switch (OrderSearchFilters.fromString(key)) {
-                case TOTAL_LESS_THAN -> spec = spec.and(OrderSpecifications.totalLessThan(new BigDecimal(value)));
-                case TOTAL_MORE_THAN -> spec = spec.and(OrderSpecifications.totalMoreThan(new BigDecimal(value)));
-                case CUSTOMER_ID_EQUALS -> spec = spec.and(OrderSpecifications.customerIdEquals(Long.parseLong(value)));
-                case WORKER_ID_EQUALS -> spec = spec.and(OrderSpecifications.workerIdEquals(Long.parseLong(value)));
-                case START_DATE_EARLIER_THAN -> spec = spec.and(OrderSpecifications.startDateTimeEarlierThan(LocalDateTime.parse(value)));
-                case START_DATE_LATER_THAN -> spec = spec.and(OrderSpecifications.startDateTimeLaterThan(LocalDateTime.parse(value)));
-                case END_DATE_EARLIER_THAN -> spec = spec.and(OrderSpecifications.endDateTimeEarlierThan(LocalDateTime.parse(value)));
-                case END_DATE_LATER_THAN -> spec = spec.and(OrderSpecifications.endDateTimeLaterThan(LocalDateTime.parse(value)));
-                case MORE_ITEMS_THAN -> spec = spec.and(OrderSpecifications.moreItemsThan(Integer.parseInt(value)));
-                case LESS_ITEMS_THAN -> spec = spec.and(OrderSpecifications.lessItemsThan(Integer.parseInt(value)));
-                case ITEM_COUNT -> spec = spec.and(OrderSpecifications.itemCount(Integer.parseInt(value)));
-            }
-        }
-        return spec;
     }
 }

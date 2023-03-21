@@ -3,6 +3,7 @@ package eu.senla.controller;
 import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
+import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
@@ -51,5 +53,14 @@ public class CategoryController {
             @RequestParam(defaultValue = "5") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy) {
         return categoryService.getAll(pageNo, pageSize, sortBy);
+    }
+
+    @GetMapping("/fltr")
+    @PreAuthorize("hasAuthority('read')")
+    public List<ResponseCategoryDto> getCategoriesWithFilters(
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "5") Integer pageSize,
+            @RequestParam(required = false) Map<String, String> filters) {
+        return categoryService.getCategoriesWithFilters(pageNo, pageSize, filters);
     }
 }

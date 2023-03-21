@@ -3,7 +3,6 @@ package eu.senla.service;
 import eu.senla.dto.credentialsDto.CredentialsDto;
 import eu.senla.dto.credentialsDto.ResponseCredentialsDto;
 import eu.senla.exception.NotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * The CredentialsService interface provides methods for managing user credentials.

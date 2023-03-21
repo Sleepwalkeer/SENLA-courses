@@ -8,24 +8,31 @@ import eu.senla.entity.Account;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.AccountRepository;
 import eu.senla.service.AccountService;
+import eu.senla.utils.specification.account.AccountSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
+
+    @Value("${customer_increment_discount_threshold}")
+    private BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD;
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
@@ -47,13 +54,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     public ResponseAccountDto update(Long id, UpdateAccountDto accountDto) {
-        if(accountRepository.existsById(id)){
+        if (accountRepository.existsById(id)) {
             Account account = modelMapper.map(accountDto, Account.class);
-            Account  updatedAccount = accountRepository.save(account);
+            Account updatedAccount = accountRepository.save(account);
             return modelMapper.map(updatedAccount, ResponseAccountDto.class);
-        }
-        else {
-            throw  new NotFoundException("No account with ID " + id + " was found");
+        } else {
+            throw new NotFoundException("No account with ID " + id + " was found");
         }
     }
 
@@ -74,4 +80,29 @@ public class AccountServiceImpl implements AccountService {
                 .stream()
                 .map(account -> modelMapper.map(account, ResponseAccountDto.class)).collect(Collectors.toList());
     }
+
+    @Transactional
+    public void incrementCustomerDiscount(Account account) {
+        BigDecimal discount = account.getDiscount();
+        if (discount.compareTo(CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD) < 0) {
+            discount = discount.add(BigDecimal.ONE);
+            accountRepository.updateAccountDiscount(account.getId(), discount);
+        }
+    }
+
+    public List<ResponseAccountDto> getAccountsWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams) {
+        Page<Account> accountPage;
+        Pageable paging = PageRequest.of(pageNo, pageSize);
+        if (!filterParams.isEmpty()) {
+            Specification<Account> spec = AccountSpecifications.createSpecificationFromFilters(filterParams);
+            accountPage = accountRepository.findAll(spec, paging);
+        } else {
+            accountPage = accountRepository.findAll(paging);
+        }
+        return accountPage.getContent()
+                .stream()
+                .map(account -> modelMapper.map(account, ResponseAccountDto.class))
+                .collect(Collectors.toList());
+    }
 }
+

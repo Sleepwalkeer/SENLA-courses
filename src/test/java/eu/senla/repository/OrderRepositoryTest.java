@@ -18,7 +18,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +41,7 @@ public class OrderRepositoryTest extends ContainersEnvironment {
         fillUpdateDummyData();
         Optional<Order> orderOptional = orderRepository.findById(1L);
         Order order = orderOptional.get();
-        order.setEndDateTime(LocalDateTime.of(2020,12,12,1,2));
+        order.setEndDateTime(LocalDateTime.of(2020, 12, 12, 1, 2));
         Order orderFromDb = orderRepository.save(order);
         Assertions.assertEquals(order.getEndDateTime(), orderFromDb.getEndDateTime());
     }
@@ -67,8 +66,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2019,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2022,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
         orderRepository.save(order);
@@ -103,8 +102,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2018,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2021,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2018, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2021, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
         orderRepository.save(order);
@@ -144,8 +143,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2017,12,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2017, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
         orderRepository.save(order);
@@ -154,8 +153,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2020,10,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 10, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(13600))
                 .build();
         orderRepository.save(order1);
@@ -164,8 +163,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2020,9,12,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 9, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(14600))
                 .build();
         orderRepository.save(order2);
@@ -176,7 +175,7 @@ public class OrderRepositoryTest extends ContainersEnvironment {
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> orderRepository.save(order));
@@ -223,8 +222,8 @@ public class OrderRepositoryTest extends ContainersEnvironment {
                 .customer(Account.builder().id(1L).build())
                 .worker(Account.builder().id(2L).build())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2020,12,2,1,2))
-                .endDateTime(LocalDateTime.of(2020,12,12,1,2))
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build();
         orderRepository.save(order);
