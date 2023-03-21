@@ -3,7 +3,6 @@ package eu.senla.service;
 import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
-import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.exception.NotFoundException;
 
 import java.util.List;

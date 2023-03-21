@@ -3,8 +3,6 @@ package eu.senla.service;
 import eu.senla.dto.accountDto.CreateAccountDto;
 import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.accountDto.UpdateAccountDto;
-import eu.senla.dto.categoryDto.ResponseCategoryDto;
-import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.entity.Account;
 import eu.senla.exception.NotFoundException;
 

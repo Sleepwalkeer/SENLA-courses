@@ -31,11 +31,11 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class AccountServiceImpl implements AccountService {
 
-    @Value("${customer_increment_discount_threshold}")
-    private BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD;
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    @Value("${customer_increment_discount_threshold}")
+    private BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD;
 
     public ResponseAccountDto getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->

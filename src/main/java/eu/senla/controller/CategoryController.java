@@ -3,7 +3,6 @@ package eu.senla.controller;
 import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
-import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

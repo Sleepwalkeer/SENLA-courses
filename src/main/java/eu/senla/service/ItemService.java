@@ -4,10 +4,10 @@ import eu.senla.dto.itemDto.CreateItemDto;
 import eu.senla.dto.itemDto.ItemPopularityDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
-import eu.senla.dto.orderDto.ResponseOrderDto;
 import eu.senla.entity.Item;
-import eu.senla.exception.NotFoundException;
 import eu.senla.exception.BadRequestException;
+import eu.senla.exception.NotFoundException;
+
 import java.util.List;
 import java.util.Map;
 

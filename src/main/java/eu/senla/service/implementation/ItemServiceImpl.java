@@ -1,11 +1,9 @@
 package eu.senla.service.implementation;
 
-import eu.senla.dto.categoryDto.ResponseCategoryDto;
 import eu.senla.dto.itemDto.CreateItemDto;
 import eu.senla.dto.itemDto.ItemPopularityDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
-import eu.senla.entity.Category;
 import eu.senla.entity.Item;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.ItemOutOfStockException;
@@ -13,7 +11,6 @@ import eu.senla.exception.NotFoundException;
 import eu.senla.repository.ItemRepository;
 import eu.senla.service.ItemService;
 import eu.senla.utils.converter.Converter;
-import eu.senla.utils.specification.category.CategorySpecifications;
 import eu.senla.utils.specification.item.ItemSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

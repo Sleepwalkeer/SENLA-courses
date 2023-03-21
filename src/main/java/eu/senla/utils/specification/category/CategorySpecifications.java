@@ -1,12 +1,10 @@
 package eu.senla.utils.specification.category;
 
-import eu.senla.entity.*;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.JoinType;
+import eu.senla.entity.Category;
+import eu.senla.entity.Category_;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 public class CategorySpecifications {
@@ -31,11 +29,14 @@ public class CategorySpecifications {
 
             switch (CategorySearchFilters.fromString(key)) {
 
-                case NAME_LIKE -> { spec = spec.and(nameLike(value));
+                case NAME_LIKE -> {
+                    spec = spec.and(nameLike(value));
                 }
-                case DISCOUNT_MORE_THAN -> {spec = spec.and(discountMoreThan(new BigDecimal(value)));
+                case DISCOUNT_MORE_THAN -> {
+                    spec = spec.and(discountMoreThan(new BigDecimal(value)));
                 }
-                case DISCOUNT_LESS_THAN -> { spec = spec.and(discountLessThan(new BigDecimal(value)));
+                case DISCOUNT_LESS_THAN -> {
+                    spec = spec.and(discountLessThan(new BigDecimal(value)));
                 }
             }
         }

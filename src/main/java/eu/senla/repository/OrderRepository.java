@@ -1,13 +1,10 @@
 package eu.senla.repository;
 
-import eu.senla.entity.Item;
 import eu.senla.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-import java.util.List;
 
 /**
  * This interface represents a repository for storing and retrieving {@link Order} objects in a database.

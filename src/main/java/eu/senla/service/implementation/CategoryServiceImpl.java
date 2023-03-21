@@ -1,15 +1,12 @@
 package eu.senla.service.implementation;
 
-import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
-import eu.senla.entity.Account;
 import eu.senla.entity.Category;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.CategoryRepository;
 import eu.senla.service.CategoryService;
-import eu.senla.utils.specification.account.AccountSpecifications;
 import eu.senla.utils.specification.category.CategorySpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

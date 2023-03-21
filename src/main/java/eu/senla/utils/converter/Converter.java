@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 public class Converter {
 
-   public  List<ItemPopularityDto> mapItemPopularityDto(Page<Object[]> itemPage){
+    public List<ItemPopularityDto> mapItemPopularityDto(Page<Object[]> itemPage) {
         List<Object[]> itemList = itemPage.getContent();
 
         List<ItemPopularityDto> dtoList = new ArrayList<>();

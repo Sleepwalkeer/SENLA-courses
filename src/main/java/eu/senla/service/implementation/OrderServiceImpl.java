@@ -37,15 +37,13 @@ import java.util.stream.Stream;
 @Transactional(readOnly = true)
 public class OrderServiceImpl implements OrderService {
 
-    @Value("${order_total_threshold}")
-    private BigDecimal ORDER_TOTAL_THRESHOLD;
     private final OrderRepository orderRepository;
     private final AccountRepository accountRepository;
-
     private final AccountService accountService;
     private final ItemService itemService;
     private final ModelMapper modelMapper;
-
+    @Value("${order_total_threshold}")
+    private BigDecimal ORDER_TOTAL_THRESHOLD;
 
     public ResponseOrderDto getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() ->

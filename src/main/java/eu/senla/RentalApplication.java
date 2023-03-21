@@ -9,7 +9,7 @@ public class RentalApplication {
     public static void main(String[] args) {
         try {
 
-        SpringApplication.run(RentalApplication.class, args);
+            SpringApplication.run(RentalApplication.class, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
