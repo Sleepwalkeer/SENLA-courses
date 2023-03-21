@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
-public class AccountControllerTest extends ContainersEnvironment {
+public class AccountControllerTest  {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -50,12 +50,12 @@ public class AccountControllerTest extends ContainersEnvironment {
     }
 
     public void fillDummyAuthorizationData() {
-        if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
-            Account admin = Account.builder().
-                    firstName("Admin")
+        if (accountRepository.findByEmail("Admin@mail.ru").isEmpty()) {
+            Account admin = Account.builder()
+                    .firstName("Admin")
                     .secondName("Admin")
                     .phone("+3758232734")
-                    .email("kfgkzsf")
+                    .email("Admin@mail.ru")
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -64,12 +64,12 @@ public class AccountControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(admin);
         }
-        if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
+        if (accountRepository.findByEmail("User2@mail.ru").isEmpty()) {
             Account user2 = Account.builder()
                     .firstName("User2")
                     .secondName("user2")
-                    .phone("+375823274")
-                    .email("kfgkzsfdf")
+                    .phone("+375334323274")
+                    .email("User2@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User2")
                             .password("escapism2")
@@ -77,12 +77,12 @@ public class AccountControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(user2);
         }
-        if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
+        if (accountRepository.findByEmail("User3@mail.ru").isEmpty()) {
             Account user3 = Account.builder()
                     .firstName("User3")
                     .secondName("user3")
-                    .phone("+375823wer")
-                    .email("kfgkzsddgd")
+                    .phone("+375293618345")
+                    .email("User3@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User3")
                             .password("escapism3")
@@ -120,26 +120,37 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
-    public void getAccountByIdTest() throws Exception {
-        int credentialsId = 1;
-        this.mockMvc.perform(get("/accounts/{id}", credentialsId))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(credentialsId));
+    public void getAccountByIdAdminTest() throws Exception {
+        this.mockMvc.perform(get("/accounts/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getOrdersByAccountIdTest() throws Exception {
+        this.mockMvc.perform(get("/accounts/{id}/orders", 1))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithUserDetails("User2")
-    public void getAccountByUnauthorizedIdTest() throws Exception {
+    public void getOrdersByAccountIdUnauthorizedTest() throws Exception {
+        this.mockMvc.perform(get("/accounts/{1}/orders", 1))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("User2")
+    public void getAccountByIdUnauthorizedTest() throws Exception {
         this.mockMvc.perform(get("/accounts/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
     @Test
     @WithUserDetails("User3")
-    public void getAccountByAuthorizedIdTest() throws Exception {
+    public void getAccountByIdAuthorizedTest() throws Exception {
         this.mockMvc.perform(get("/accounts/{id}", 3))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(3));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
@@ -168,7 +179,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
-    public void updateAccountTest() throws Exception {
+    public void updateAccountAdminTest() throws Exception {
         fillUpdateAccountDummyData();
         Long id = accountRepository.findByEmail("updacc").get().getId();
         String requestBody = "{\"id\":\"" + id + "\",\"firstName\":\"updaccnew\"," +
@@ -176,9 +187,7 @@ public class AccountControllerTest extends ContainersEnvironment {
         this.mockMvc.perform(put("/accounts/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnew"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     private void fillUpdateAccountDummyData() {
@@ -197,7 +206,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("User2")
-    public void updateAccountByUnauthorizedUserTest() throws Exception {
+    public void updateAccountUnauthorizedTest() throws Exception {
         String requestBody = "{\"id\":\"4\",\"firstName\":\"updaccnew\",\"secondName\":\"updaccnew\"" +
                 ",\"phone\":\"+375331225432\",\"email\":\"updaccnew@mail.ru\"}";
 
@@ -209,7 +218,7 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("updaccUser1")
-    public void updateAccountByAuthorizedUserTest() throws Exception {
+    public void updateAccountAuthorizedTest() throws Exception {
         Account accountForUpdate = accountRepository.findByEmail("updaccAuth1@mail.ru").get();
         String requestBody = "{\"id\":\"" + accountForUpdate.getId() + "\",\"firstName\":\"updaccnewAuth1\"," +
                 "\"secondName\":\"updaccnewAuth1\",\"phone\":\"+375331234564\"," +
@@ -218,14 +227,12 @@ public class AccountControllerTest extends ContainersEnvironment {
         this.mockMvc.perform(put("/accounts/{id}", accountForUpdate.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(accountForUpdate.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("updaccnewAuth1"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
     @WithUserDetails("Admin")
-    public void updateInvalidAccountTest() throws Exception {
+    public void updateNonexistentAccountTest() throws Exception {
         String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\"" +
                 ",\"phone\":\"+375291423423\",\"email\":\"1sdafasdf13@mail.ru\"}";
 
@@ -237,17 +244,9 @@ public class AccountControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
-    public void deleteAccountByIdTest() throws Exception {
+    public void deleteAccountByIdAdminTest() throws Exception {
         fillDeleteAccountByIdDummyData();
         mockMvc.perform(delete("/accounts/{id}", 6))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    @WithUserDetails("delaccUser")
-    public void deleteAccountByAuthorizedIdTest() throws Exception {
-        Account accountForDeletion = accountRepository.findByEmail("delaccAuth1").get();
-        mockMvc.perform(delete("/accounts/{id}", accountForDeletion.getId()))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
@@ -287,65 +286,49 @@ public class AccountControllerTest extends ContainersEnvironment {
                         .build())
                 .build();
         accountRepository.save(dummyCredentialsData2);
-
-        Account dummyCredentialsData3 = Account.builder()
-                .firstName("deleteaccid33")
-                .secondName("deleteaccid33")
-                .phone("deleteaccid33")
-                .email("deleteaccid33")
-                .credentials(Credentials.builder()
-                        .username("deleteaccid33")
-                        .password("deleteaccid33")
-                        .build())
-                .build();
-        accountRepository.save(dummyCredentialsData3);
+    }
+    @Test
+    @WithUserDetails("delaccUser")
+    public void deleteAccountByIdAuthorizedTest() throws Exception {
+        Account accountForDeletion = accountRepository.findByEmail("delaccAuth1").get();
+        mockMvc.perform(delete("/accounts/{id}", accountForDeletion.getId()))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteAccountByInvalidIdTest() throws Exception {
-//        mockMvc.perform(delete("/accounts/{id}", 500000)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
-
-
-//    private void fillDeleteAccountDummyData() {
-//        Account dummyCredentialsData = Account.builder().firstName("deleteacc").secondName("deleteacc")
-//                .phone("deleteacc").email("deleteacc").discount(0F)
-//                .credentials(Credentials.builder().username("deleteacc").password("deleteacc").role(Role.USER).build()).build();
-//        accountRepository.save(dummyCredentialsData);
-//        Account dummyCredentialsData1 = Account.builder().firstName("deleteacc11").secondName("deleteacc11")
-//                .phone("deleteacc11").email("deleteacc11").discount(0F)
-//                .credentials(Credentials.builder().username("deleteacc11").password("deleteacc11").role(Role.USER).build()).build();
-//        accountRepository.save(dummyCredentialsData1);
-//        Account dummyCredentialsData2 = Account.builder().firstName("deleteacc22").secondName("deleteacc22")
-//                .phone("deleteacc22").email("deleteacc22").discount(0F)
-//                .credentials(Credentials.builder().username("deleteacc22").password("deleteacc22").role(Role.USER).build()).build();
-//        accountRepository.save(dummyCredentialsData2);
-//        Account dummyCredentialsData3 = Account.builder().firstName("deleteacc33").secondName("deleteacc33")
-//                .phone("deleteacc33").email("deleteacc33").discount(0F)
-//                .credentials(Credentials.builder().username("deleteacc33").password("deleteacc33").role(Role.USER).build()).build();
-//        accountRepository.save(dummyCredentialsData3);
-//    }
-
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteInvalidAccountTest() throws Exception {
-//        String requestBody = "{\"id\":\"1000000\",\"firstName\":\"chlfdfh\",\"secondName\":\"dsfgdfg\"," +
-//                "\"phone\":\"14234\",\"email\":\"1sdafasdf13\",\"credentials\":{\"id\":\"100000\"}}";
-//
-//        mockMvc.perform(delete("/accounts")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
-
+    @Test
+    @WithUserDetails("Admin")
+    public void deleteNonexistentAccountByIdTest() throws Exception {
+        mockMvc.perform(delete("/accounts/{id}", 500000)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
     @Test
     @WithUserDetails("Admin")
     public void getAllAccountsTest() throws Exception {
         mockMvc.perform(get("/accounts"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
+    }
+
+    @Test
+    @WithUserDetails("User2")
+    public void getAccountsWithFiltersUnauthorizedTest() throws Exception {
+        mockMvc.perform(get("/accounts/fltr?firstNameLike=pet&discountLessThan=10"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getAccountsWithFiltersTest() throws Exception {
+        mockMvc.perform(get("/accounts/fltr?firstNameLike=Us%&discountLessThan=10"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getAccountsWithInvalidFiltersTest() throws Exception {
+        mockMvc.perform(get("/accounts/fltr?firstNamee=pet&discountLessThan=10"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

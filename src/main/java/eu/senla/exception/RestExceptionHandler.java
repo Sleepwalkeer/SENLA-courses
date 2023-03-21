@@ -42,7 +42,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessDeniedException ex) {
 
-        log.error("Access Denied Exception" + ex.getMessage());
+        log.error("AccessDeniedException occured. " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ex.getMessage() + " You do not have sufficient privileges to perform this operation.");
     }

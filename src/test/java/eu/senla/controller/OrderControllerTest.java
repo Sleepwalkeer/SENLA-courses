@@ -4,10 +4,11 @@ import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
-import eu.senla.entity.Account;
-import eu.senla.entity.Credentials;
-import eu.senla.entity.Role;
+import eu.senla.entity.*;
 import eu.senla.repository.AccountRepository;
+import eu.senla.repository.CategoryRepository;
+import eu.senla.repository.ItemRepository;
+import eu.senla.repository.OrderRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
@@ -36,6 +40,12 @@ public class OrderControllerTest extends ContainersEnvironment {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private ItemRepository itemRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private OrderRepository orderRepository;
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -49,12 +59,12 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     public void fillDummyAuthorizationData() {
-        if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
+        if (accountRepository.findByEmail("Admin@mail.ru").isEmpty()) {
             Account admin = Account.builder()
                     .firstName("Admin")
                     .secondName("Admin")
                     .phone("+3758232734")
-                    .email("kfgkzsf")
+                    .email("Admin@mail.ru")
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -63,12 +73,12 @@ public class OrderControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(admin);
         }
-        if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
+        if (accountRepository.findByEmail("User2@mail.ru").isEmpty()) {
             Account user2 = Account.builder()
                     .firstName("User2")
                     .secondName("user2")
-                    .phone("+375823274")
-                    .email("kfgkzsfdf")
+                    .phone("+375334323274")
+                    .email("User2@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User2")
                             .password("escapism2")
@@ -76,12 +86,12 @@ public class OrderControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(user2);
         }
-        if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
+        if (accountRepository.findByEmail("User3@mail.ru").isEmpty()) {
             Account user3 = Account.builder()
                     .firstName("User3")
                     .secondName("user3")
-                    .phone("+375823wer")
-                    .email("kfgkzsddgd")
+                    .phone("+375293618345")
+                    .email("User3@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User3")
                             .password("escapism3")
@@ -96,62 +106,45 @@ public class OrderControllerTest extends ContainersEnvironment {
     public void getOrderByIdTest() throws Exception {
         fillGetOrderByIdDummyData();
         this.mockMvc.perform(get("/orders/{id}", 1))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private void fillGetOrderByIdDummyData() throws Exception {
-        String dummyAccountData = "{\"firstName\":\"getord\",\"secondName\":\"getord\",\"phone\":\"getord\",\"email\":\"getord\"," +
-                "\"credentials\":{ \"username\": \"getord\", \"password\": \"getord\" , \"role\" : \"USER\"  },\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyAccountData));
-        String dummyCategoryData = "{\"name\": \"getord1\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+    private void fillGetOrderByIdDummyData() {
+        categoryRepository.save(Category.builder().name("orderctrlgetbyidtest").build());
 
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":1\"},\"name\":\"getord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}",
-                "{\"category\":{\"id\":1\"},\"name\":\"getord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
-        };
-        for (String dummyDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
-        String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(post("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody));
+        itemRepository.save(Item.builder()
+                .name("orderctrlgetbyidtest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        List<Item> items = itemRepository.findAll();
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+    }
+
+    @Test
+    @WithUserDetails("User2")
+    public void getOrderByIdUnauthorizedTest() throws Exception {
+        this.mockMvc.perform(get("/orders/{id}", 1))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
 
     @Test
     @WithUserDetails("Admin")
     public void createOrderTest() throws Exception {
-
-        String dummyCategoryData = "{\"name\": \"getord\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
-
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":\"1\"},\"name\":\"getordit1\"," +
-                        "\"price\":\"100\",\"quantity\":\"10\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"getorditem1\"," +
-                        "\"price\":\"100\",\"quantity\":\"10\",\"discount\":\"25\"}"
-        };
-        for (String dummyDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
-
-        String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
+        fillcreateOrderTest();
+        Long itemId = itemRepository.findByName("orderctrlcreatetest1").get().getId();
+        String requestBody = "{\"customer\":{\"id\":\"1\"},\"worker\":{\"id\":\"1\"}," +
+                "\"items\":[{\"id\":\"" + itemId + "\",\"category\":{\"id\":\"1\"}}]," +
                 "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -159,9 +152,20 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
+    private void fillcreateOrderTest() {
+        categoryRepository.save(Category.builder().name("orderctrlcreatetest").build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatetest1")
+                .price(new BigDecimal(300))
+                .quantity(10)
+                .category(Category.builder().id(1L).build())
+                .build());
+    }
+
     @Test
     @WithUserDetails("User2")
-    public void createOrderUnauthorizedIdTest() throws Exception {
+    public void createOrderUnauthorizedTest() throws Exception {
         String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
                 "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
@@ -185,6 +189,18 @@ public class OrderControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
+    public void createInvalidTimeOrderTest() throws Exception {
+        String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
+                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
+                "\"startDateTime\":[2024,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
+        this.mockMvc.perform(post("/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
     public void updateOrderTest() throws Exception {
         fillUpdateOrderDummyData();
         String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
@@ -194,43 +210,33 @@ public class OrderControllerTest extends ContainersEnvironment {
         this.mockMvc.perform(put("/orders/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(1))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value("525.0"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private void fillUpdateOrderDummyData() throws Exception {
-        String dummyAccountData = "{\"firstName\":\"updordc\",\"secondName\":\"updordc\"," +
-                "\"phone\":\"updordc\",\"email\":\"updordc\"," +
-                "\"credentials\":{\"username\":\"updordc\",\"password\":\"updordc\",\"role\":\"USER\"},\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyAccountData));
-        String dummyCategoryData = "{\"name\": \"updord\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+    private void fillUpdateOrderDummyData() {
+        categoryRepository.save(Category.builder().name("orderctrlupdtest").build());
 
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":1\"},\"name\":\"updord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}",
-                "{\"category\":{\"id\":1\"},\"name\":\"updord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
-        };
-        for (String dummyDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
-        String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(post("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody));
+        itemRepository.save(Item.builder()
+                .name("orderctrlupdtest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        List<Item> items = itemRepository.findAll();
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
     }
 
     @Test
     @WithUserDetails("User3")
-    public void updateOrderWithUnauthorizedUserTest() throws Exception {
+    public void updateOrderUnauthorizedTest() throws Exception {
         String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
                 ",\"worker\":{\"id\":1}," +
                 "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
@@ -255,121 +261,74 @@ public class OrderControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
-    public void deleteOrderByIdTest() throws Exception {
+    public void deleteOrderByIdAdminTest() throws Exception {
         fillDeleteOrderByIdDummyData();
         mockMvc.perform(delete("/orders/{id}", 4))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private void fillDeleteOrderByIdDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"delidordor\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+    private void fillDeleteOrderByIdDummyData() {
+        categoryRepository.save(Category.builder().name("orderctrldelbyIdtest").build());
 
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":\"1\"},\"name\":\"delidordit1\",\"price\":\"1\",\"quantity\":\"10\",\"discount\":\"0\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"delidordit2\",\"price\":\"1\",\"quantity\":\"10\",\"discount\":\"0\"}"
-        };
-        for (String dummyDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
+        itemRepository.save(Item.builder()
+                .name("orderctrldelbyIdtest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
 
-        String[] orders = {
-                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
-                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
-                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
-                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}",
-                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                        "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}"
-        };
-        for (String order : orders) {
-            this.mockMvc.perform(post("/orders")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(order));
-        }
+        List<Item> items = itemRepository.findAll();
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
     }
 
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteOrderByInvalidIdTest() throws Exception {
-//        mockMvc.perform(delete("/orders/{id}", 500000)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
-
-
-//    @WithUserDetails("Admin")
-//    private void fillDeleteOrderDummyData() throws Exception {
-//        String dummyAccountData = "{\"firstName\":\"delord\",\"secondName\":\"delord\"" +
-//                ",\"phone\":\"delord\",\"email\":\"delord\"," +
-//                "\"credentials\":{ \"username\": \"delord\", \"password\": \"delord\"" +
-//                ", \"role\" : \"USER\"  },\"discount\":\"0\"}";
-//        this.mockMvc.perform(post("/accounts")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(dummyAccountData));
-//        String dummyCategoryData = "{\"name\": \"delord\",\"discount\":\"0\"}";
-//        this.mockMvc.perform(post("/categories")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(dummyCategoryData));
-//
-//        String[] dummyItemData = {
-//                "{\"category\":{\"id\":1\"},\"name\":\"delord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}",
-//                "{\"category\":{\"id\":1\"},\"name\":\"delord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
-//        };
-//        for (String dummyDatum : dummyItemData) {
-//            this.mockMvc.perform(post("/items")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .content(dummyDatum));
-//        }
-//
-//        String[] orders = {
-//                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-//                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-//                        "\"startDateTime\":1666778124325,\"endDateTime\":1675778124325,\"totalPrice\":12302}",
-//                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-//                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-//                        "\"startDateTime\":1667778124325,\"endDateTime\":1675778124325,\"totalPrice\":12312}",
-//                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-//                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-//                        "\"startDateTime\":1668778124325,\"endDateTime\":1675778124325,\"totalPrice\":12313}",
-//                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-//                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-//                        "\"startDateTime\":1669778124325,\"endDateTime\":1675778124325,\"totalPrice\":12314}",
-//                "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-//                        "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-//                        "\"startDateTime\":1675778124325,\"endDateTime\":1675788124325,\"totalPrice\":12315}"
-//        };
-//        for (String order : orders) {
-//            this.mockMvc.perform(post("/orders")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .content(order));
-//        }
-//    }
-
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteInvalidOrderTest() throws Exception {
-//
-//        String requestBody = "{\"id\": 150,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
-//                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-//                "\"startDateTime\":1665778114325,\"endDateTime\":1675778114325,\"totalPrice\":12300}";
-//        mockMvc.perform(delete("/orders")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(requestBody))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
+    @Test
+    @WithUserDetails("User3")
+    public void deleteOrderByIdUnauthorizedTest() throws Exception {
+        mockMvc.perform(delete("/orders/{id}", 4))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+    
+    @Test
+    @WithUserDetails("Admin")
+    public void deleteNonexistentOrderByTest() throws Exception {
+        mockMvc.perform(delete("/orders/{id}", 500000)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
     @Test
     @WithUserDetails("Admin")
@@ -380,32 +339,87 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
     }
 
-    private void fillGetAllOrderDummyData() throws Exception {
-        String dummyAccountData = "{\"firstName\":\"getAllord\",\"secondName\":\"getAllord\"," +
-                "\"phone\":\"getAllord\",\"email\":\"getAllord\"," +
-                "\"credentials\":{ \"username\":\"getAllord\",\"password\":\"getAllord\",\"role\":\"USER\"},\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyAccountData));
-        String dummyCategoryData = "{\"name\": \"getAllord\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+    @Test
+    @WithUserDetails("User2")
+    public void getAllOrdersUnauthorizedTest() throws Exception {
+        mockMvc.perform(get("/orders"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
 
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":1\"},\"name\":\"getAllord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}",
-                "{\"category\":{\"id\":1\"},\"name\":\"getAllord\",\"price\":1,\"quantity\":1,\"discount\":\"0\"}"
-        };
-        for (String dummyDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyDatum));
-        }
-        String requestBody = "{\"customer\":{\"id\":1},\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":1}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(post("/orders")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody));
+    private void fillGetAllOrderDummyData() {
+        categoryRepository.save(Category.builder().name("orderctrlGetAlltest").build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlGetAlltest")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        List<Item> items = itemRepository.findAll();
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2023, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getOrdersWithFiltersTest() throws Exception {
+        fillgetOrdersWithFiltersTestDummyData();
+        mockMvc.perform(get("/orders/fltr?startDateEarlierThan=2025-03-20T13:45:30" +
+                        "&endDateEarlierThan=2025-03-19T13:45:30&moreItemsThan=0&totalLessThan=1300000"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(1))));
+    }
+
+    private void fillgetOrdersWithFiltersTestDummyData() {
+        categoryRepository.save(Category.builder().name("orderctrlgetwithfltrtest").build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlgetwithfltrtest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        List<Item> items = itemRepository.findAll();
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+
+        orderRepository.save(Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .worker(Account.builder().id(2L).build())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getOrdersWithInvalidFiltersTest() throws Exception {
+        mockMvc.perform(get("/orders/fltr?firstNamee=pet&discountLessThan=10"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

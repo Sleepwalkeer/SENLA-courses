@@ -4,10 +4,11 @@ import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
-import eu.senla.entity.Account;
-import eu.senla.entity.Credentials;
-import eu.senla.entity.Role;
+import eu.senla.entity.*;
 import eu.senla.repository.AccountRepository;
+import eu.senla.repository.CategoryRepository;
+import eu.senla.repository.ItemRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
@@ -36,6 +38,12 @@ public class ItemControllerTest extends ContainersEnvironment {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private ItemRepository itemRepository;
     private MockMvc mockMvc;
 
 
@@ -50,12 +58,12 @@ public class ItemControllerTest extends ContainersEnvironment {
     }
 
     public void fillDummyAuthorizationData() {
-        if (accountRepository.findByEmail("kfgkzsf").isEmpty()) {
+        if (accountRepository.findByEmail("Admin@mail.ru").isEmpty()) {
             Account admin = Account.builder()
                     .firstName("Admin")
                     .secondName("Admin")
                     .phone("+3758232734")
-                    .email("kfgkzsf")
+                    .email("Admin@mail.ru")
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -64,12 +72,12 @@ public class ItemControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(admin);
         }
-        if (accountRepository.findByEmail("kfgkzsfdf").isEmpty()) {
+        if (accountRepository.findByEmail("User2@mail.ru").isEmpty()) {
             Account user2 = Account.builder()
                     .firstName("User2")
                     .secondName("user2")
-                    .phone("+375823274")
-                    .email("kfgkzsfdf")
+                    .phone("+375334323274")
+                    .email("User2@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User2")
                             .password("escapism2")
@@ -77,12 +85,12 @@ public class ItemControllerTest extends ContainersEnvironment {
                     .build();
             accountRepository.save(user2);
         }
-        if (accountRepository.findByEmail("kfgkzsddgd").isEmpty()) {
+        if (accountRepository.findByEmail("User3@mail.ru").isEmpty()) {
             Account user3 = Account.builder()
                     .firstName("User3")
                     .secondName("user3")
-                    .phone("+375823wer")
-                    .email("kfgkzsddgd")
+                    .phone("+375293618345")
+                    .email("User3@mail.ru")
                     .credentials(Credentials.builder()
                             .username("User3")
                             .password("escapism3")
@@ -95,47 +103,38 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void getItemByIdTest() throws Exception {
-        fillGetItemByIdDummyData();
-        int itemId = 1;
-        this.mockMvc.perform(get("/items/{id}", itemId))
+        fillGetItemByIdTestDummyData();
+        this.mockMvc.perform(get("/items/{id}", 1))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private void fillGetItemByIdDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"getByIddata112\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+    private void fillGetItemByIdTestDummyData() {
+        categoryRepository.save(Category.builder().name("itemctrlgetByIdtest").build());
 
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getItemByIddata\"" +
-                ",\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/items")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(dummyItemData))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        itemRepository.save(Item.builder()
+                .name("itemctrlgetByIdtest")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
     }
-
 
     @Test
     @WithUserDetails("Admin")
     public void createItemTest() throws Exception {
-        String dummyCategoryData = "{\"name\": \"createdata11\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
+        categoryRepository.save(Category.builder().name("itemctrlcreatetest").build());
 
         String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\"," +
                 "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}";
+
         this.mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
-
     }
 
     @Test
     @WithUserDetails("User2")
-    public void createItemWithUnauthorizedIdTest() throws Exception {
+    public void createItemUnauthorizedTest() throws Exception {
         String requestBody = "{\"category\":{\"id\":\"1\"},\"name\":\"createItemdata\",\"price\":\"1\",\"quantity\":\"1\"}";
         this.mockMvc.perform(post("/items")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -157,31 +156,29 @@ public class ItemControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void updateItemTest() throws Exception {
         fillUpdateItemTestDummyData();
-        String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\",\"discount\":\"0\"}," +
-                "\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\",\"discount\":\"0\"}";
+        String requestBody = "{\"id\":\"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\",\"discount\":\"0\"}," +
+                "\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\",\"discount\":\"30\"}";
         this.mockMvc.perform(put("/items/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("updateItemData"));
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    private void fillUpdateItemTestDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"updateDdata11\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"updateItem\"" +
-                ",\"price\":\"12\",\"quantity\":\"1\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/items")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyItemData));
+    private void fillUpdateItemTestDummyData() {
+        categoryRepository.save(Category.builder().name("itemctrlUpdtest").build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrlUpdtest")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
     }
 
     @Test
     @WithUserDetails("User2")
-    public void updateItemWithUnauthorizedUserTest() throws Exception {
-        String requestBody = "{\"id\" : \"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"},\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
+    public void updateItemUnauthorizedTest() throws Exception {
+        String requestBody = "{\"id\":\"1\",\"category\":{\"id\":\"1\",\"name\":\"cataup\"}" +
+                ",\"name\":\"updateItemData\",\"price\":\"12\",\"quantity\":\"1\"}";
         this.mockMvc.perform(put("/items/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
@@ -191,8 +188,9 @@ public class ItemControllerTest extends ContainersEnvironment {
 
     @Test
     @WithUserDetails("Admin")
-    public void updateInvalidItemTest() throws Exception {
-        String requestBody = "{\"category\":{\"id\":\"1000\"},\"name\":\"updateInvalidData\",\"price\":\"1\",\"quantity\":\"1\"}";
+    public void updateNonexistentItemTest() throws Exception {
+        String requestBody = "{\"category\":{\"id\":\"1000\"}," +
+                "\"name\":\"updateInvalidData\",\"price\":\"1\",\"quantity\":\"1\"}";
         this.mockMvc.perform(put("/items/{id}", 1000)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody)
@@ -203,110 +201,151 @@ public class ItemControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("Admin")
     public void deleteItemByIdTest() throws Exception {
-        fillDeleteItemByIdDummyData();
+        fillDeleteItemByIdTestDummyData();
 
-        mockMvc.perform(delete("/items/{id}", 4))
+        Long id = itemRepository.findByName("itemctrldelByIdtest3").get().getId();
+        mockMvc.perform(delete("/items/{id}", id))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    private void fillDeleteItemByIdTestDummyData() {
+        categoryRepository.save(Category.builder().name("itemctrldelByIdtest").build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrldelByIdtest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrldelByIdtest2")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrldelByIdtest3")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrldelByIdtest4")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
     }
 
     @Test
     @WithUserDetails("User3")
-    public void deleteItemByIdWithUnauthorizedUserTest() throws Exception {
+    public void deleteItemByIdUnauthorizedTest() throws Exception {
         mockMvc.perform(delete("/items/{id}", 4))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
 
-    private void fillDeleteItemByIdDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"deleteByIdDdata11\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
 
-        String[] dummyItemData = {
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata\"," +
-                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata1\"," +
-                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata2\"," +
-                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata3\"," +
-                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemByIddata4\"," +
-                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}"
-        };
-
-        for (String dummyItemDatum : dummyItemData) {
-            this.mockMvc.perform(post("/items")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(dummyItemDatum));
-        }
+    @Test
+    @WithUserDetails("Admin")
+    public void deleteNonexistentItemByIdTest() throws Exception {
+        mockMvc.perform(delete("/items/{id}", 500000)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteItemByInvalidIdTest() throws Exception {
-//        mockMvc.perform(delete("/items/{id}", 500000)
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
-
-//    private void fillDeleteItemDummyData() throws Exception {
-//        String dummyCategoryData = "{\"name\": \"deleteDdata11\",\"discount\":\"0\"}";
-//        this.mockMvc.perform(post("/categories")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(dummyCategoryData));
-//
-//        String[] dummyItemData = {
-//                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata\"," +
-//                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-//                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata1\"," +
-//                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-//                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata2\"," +
-//                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-//                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata3\"," +
-//                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}",
-//                "{\"category\":{\"id\":\"1\"},\"name\":\"deleteItemdata4\"," +
-//                        "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\"}"
-//        };
-//
-//        for (String dummyItemDatum : dummyItemData) {
-//            this.mockMvc.perform(post("/items")
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .content(dummyItemDatum));
-//        }
-//    }
-
-//    @Test
-//    @WithUserDetails("Admin")
-//    public void deleteInvalidItemTest() throws Exception {
-//
-//        String deleteRequestBody = "{\"id\":\"10000\"}";
-//        mockMvc.perform(delete("/items")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(deleteRequestBody))
-//                .andExpect(MockMvcResultMatchers.status().isNotFound());
-//    }
 
     @Test
     @WithUserDetails("Admin")
     public void getAllItemsTest() throws Exception {
-        fillGetAllItemsWithDummyData();
+        fillGetAllItemsTestDummyData();
 
         mockMvc.perform(get("/items"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(0))));
     }
 
-    private void fillGetAllItemsWithDummyData() throws Exception {
-        String dummyCategoryData = "{\"name\": \"allitemscat\",\"discount\":\"0\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/categories")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyCategoryData));
 
-        String dummyItemData = "{\"category\":{\"id\":\"1\"},\"name\":\"getallItems\"," +
-                "\"price\":\"1\",\"quantity\":\"1\",\"discount\":\"0\",\"discount\":\"0\"}";
-        this.mockMvc.perform(post("/items")
+    private void fillGetAllItemsTestDummyData() {
+        categoryRepository.save(Category.builder().name("itemctrlgetalltest").build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrlgetalltest")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+    }
+
+    @Test
+    @WithUserDetails("User2")
+    public void getItemsWithFiltersTest() throws Exception {
+        fillgetItemsWithFiltersTestDummyData();
+        mockMvc.perform(get("/items/fltr?nameLike=itemctrl%&discountMoreThan=30"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(greaterThan(1))));
+    }
+
+    private void fillgetItemsWithFiltersTestDummyData() {
+        categoryRepository.save(Category.builder().name("itemctrlgetallfilterstest").build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrlgetallfilterstest1")
+                .price(new BigDecimal(300))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrlgetallfilterstest2")
+                .price(new BigDecimal(300))
+                .discount(new BigDecimal(50))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("itemctrlgetallfilterstest3")
+                .price(new BigDecimal(300))
+                .discount(new BigDecimal(50))
+                .category(Category.builder().id(1L).build())
+                .build());
+    }
+
+    @Test
+    @WithUserDetails("User2")
+    public void getItemsWithInvalidFiltersTest() throws Exception {
+        mockMvc.perform(get("/items/fltr?firstNamee=pet&discountLessThan=10"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void replenishItemTest() throws Exception {
+        String requestBody = "{\"quantity\":\"1000\"}";
+        mockMvc.perform(put("/items/{id}/replenish",1)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(dummyItemData));
+                .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+    @Test
+    @WithUserDetails("User2")
+    public void replenishItemUnauthorizedTest() throws Exception {
+        String requestBody = "{\"quantity\":\"1000\"}";
+        mockMvc.perform(put("/items/{id}/replenish",1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void replenishItemInvalidQuantityTest() throws Exception {
+        String requestBody = "{\"quantity\":\"0\"}";
+        mockMvc.perform(put("/items/{id}/replenish",1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    @WithUserDetails("Admin")
+    public void getItemsByPopularityTest() throws Exception {
+        mockMvc.perform(get("/items/popularity"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

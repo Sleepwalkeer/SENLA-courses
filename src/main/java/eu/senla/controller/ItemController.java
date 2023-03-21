@@ -31,8 +31,8 @@ public class ItemController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createItem(@RequestBody @Valid CreateItemDto itemDto) {
-        itemService.create(itemDto);
+    public ResponseItemDto createItem(@RequestBody @Valid CreateItemDto itemDto) {
+        return itemService.create(itemDto);
     }
 
     @PutMapping("/{id}")
@@ -75,6 +75,7 @@ public class ItemController {
     }
 
     @GetMapping("/popularity")
+    @PreAuthorize("hasAuthority('read')")
     public List<ItemPopularityDto> getItemsByPopularity(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "5") Integer pageSize) {

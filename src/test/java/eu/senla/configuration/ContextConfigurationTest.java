@@ -76,8 +76,4 @@ public class ContextConfigurationTest {
         return liquibase;
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
 }

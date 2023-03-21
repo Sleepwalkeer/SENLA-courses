@@ -29,8 +29,8 @@ public class CategoryController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('write')")
-    public void createCategory(@Valid @RequestBody CreateCategoryDto categoryDto) {
-        categoryService.create(categoryDto);
+    public ResponseCategoryDto createCategory(@Valid @RequestBody CreateCategoryDto categoryDto) {
+        return categoryService.create(categoryDto);
     }
 
     @PutMapping("/{id}")
