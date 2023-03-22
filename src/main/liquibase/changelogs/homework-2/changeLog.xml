@@ -333,4 +333,15 @@
         </preConditions>
         <sqlFile encoding="utf8" path="./sql/34.item-add-discount.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="account-balance" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="balance"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/35.account-add-balance.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog> 

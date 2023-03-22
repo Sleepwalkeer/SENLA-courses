@@ -12,10 +12,10 @@ import eu.senla.repository.OrderRepository;
 import eu.senla.service.AccountService;
 import eu.senla.service.ItemService;
 import eu.senla.service.OrderService;
+import eu.senla.utils.RentDaysEvaluator;
 import eu.senla.utils.specification.order.OrderSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,8 +42,9 @@ public class OrderServiceImpl implements OrderService {
     private final AccountService accountService;
     private final ItemService itemService;
     private final ModelMapper modelMapper;
-    @Value("${order_total_threshold}")
-    private BigDecimal ORDER_TOTAL_THRESHOLD;
+    //    @Value("${order_total_threshold}")
+//    private BigDecimal ORDER_TOTAL_THRESHOLD;
+    private final BigDecimal ORDER_TOTAL_THRESHOLD = new BigDecimal(5000);
 
     public ResponseOrderDto getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() ->
@@ -66,6 +67,7 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalPrice = calculateTotalPrice(order);
         order.setTotalPrice(totalPrice);
 
+        accountService.withdrawBalance(order.getCustomer(), totalPrice);
         if (totalPrice.compareTo(ORDER_TOTAL_THRESHOLD) >= 0) {
             accountService.incrementCustomerDiscount(order.getCustomer());
         }
@@ -140,7 +142,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private BigDecimal calculateTotalPrice(Order order) {
+    public BigDecimal calculateTotalPrice(Order order) {
         BigDecimal customerDiscount = order
                 .getCustomer()
                 .getDiscount()
@@ -169,6 +171,8 @@ public class OrderServiceImpl implements OrderService {
                     .setScale(2, RoundingMode.HALF_UP));
         }
         Duration rentDuration = Duration.between(order.getStartDateTime(), order.getEndDateTime());
-        return totalPricePerDay.multiply(BigDecimal.valueOf(rentDuration.toDays()));
+
+        int rentDays = RentDaysEvaluator.count(rentDuration.toSeconds());
+        return totalPricePerDay.multiply(BigDecimal.valueOf(rentDays));
     }
 }

@@ -5,13 +5,13 @@ import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.accountDto.UpdateAccountDto;
 import eu.senla.dto.credentialsDto.CredentialsDto;
 import eu.senla.entity.Account;
+import eu.senla.exception.InsufficientFundsException;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.AccountRepository;
 import eu.senla.service.AccountService;
 import eu.senla.utils.specification.account.AccountSpecifications;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,8 +34,11 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
-    @Value("${customer_increment_discount_threshold}")
-    private BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD;
+
+//    @Value("${customer_increment_discount_threshold}")
+//    private BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD;
+
+    private final BigDecimal CUSTOMER_INCREMENT_DISCOUNT_THRESHOLD = new BigDecimal(30);
 
     public ResponseAccountDto getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
@@ -103,6 +106,15 @@ public class AccountServiceImpl implements AccountService {
                 .stream()
                 .map(account -> modelMapper.map(account, ResponseAccountDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void withdrawBalance(Account account, BigDecimal balance) {
+        if (account.getBalance().compareTo(balance) >= 0) {
+            accountRepository.updateAccountBalance(account.getId(), balance);
+        } else {
+            throw new InsufficientFundsException("Insufficient funds. The account does not have enough funds to process this order.");
+        }
     }
 }
 

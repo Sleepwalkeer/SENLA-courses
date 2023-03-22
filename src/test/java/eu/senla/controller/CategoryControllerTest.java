@@ -25,7 +25,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
-
 import java.math.BigDecimal;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -64,6 +63,8 @@ public class CategoryControllerTest extends ContainersEnvironment {
                     .secondName("Admin")
                     .phone("+3758232734")
                     .email("Admin@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")

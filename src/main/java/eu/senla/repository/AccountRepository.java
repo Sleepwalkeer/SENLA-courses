@@ -25,7 +25,23 @@ public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpec
      */
     Optional<Account> findByEmail(String email);
 
+    /**
+     * Updates the discount value of the account with the specified ID.
+     *
+     * @param accountId the ID of the account to update
+     * @param discount  the new discount value
+     */
     @Modifying
     @Query("UPDATE Account a SET a.discount = :discount WHERE a.id = :accountId")
     void updateAccountDiscount(@Param("accountId") Long accountId, @Param("discount") BigDecimal discount);
+
+    /**
+     * Updates the balance value of the account with the specified ID.
+     *
+     * @param accountId the ID of the account to update
+     * @param balance   the new balance value
+     */
+    @Modifying
+    @Query("UPDATE Account a SET a.balance = :balance WHERE a.id = :accountId")
+    void updateAccountBalance(@Param("accountId") Long accountId, @Param("balance") BigDecimal balance);
 }

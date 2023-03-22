@@ -56,9 +56,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ItemOutOfStockException.class)
     public ResponseEntity<String> handleItemOutOfStockException(ItemOutOfStockException ex) {
-        log.error("ItemOutOfStockException " + ex.getMessage());
+        log.error("ItemOutOfStockException. " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(ex.getMessage() + " Please, remove this item from your order");
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<String> handleInsufficientFundsException(InsufficientFundsException ex) {
+        log.error("InsufficientFundsException." + ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Insufficient funds. The account does not have enough funds to process this order.");
     }
 
     @ExceptionHandler(InvalidFilterKeyException.class)

@@ -65,6 +65,8 @@ public class OrderControllerTest extends ContainersEnvironment {
                     .secondName("Admin")
                     .phone("+3758232734")
                     .email("Admin@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -142,26 +144,92 @@ public class OrderControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void createOrderTest() throws Exception {
         fillcreateOrderTest();
-        Long itemId = itemRepository.findByName("orderctrlcreatetest1").get().getId();
+        Long itemId1 = itemRepository.findByName("orderctrlcreatetest1").get().getId();
+        Long itemId2 = itemRepository.findByName("orderctrlcreatetest2").get().getId();
+        Long itemId3 = itemRepository.findByName("orderctrlcreatetest3").get().getId();
         String requestBody = "{\"customer\":{\"id\":\"1\"},\"worker\":{\"id\":\"1\"}," +
-                "\"items\":[{\"id\":\"" + itemId + "\",\"category\":{\"id\":\"1\"}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
+                "\"items\":[{\"id\":\"" + itemId1 + "\"}, {\"id\":\"" + itemId2 + "\"}, {\"id\":\"" + itemId3 + "\"}]," +
+                "\"startDateTime\":[2023,3,12,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPrice").value("5350.0"));
     }
+
 
     private void fillcreateOrderTest() {
         categoryRepository.save(Category.builder().name("orderctrlcreatetest").build());
-
+        categoryRepository.save(Category.builder().name("orderctrlcreatetest1").discount(new BigDecimal(30)).build());
+        Long id = categoryRepository.findByName("orderctrlcreatetest1").get().getId();
+        Long id2 = categoryRepository.findByName("orderctrlcreatetest").get().getId();
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest1")
-                .price(new BigDecimal(300))
+                .price(new BigDecimal(500))
                 .quantity(10)
+                .discount(new BigDecimal(50))
                 .category(Category.builder().id(1L).build())
                 .build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatetest2")
+                .price(new BigDecimal(300))
+                .quantity(10)
+                .category(Category.builder().id(id).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatetest3")
+                .price(new BigDecimal(100))
+                .quantity(10)
+                .category(Category.builder().id(id2).build())
+                .build());
     }
+
+
+    @Test
+    @WithUserDetails("Admin")
+    public void createOrderInsufficientFundsTest() throws Exception {
+        fillcreateOrderInsufficientFundsTest();
+        Long itemId1 = itemRepository.findByName("orderctrlcreatebalancetest1").get().getId();
+        Long itemId2 = itemRepository.findByName("orderctrlcreatebalancetest2").get().getId();
+        Long itemId3 = itemRepository.findByName("orderctrlcreatebalancetest3").get().getId();
+        String requestBody = "{\"customer\":{\"id\":\"2\"},\"worker\":{\"id\":\"1\"}," +
+                "\"items\":[{\"id\":\"" + itemId1 + "\"}, {\"id\":\"" + itemId2 + "\"}, {\"id\":\"" + itemId3 + "\"}]," +
+                "\"startDateTime\":[2023,3,12,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
+        this.mockMvc.perform(post("/orders")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    private void fillcreateOrderInsufficientFundsTest() {
+        categoryRepository.save(Category.builder().name("orderctrlcreatebalancetest").build());
+        categoryRepository.save(Category.builder().name("orderctrlcreatebalancetest1").discount(new BigDecimal(30)).build());
+        Long id = categoryRepository.findByName("orderctrlcreatetest1").get().getId();
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatebalancetest1")
+                .price(new BigDecimal(500))
+                .quantity(10)
+                .discount(new BigDecimal(50))
+                .category(Category.builder().id(1L).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatebalancetest2")
+                .price(new BigDecimal(300))
+                .quantity(10)
+                .category(Category.builder().id(id).build())
+                .build());
+
+        itemRepository.save(Item.builder()
+                .name("orderctrlcreatebalancetest3")
+                .price(new BigDecimal(100))
+                .quantity(10)
+                .category(Category.builder().id(id).build())
+                .build());
+    }
+
 
     @Test
     @WithUserDetails("User2")
@@ -318,10 +386,10 @@ public class OrderControllerTest extends ContainersEnvironment {
     @Test
     @WithUserDetails("User3")
     public void deleteOrderByIdUnauthorizedTest() throws Exception {
-        mockMvc.perform(delete("/orders/{id}", 4))
+        mockMvc.perform(delete("/orders/{id}", 5))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
-    
+
     @Test
     @WithUserDetails("Admin")
     public void deleteNonexistentOrderByTest() throws Exception {

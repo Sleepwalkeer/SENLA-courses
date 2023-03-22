@@ -2,21 +2,22 @@ package eu.senla.repository;
 
 import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.ContextConfigurationTest;
-import eu.senla.entity.Account;
-import eu.senla.entity.Category;
-import eu.senla.entity.Item;
-import eu.senla.entity.Order;
+import eu.senla.entity.*;
 import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,48 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     @Autowired
     CategoryRepository categoryRepository;
 
+
+    @PostConstruct
+    public void SaveDummyAuthorizationData() {
+        fillDummyData();
+    }
+
+
+    private void fillDummyData() {
+        if (accountRepository.findByEmail("RepoAllId@mail.ru").isEmpty()) {
+            Account admin = Account.builder()
+                    .firstName("RepoAllId")
+                    .secondName("RepoAllId")
+                    .phone("+37583232734")
+                    .email("RepoAllId@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
+                    .credentials(Credentials.builder()
+                            .username("RepoAllId")
+                            .password("RepoAllId")
+                            .role(Role.ADMIN)
+                            .build())
+                    .build();
+            accountRepository.save(admin);
+        }
+        if (categoryRepository.findByName("orderDao").isEmpty()) {
+            Category category = Category.builder()
+                    .name("orderDao")
+                    .build();
+            categoryRepository.save(category);
+        }
+
+        if (itemRepository.findByName("Excavator2").isEmpty()) {
+            Item jackhammer = Item.builder()
+                    .name("Excavator2")
+                    .price(new BigDecimal(750))
+                    .quantity(8)
+                    .category(categoryRepository.findByName("orderDao").get())
+                    .build();
+            itemRepository.save(jackhammer);
+        }
+    }
+
     @Test
     @Transactional
     public void updateTest() {
@@ -47,24 +90,11 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillUpdateDummyData() {
-        Category category = Category.builder()
-                .name("orderDaoUpd")
-                .build();
-        categoryRepository.save(category);
-
-        Item jackhammer = Item.builder()
-                .name("Excavator2")
-                .price(new BigDecimal(750))
-                .quantity(8)
-                .category(Category.builder().id(1L).build())
-                .build();
-        itemRepository.save(jackhammer);
-
         List<Item> items = itemRepository.findAll();
 
         Order order = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -83,24 +113,11 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillFindByIdDummyData() {
-        Category category = Category.builder()
-                .name("orderDaoFind")
-                .build();
-        categoryRepository.save(category);
-
-        Item jackhammer = Item.builder()
-                .category(Category.builder().id(1L).build())
-                .name("Excavator1")
-                .price(new BigDecimal(750))
-                .quantity(8)
-                .build();
-        itemRepository.save(jackhammer);
-
         List<Item> items = itemRepository.findAll();
 
         Order order = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2018, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2021, 12, 12, 1, 2))
@@ -110,80 +127,14 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     @Test
-    @Transactional
-    public void deleteByIdTest() {
-        fillDeleteByIdDummyData();
-        orderRepository.deleteById(3L);
-        Assertions.assertFalse(orderRepository.findById(3L).isPresent());
-    }
-
-    private void fillDeleteByIdDummyData() {
-        Category category = Category.builder().name("orderDaoDel").build();
-        categoryRepository.save(category);
-
-        Item jackhammer = Item.builder()
-                .name("Excavator1")
-                .price(new BigDecimal(750))
-                .quantity(8)
-                .category(Category.builder().id(1L).build())
-                .build();
-
-        itemRepository.save(jackhammer);
-        Item angleGrinder = Item.builder()
-                .name("Drilling machine")
-                .price(new BigDecimal(600))
-                .quantity(15)
-                .category(Category.builder().id(1L).build())
-                .build();
-        itemRepository.save(angleGrinder);
-
-        List<Item> items = itemRepository.findAll();
-
+    public void createInvalidDataTest() {
         Order order = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
-                .items(items)
-                .startDateTime(LocalDateTime.of(2017, 12, 12, 1, 2))
-                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
-                .totalPrice(new BigDecimal(12200))
-                .build();
-        orderRepository.save(order);
-
-        Order order1 = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
-                .items(items)
-                .startDateTime(LocalDateTime.of(2020, 10, 12, 1, 2))
-                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
-                .totalPrice(new BigDecimal(13600))
-                .build();
-        orderRepository.save(order1);
-
-        Order order2 = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
-                .items(items)
-                .startDateTime(LocalDateTime.of(2020, 9, 12, 1, 2))
-                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
-                .totalPrice(new BigDecimal(14600))
-                .build();
-        orderRepository.save(order2);
-    }
-
-    @Test
-    public void addInvalidDataTest() {
-        Order order = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
                 .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(11600))
                 .build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> orderRepository.save(order));
-    }
-
-    @Test
-    public void findByInvalidIdTest() {
-        Assertions.assertFalse(orderRepository.findById(50L).isPresent());
     }
 
     @Test
@@ -197,30 +148,77 @@ public class OrderRepositoryTest extends ContainersEnvironment {
     }
 
     private void fillGetLazyDummyData() {
-        Category category = Category.builder().name("ordDaoLazy").build();
-        categoryRepository.save(category);
-
-        Item jackhammer = Item.builder()
-                .category(Category.builder().id(1L).build())
-                .name("Excavator3")
-                .price(new BigDecimal(750))
-                .quantity(8)
-                .build();
-        itemRepository.save(jackhammer);
-
-        Item excavator = Item.builder()
-                .category(Category.builder().id(1L).build())
-                .name("Excavator")
-                .price(new BigDecimal(750))
-                .quantity(8)
-                .build();
-        itemRepository.save(excavator);
-
         List<Item> items = itemRepository.findAll();
 
         Order order = Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build();
+        orderRepository.save(order);
+    }
+
+    @Test
+    public void getAllByCustomerIdTest() {
+        fillGetAllByCustomerIdTestDummyData();
+        Pageable paging = PageRequest.of(0, 2);
+        Long id = accountRepository.findByEmail("RepoAllId@mail.ru").get().getId();
+        Page<Order> orderPage = orderRepository.getAllByCustomer_Id(id, paging);
+
+        Assertions.assertFalse(orderPage.isEmpty());
+    }
+
+    private void fillGetAllByCustomerIdTestDummyData() {
+        List<Item> items = itemRepository.findAll();
+
+        Order order = Order.builder()
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build();
+        orderRepository.save(order);
+
+        Order order2 = Order.builder()
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2021, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build();
+        orderRepository.save(order2);
+
+        Order order3 = Order.builder()
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .items(items)
+                .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
+                .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
+                .totalPrice(new BigDecimal(12200))
+                .build();
+        orderRepository.save(order3);
+    }
+
+
+    @Test
+    public void getEagerOrderTest() {
+        fillGetEagerOrderTestDummyData();
+        Order eagerOrder = orderRepository.findOrderById(1L);
+        Assertions.assertDoesNotThrow(() -> System.out.println(eagerOrder.getItems()));
+    }
+
+    private void fillGetEagerOrderTestDummyData() {
+        List<Item> items = itemRepository.findAll();
+
+        Order order = Order.builder()
+                .customer(accountRepository.findByEmail("RepoAllId@mail.ru").get())
+                .worker(accountRepository.findByEmail("RepoAllId@mail.ru").get())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2020, 12, 2, 1, 2))
                 .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))

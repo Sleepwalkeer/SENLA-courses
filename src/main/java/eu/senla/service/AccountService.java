@@ -6,6 +6,7 @@ import eu.senla.dto.accountDto.UpdateAccountDto;
 import eu.senla.entity.Account;
 import eu.senla.exception.NotFoundException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -78,4 +79,6 @@ public interface AccountService {
      * @return A list of ResponseItemDto objects containing information about the accounts.
      */
     List<ResponseAccountDto> getAccountsWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams);
+
+    void withdrawBalance(Account account, BigDecimal balance);
 }

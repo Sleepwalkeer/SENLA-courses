@@ -3,6 +3,7 @@ package eu.senla.repository;
 import eu.senla.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -13,8 +14,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
-//    @EntityGraph(value = "graph.Order.allFields", type = EntityGraph.EntityGraphType.LOAD)
-//    Order findOrderById(Long id);
+    @EntityGraph(value = "graph.Order.allFields", type = EntityGraph.EntityGraphType.LOAD)
+    Order findOrderById(Long id);
 
     Page<Order> getAllByCustomer_Id(Long id, Pageable pageable);
 

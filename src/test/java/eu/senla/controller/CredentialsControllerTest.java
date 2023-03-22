@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -24,6 +23,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -55,6 +55,8 @@ public class CredentialsControllerTest extends ContainersEnvironment {
                     .secondName("Admin")
                     .phone("+3758232734")
                     .email("Admin@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -187,6 +189,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
+
     @Test
     @WithUserDetails("User2")
     public void updateCredentialsUnathorizedTest() throws Exception {
@@ -205,6 +208,7 @@ public class CredentialsControllerTest extends ContainersEnvironment {
         mockMvc.perform(delete("/credentials/{id}", 7))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
     }
+
     private void fillDeleteByIdCredentialsDummyData() {
         Account dummyCredentialsData = Account.builder()
                 .firstName("deleteCredsid")

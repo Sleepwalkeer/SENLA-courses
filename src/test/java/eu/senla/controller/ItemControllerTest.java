@@ -8,7 +8,6 @@ import eu.senla.entity.*;
 import eu.senla.repository.AccountRepository;
 import eu.senla.repository.CategoryRepository;
 import eu.senla.repository.ItemRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -64,6 +63,8 @@ public class ItemControllerTest extends ContainersEnvironment {
                     .secondName("Admin")
                     .phone("+3758232734")
                     .email("Admin@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -317,16 +318,17 @@ public class ItemControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void replenishItemTest() throws Exception {
         String requestBody = "{\"quantity\":\"1000\"}";
-        mockMvc.perform(put("/items/{id}/replenish",1)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(requestBody))
+        mockMvc.perform(put("/items/{id}/replenish", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
     @Test
     @WithUserDetails("User2")
     public void replenishItemUnauthorizedTest() throws Exception {
         String requestBody = "{\"quantity\":\"1000\"}";
-        mockMvc.perform(put("/items/{id}/replenish",1)
+        mockMvc.perform(put("/items/{id}/replenish", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isForbidden());
@@ -336,7 +338,7 @@ public class ItemControllerTest extends ContainersEnvironment {
     @WithUserDetails("Admin")
     public void replenishItemInvalidQuantityTest() throws Exception {
         String requestBody = "{\"quantity\":\"0\"}";
-        mockMvc.perform(put("/items/{id}/replenish",1)
+        mockMvc.perform(put("/items/{id}/replenish", 1)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());

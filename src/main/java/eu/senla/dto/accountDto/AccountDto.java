@@ -1,6 +1,7 @@
 package eu.senla.dto.accountDto;
 
 import eu.senla.dto.credentialsDto.CredentialsDto;
+import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -28,7 +29,6 @@ public class AccountDto {
     @NotBlank(message = "Phone number must be specified")
     @Pattern(regexp = "^(\\+375|80)(29|25|44|33)(\\d{7})$", message = "Phone number is invalid")
     private String phone;
-    //TODO ПРОВЕРЬ РЕГУЛЯРКИ
 
     @NotBlank(message = "Email address must be specified")
     @Size(max = 64, message = "Email address cannot exceed 64 characters")
@@ -43,4 +43,9 @@ public class AccountDto {
     @DecimalMax(value = "99.99", message = "discount cannot be 100%")
     @Builder.Default
     private BigDecimal discount = BigDecimal.ZERO;
+
+    @DecimalMin(value = "0", message = "balance cannot be negative")
+    @Builder.Default
+    @Column(name = "balance")
+    private BigDecimal balance = BigDecimal.ZERO;
 }

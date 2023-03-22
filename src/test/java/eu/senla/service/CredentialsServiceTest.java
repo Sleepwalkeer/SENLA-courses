@@ -49,7 +49,7 @@ public class CredentialsServiceTest {
         Credentials credentials = Credentials.builder().username("RentalApplication").build();
         ResponseCredentialsDto credentialsDto = ResponseCredentialsDto.builder().username("RentalApplication").build();
 
-        when(credentialsRepository.findById(1L)).thenReturn(Optional.ofNullable(credentials));
+        when(credentialsRepository.findById(1L)).thenReturn(Optional.of(credentials));
         when(modelMapper.map(credentials, ResponseCredentialsDto.class)).thenReturn(credentialsDto);
 
         ResponseCredentialsDto credentialsDtoRetrieved = credentialsService.getById(1L);
@@ -59,8 +59,9 @@ public class CredentialsServiceTest {
     }
 
     @Test
-    public void getByInvalidIdTest() {
+    public void getByNonexistentIdTest() {
         when(credentialsRepository.findById(1L)).thenReturn(Optional.empty());
+
         Assertions.assertThrows(NotFoundException.class, () -> credentialsService.getById(1L));
     }
 
@@ -81,7 +82,7 @@ public class CredentialsServiceTest {
     }
 
     @Test
-    public void updateNonExistentCredentialsTest() {
+    public void updateNonexistentCredentialsTest() {
         Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
         CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
@@ -90,6 +91,7 @@ public class CredentialsServiceTest {
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
+        verify(credentialsRepository, times(0)).save(credentials);
         Assertions.assertThrows(NotFoundException.class, () -> credentialsService.update(1L, credentialsDto));
     }
 
@@ -98,6 +100,16 @@ public class CredentialsServiceTest {
         doNothing().when(credentialsRepository).deleteById(1L);
         when(credentialsRepository.existsById(1L)).thenReturn(true);
         credentialsService.deleteById(1L);
+
         verify(credentialsRepository).deleteById(1L);
+    }
+
+    @Test
+    public void deleteByNonexistentIdTest() {
+        doNothing().when(credentialsRepository).deleteById(1L);
+        when(credentialsRepository.existsById(1L)).thenReturn(false);
+
+        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.deleteById(1L));
+        verify(credentialsRepository, times(0)).deleteById(1L);
     }
 }

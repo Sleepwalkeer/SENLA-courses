@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +55,7 @@ public class AccountServiceTest {
                         .username("RentalApplication")
                         .build())
                 .build();
+
         CreateAccountDto accountDto = CreateAccountDto.builder()
                 .id(1L)
                 .email("blabla@gmail.com")
@@ -75,12 +77,6 @@ public class AccountServiceTest {
         verify(accountRepository).save(account);
     }
 
-//    @Test
-//    public void createWithInvalidDataTest() {
-//        CreateAccountDto accountDto = CreateAccountDto.builder().id(1L).firstName("Bill").secondName("Stark").build();
-//        Assertions.assertThrows(BadRequestException.class, () -> accountService.create(accountDto));
-//    }
-
     @Test
     public void getByIdTest() {
         Account account = Account.builder()
@@ -97,7 +93,7 @@ public class AccountServiceTest {
                 .firstName("Bill")
                 .secondName("Stark").build();
 
-        when(accountRepository.findById(1L)).thenReturn(Optional.ofNullable(account));
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         when(modelMapper.map(account, ResponseAccountDto.class)).thenReturn(accountDto);
 
         ResponseAccountDto accountDtoRetrieved = accountService.getById(1L);
@@ -107,11 +103,9 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void getByInvalidIdTest() {
+    public void getByNonexistentIdTest() {
         when(accountRepository.findById(1L)).thenReturn(Optional.empty());
-
         Assertions.assertThrows(NotFoundException.class, () -> accountService.getById(1L));
-        verify(accountRepository).findById(1L);
     }
 
     @Test
@@ -154,7 +148,7 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void updateNonExistentAccountTest() {
+    public void updateNonexistentAccountTest() {
         Account account = Account.builder()
                 .id(1L)
                 .email("blabla@gmail.com")
@@ -190,6 +184,13 @@ public class AccountServiceTest {
     }
 
     @Test
+    public void deleteByNonexistentIdTest() {
+        doNothing().when(accountRepository).deleteById(1L);
+        when(accountRepository.existsById(1L)).thenReturn(false);
+        Assertions.assertThrows(NotFoundException.class, () -> accountService.deleteById(1L));
+    }
+
+    @Test
     public void getAllTest() {
         ResponseAccountDto accountDto1 = ResponseAccountDto.builder()
                 .id(1L)
@@ -199,17 +200,6 @@ public class AccountServiceTest {
                 .secondName("StarkWall")
                 .build();
 
-        ResponseAccountDto accountDto2 = ResponseAccountDto.builder()
-                .id(2L)
-                .email("blabla@gmail.com")
-                .phone("+375331234124")
-                .firstName("Bill")
-                .secondName("Stark")
-                .build();
-        List<ResponseAccountDto> accountDtos = new ArrayList<>();
-        accountDtos.add(accountDto1);
-        accountDtos.add(accountDto2);
-
         Account account1 = Account.builder()
                 .id(1L)
                 .email("blablacar@gmail.com")
@@ -218,28 +208,49 @@ public class AccountServiceTest {
                 .secondName("StarkWall")
                 .build();
 
-        Account account2 = Account.builder()
-                .id(2L)
-                .email("blabla@gmail.com")
-                .phone("+375331234124")
-                .firstName("Bill")
-                .secondName("Stark")
-                .build();
-
         List<Account> accounts = new ArrayList<>();
         accounts.add(account1);
-        accounts.add(account2);
         Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
         Page<Account> accountPage = new PageImpl<>(accounts, paging, accounts.size());
 
         when(accountRepository.findAll(paging)).thenReturn(accountPage);
         when(modelMapper.map(eq(account1), eq(ResponseAccountDto.class)))
                 .thenReturn(accountDto1);
-        when(modelMapper.map(eq(account2), eq(ResponseAccountDto.class)))
-                .thenReturn(accountDto2);
 
         List<ResponseAccountDto> retrievedAccountDtos = accountService.getAll(1, 2, "id");
 
         verify(accountRepository).findAll(paging);
+        Assertions.assertFalse(retrievedAccountDtos.isEmpty());
     }
+
+    @Test
+    public void incrementCustomerDiscountTest() {
+        Account account = Account.builder()
+                .id(1L)
+                .email("blablacar@gmail.com")
+                .phone("+375331234")
+                .firstName("Billy")
+                .secondName("StarkWall")
+                .discount(new BigDecimal(1))
+                .build();
+
+        accountService.incrementCustomerDiscount(account);
+        verify(accountRepository).updateAccountDiscount(1L, new BigDecimal(2));
+    }
+
+    @Test
+    public void incrementCustomerDiscountOverThresholdTest() {
+        Account account = Account.builder()
+                .id(1L)
+                .email("blablacar@gmail.com")
+                .phone("+375331234")
+                .firstName("Billy")
+                .secondName("StarkWall")
+                .discount(new BigDecimal(30))
+                .build();
+        accountService.incrementCustomerDiscount(account);
+        verify(accountRepository, times(0)).updateAccountDiscount(1L, new BigDecimal(31));
+    }
+
+
 }

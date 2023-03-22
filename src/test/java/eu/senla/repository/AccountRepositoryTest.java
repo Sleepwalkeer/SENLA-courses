@@ -14,7 +14,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -26,13 +28,32 @@ public class AccountRepositoryTest extends ContainersEnvironment {
 
     @Test
     public void findyByIdTest() {
-        Optional<Account> accountFromDb = accountRepository.findById(1L);
-        Assertions.assertEquals(1L, accountFromDb.get().getId());
+        Account testDaoAcc = Account.builder()
+                .firstName("testDaoAccFind")
+                .secondName("testDaoAccFind")
+                .phone("testDaoAccFind")
+                .email("testDaoAccFind")
+                .credentials(Credentials.builder()
+                        .username("testDaoAccFind")
+                        .password("testDaoAccFind")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+        Long id = accountRepository.findByEmail("testDaoAccFind").get().getId();
+
+        Optional<Account> accountFromDb = accountRepository.findById(id);
+        Assertions.assertEquals(id, accountFromDb.get().getId());
+    }
+
+    @Test
+    public void findyByNonexistentIdTest() {
+        Optional<Account> accountFromDb = accountRepository.findById(100L);
+        Assertions.assertFalse(accountFromDb.isPresent());
     }
 
     @Test
     public void updateTest() {
-        fillUpdateDummyData();
+        fillUpdateTestDummyData();
         Optional<Account> accountOptional = accountRepository.findByEmail("testDaoAccUpd");
         Account account = accountOptional.get();
         account.setPhone("+88005553535");
@@ -44,7 +65,7 @@ public class AccountRepositoryTest extends ContainersEnvironment {
         Assertions.assertEquals(account.getEmail(), accountFromDb.getEmail());
     }
 
-    private void fillUpdateDummyData() {
+    private void fillUpdateTestDummyData() {
         Account testDaoAcc = Account.builder()
                 .firstName("testDaoAccUpd")
                 .secondName("testDaoAccUpd")
@@ -57,6 +78,31 @@ public class AccountRepositoryTest extends ContainersEnvironment {
                 .build();
         accountRepository.save(testDaoAcc);
     }
+
+    @Test
+    public void updateInvalidDataTest() {
+        fillUpdateInvalidDataTestDummyData();
+        Optional<Account> accountOptional = accountRepository.findByEmail("testDaoAccUpdInvld");
+        Account account = accountOptional.get();
+        account.setPhone("+880055535383475834759834789579345");
+
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> accountRepository.save(account));
+    }
+
+    private void fillUpdateInvalidDataTestDummyData() {
+        Account testDaoAcc = Account.builder()
+                .firstName("testDaoAccUpdInvld")
+                .secondName("testDaoAccUpdInvld")
+                .phone("testDaoAccUpdInvld")
+                .email("testDaoAccUpdInvld")
+                .credentials(Credentials.builder()
+                        .username("testDaoAccUpdInvld")
+                        .password("testDaoAccUpdInvld")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+    }
+
 
     @Test
     public void deleteByIdTest() {
@@ -81,10 +127,10 @@ public class AccountRepositoryTest extends ContainersEnvironment {
     }
 
     @Test
-    public void addInvalidDataTest() {
+    public void createInvalidDataTest() {
         Account account = Account.builder()
-                .firstName("Mallory")
-                .secondName("Kay")
+                .firstName("Mallorysfdsdf")
+                .secondName("Ksdfadfssfdssdsdy")
                 .phone("+375298201846")
                 .credentials(Credentials.builder()
                         .password("kz25bj2jk23r")
@@ -95,8 +141,122 @@ public class AccountRepositoryTest extends ContainersEnvironment {
     }
 
     @Test
-    public void getLazyAccociationsWithoutTransactionalTest() {
-        Credentials credentials = accountRepository.findById(1L).get().getCredentials();
+    public void getLazyAssociationsWithoutTransactionalTest() {
+
+        Account testDaoAcc = Account.builder()
+                .firstName("LazyDaoAcc")
+                .secondName("LazyDaoAcc")
+                .phone("LazyDaoAcc")
+                .email("LazyDaoAcc")
+                .credentials(Credentials.builder()
+                        .username("LazyDaoAcc")
+                        .password("LazyDaoAcc")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+
+        Long id = accountRepository.findByEmail("LazyDaoAcc").get().getId();
+
+        Credentials credentials = accountRepository.findById(id).get().getCredentials();
         Assertions.assertThrows(LazyInitializationException.class, () -> System.out.println(credentials));
+    }
+
+    @Test
+    @Transactional
+    public void updateAccountDiscountTest() {
+        fillUpdateAccountDiscountTestDummyData();
+        Account account = accountRepository.findByEmail("DaoAccUpdDsc").get();
+        account.setDiscount(new BigDecimal(50));
+        accountRepository.updateAccountBalance(account.getId(), account.getDiscount());
+        Account updatedAccount = accountRepository.findByEmail("DaoAccUpdDsc").get();
+        Assertions.assertEquals(updatedAccount.getDiscount(), new BigDecimal(50));
+    }
+
+    private void fillUpdateAccountDiscountTestDummyData() {
+        Account testDaoAcc = Account.builder()
+                .firstName("testDaoAccUpdDsc")
+                .secondName("testDaoAccUpdDsc")
+                .phone("DaoAccUpdDsc")
+                .email("DaoAccUpdDsc")
+                .credentials(Credentials.builder()
+                        .username("testDaoAccUpdDsc")
+                        .password("testDaoAccUpdDsc")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+    }
+
+    @Test
+    @Transactional
+    public void updateInvalidAccountDiscountTest() {
+        fillUpdateInvalidAccountDiscountTestDummyData();
+        Account account = accountRepository.findByEmail("InvlDaoAccUpdDsc").get();
+        account.setDiscount(new BigDecimal(-50));
+        Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> accountRepository.updateAccountDiscount(account.getId(), account.getDiscount()));
+    }
+
+    private void fillUpdateInvalidAccountDiscountTestDummyData() {
+        Account testDaoAcc = Account.builder()
+                .firstName("InvlDaoAccUpdDsc")
+                .secondName("InvlDaoAccUpdDsc")
+                .phone("InvlAccUpdDsc")
+                .email("InvlDaoAccUpdDsc")
+                .credentials(Credentials.builder()
+                        .username("InvlDaoAccUpdDsc")
+                        .password("InvlDaoAccUpdDsc")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+    }
+
+
+    @Test
+    @Transactional
+    public void updateAccountBalanceTest() {
+        fillUpdateAccountBalanceTestDummyData();
+        Account account = accountRepository.findByEmail("DaoAccUpdBln").get();
+        account.setBalance(new BigDecimal(50));
+        accountRepository.updateAccountBalance(account.getId(), account.getBalance());
+        Account updatedAccount = accountRepository.findByEmail("DaoAccUpdBln").get();
+        Assertions.assertEquals(updatedAccount.getBalance(), new BigDecimal(50));
+    }
+
+    private void fillUpdateAccountBalanceTestDummyData() {
+        Account testDaoAcc = Account.builder()
+                .firstName("testDaoAccUpdBln")
+                .secondName("testDaoAccUpdBln")
+                .phone("DaoAccUpdBln")
+                .email("DaoAccUpdBln")
+                .credentials(Credentials.builder()
+                        .username("testDaoAccUpdBln")
+                        .password("testDaoAccUpdBln")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
+    }
+
+    @Test
+    @Transactional
+    public void updateInvalidAccountBalanceTest() {
+        fillUpdateInvalidAccountBalanceTestDummyData();
+        Account account = accountRepository.findByEmail("InvlDaoAccUpdBln").get();
+        account.setBalance(new BigDecimal(-50));
+        Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> accountRepository.updateAccountBalance(account.getId(), account.getBalance()));
+    }
+
+    private void fillUpdateInvalidAccountBalanceTestDummyData() {
+        Account testDaoAcc = Account.builder()
+                .firstName("InvlDaoAccUpdBln")
+                .secondName("InvlDaoAccUpdBln")
+                .phone("InvlAccUpdBln")
+                .email("InvlDaoAccUpdBln")
+                .credentials(Credentials.builder()
+                        .username("InvlDaoAccUpdBln")
+                        .password("InvlDaoAccUpdBln")
+                        .build())
+                .build();
+        accountRepository.save(testDaoAcc);
     }
 }

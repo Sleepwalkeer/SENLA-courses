@@ -29,7 +29,6 @@ public class CreateAccountDto {
     @NotBlank(message = "Phone number must be specified")
     @Pattern(regexp = "^(\\+375|80)(29|25|44|33)(\\d{7})$", message = "Phone number is invalid")
     private String phone;
-    //TODO ПРОВЕРЬ РЕГУЛЯРКИ
 
     @NotBlank(message = "Email address must be specified")
     @Size(max = 64, message = "Email address cannot exceed 64 characters")

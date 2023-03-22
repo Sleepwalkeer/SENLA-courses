@@ -52,7 +52,7 @@ public class CategoryServiceTest {
         Category category = Category.builder().name("Construction tools").build();
         ResponseCategoryDto categoryDto = ResponseCategoryDto.builder().name("Construction tools").build();
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.ofNullable(category));
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         when(modelMapper.map(category, ResponseCategoryDto.class)).thenReturn(categoryDto);
 
         ResponseCategoryDto categoryDtoRetrieved = categoryService.getById(1L);
@@ -62,11 +62,9 @@ public class CategoryServiceTest {
     }
 
     @Test
-    public void getByInvalidIdTest() {
+    public void getByNonexistentIdTest() {
         when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
-
         Assertions.assertThrows(NotFoundException.class, () -> categoryService.getById(1L));
-        verify(categoryRepository).findById(1L);
     }
 
     @Test
@@ -79,14 +77,14 @@ public class CategoryServiceTest {
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
-        ResponseCategoryDto categoryDtoRetrieved = categoryService.update(1L, categoryDto);
+        categoryService.update(1L, categoryDto);
 
         verify(categoryRepository).existsById(1L);
         verify(categoryRepository).save(category);
     }
 
     @Test
-    public void updateNonExistentCategoryTest() {
+    public void updateNonexistentCategoryTest() {
         Category category = Category.builder().id(1L).name("Construction tools").build();
         CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
 
@@ -97,6 +95,7 @@ public class CategoryServiceTest {
 
         Assertions.assertThrows(NotFoundException.class, () -> categoryService.update(1L, categoryDto));
         verify(categoryRepository).existsById(1L);
+        verify(categoryRepository, times(0)).save(category);
     }
 
     @Test
@@ -104,36 +103,37 @@ public class CategoryServiceTest {
         doNothing().when(categoryRepository).deleteById(1L);
         when(categoryRepository.existsById(1L)).thenReturn(true);
         categoryService.deleteById(1L);
-
         verify(categoryRepository).deleteById(1L);
+    }
+
+    @Test
+    public void deleteByNonexistentIdTest() {
+        when(categoryRepository.existsById(1L)).thenReturn(false);
+
+        Assertions.assertThrows(NotFoundException.class, () -> categoryService.deleteById(1L));
+        verify(categoryRepository).existsById(1L);
+        verify(categoryRepository, times(0)).deleteById(1L);
     }
 
 
     @Test
     public void getAllTest() {
-        CategoryDto categoryDto1 = CategoryDto.builder().id(1L).name("Construction tools").build();
-        CategoryDto categoryDto2 = CategoryDto.builder().id(2L).name("furniture").build();
-
-        List<CategoryDto> categoryDtos = new ArrayList<>();
-        categoryDtos.add(categoryDto1);
-        categoryDtos.add(categoryDto2);
+        ResponseCategoryDto categoryDto1 = ResponseCategoryDto.builder().name("Construction tools").build();
 
         Category category1 = Category.builder().id(1L).name("Construction tools").build();
-        Category category2 = Category.builder().id(2L).name("furniture").build();
         List<Category> categories = new ArrayList<>();
         categories.add(category1);
-        categories.add(category2);
+
         Pageable paging = PageRequest.of(1, 2, Sort.by("id"));
         Page<Category> categoryPage = new PageImpl<>(categories, paging, categories.size());
 
         when(categoryRepository.findAll(paging)).thenReturn(categoryPage);
-        when(modelMapper.map(eq(category1), eq(CategoryDto.class)))
+        when(modelMapper.map(eq(category1), eq(ResponseCategoryDto.class)))
                 .thenReturn(categoryDto1);
-        when(modelMapper.map(eq(category2), eq(CategoryDto.class)))
-                .thenReturn(categoryDto2);
 
-        categoryService.getAll(1, 2, "id");
+        List<ResponseCategoryDto> retrievedCategoryDtos = categoryService.getAll(1, 2, "id");
 
         verify(categoryRepository).findAll(paging);
+        Assertions.assertFalse(retrievedCategoryDtos.isEmpty());
     }
 }

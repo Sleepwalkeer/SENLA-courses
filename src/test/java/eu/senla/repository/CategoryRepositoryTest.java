@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
@@ -28,54 +29,64 @@ public class CategoryRepositoryTest extends ContainersEnvironment {
                 .build();
         categoryRepository.save(dummyData);
 
-        Optional<Category> categoryFromDb = categoryRepository.findById(1L);
-        Assertions.assertEquals(1L, categoryFromDb.get().getId());
+        Long id = categoryRepository.findByName("catDaoFindById").get().getId();
+        Optional<Category> categoryFromDb = categoryRepository.findById(id);
+        Assertions.assertEquals(id, categoryFromDb.get().getId());
     }
 
     @Test
     public void updateTest() {
         Category category = Category.builder()
-                .id(1L)
-                .name("updatedNewestVersion")
-                .build();
-        Category categoryFromDb = categoryRepository.save(category);
-        Assertions.assertEquals(category.getName(), categoryFromDb.getName());
-    }
-
-    @Test
-    public void deleteByIdTest() {
-        fillDeleteByIdDummyData();
-        Long id = categoryRepository.findByName("catDaoDelete2").get().getId();
-        categoryRepository.deleteById(id);
-        Assertions.assertFalse(categoryRepository.findById(id).isPresent());
-    }
-
-    private void fillDeleteByIdDummyData() {
-        Category category = Category.builder()
-                .name("catDaoDelete")
+                .name("ctgupd")
                 .build();
         categoryRepository.save(category);
 
-        Category category1 = Category.builder()
-                .name("catDaoDelete1")
-                .build();
-        categoryRepository.save(category1);
-
         Category category2 = Category.builder()
-                .name("catDaoDelete2")
+                .id(categoryRepository.findByName("ctgupd").get().getId())
+                .name("ctgupdnew")
                 .build();
-        categoryRepository.save(category2);
+        Category categoryFromDb = categoryRepository.save(category2);
+
+        Assertions.assertEquals(category2.getName(), categoryFromDb.getName());
     }
 
     @Test
-    public void addInvalidDataTest() {
-        Category category = Category.builder().build();
+    public void updateInvalidTest() {
+        Category category = Category.builder()
+                .id(1L)
+                .name("ctgupdinvld")
+                .build();
+        categoryRepository.save(category);
+
+        Category category2 = Category.builder()
+                .id(1L)
+                .name("test")
+                .discount(new BigDecimal(-50))
+                .build();
+        Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> categoryRepository.save(category2));
+    }
+
+    @Test
+    public void CreateTest() {
+        Category category = Category.builder().name("crtTst").build();
+        Category categoryFromDb = categoryRepository.save(category);
+        Assertions.assertEquals(category.getName(), categoryFromDb.getName());
+
+    }
+
+    @Test
+    public void CreateInvalidTest() {
+        Category category = Category.builder().discount(new BigDecimal(-50)).build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> categoryRepository.save(category));
     }
 
     @Test
-    public void findByInvalidIdTest() {
-        Assertions.assertFalse(categoryRepository.findById(400L).isPresent());
+    public void findByNameTest() {
+        Category category = Category.builder().name("fndByNameTest").build();
+        Category categoryFromDb = categoryRepository.save(category);
+        Category findByNameCategory = categoryRepository.findByName("fndByNameTest").get();
+        Assertions.assertEquals(categoryFromDb.getName(), findByNameCategory.getName());
     }
 
 }

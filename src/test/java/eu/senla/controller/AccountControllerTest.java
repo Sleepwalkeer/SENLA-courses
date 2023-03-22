@@ -1,6 +1,5 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.ContainersEnvironment;
 import eu.senla.configuration.ContextConfigurationTest;
 import eu.senla.configuration.SecurityConfigurationTest;
 import eu.senla.configuration.ServletConfigurationTest;
@@ -23,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
 @WebAppConfiguration
-public class AccountControllerTest  {
+public class AccountControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -56,6 +56,8 @@ public class AccountControllerTest  {
                     .secondName("Admin")
                     .phone("+3758232734")
                     .email("Admin@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
                     .credentials(Credentials.builder()
                             .username("Admin")
                             .password("escapism")
@@ -287,6 +289,7 @@ public class AccountControllerTest  {
                 .build();
         accountRepository.save(dummyCredentialsData2);
     }
+
     @Test
     @WithUserDetails("delaccUser")
     public void deleteAccountByIdAuthorizedTest() throws Exception {
@@ -302,6 +305,7 @@ public class AccountControllerTest  {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
+
     @Test
     @WithUserDetails("Admin")
     public void getAllAccountsTest() throws Exception {

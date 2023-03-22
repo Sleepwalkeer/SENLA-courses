@@ -42,4 +42,8 @@ public class Account {
     @Column(name = "discount")
     private BigDecimal discount = BigDecimal.ZERO;
 
+    @Builder.Default
+    @Column(name = "balance")
+    private BigDecimal balance = BigDecimal.ZERO;
+
 }

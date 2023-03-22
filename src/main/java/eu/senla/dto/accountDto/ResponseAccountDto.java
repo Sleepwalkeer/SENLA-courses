@@ -17,4 +17,5 @@ public class ResponseAccountDto {
     private String phone;
     private String email;
     private BigDecimal discount;
+    private BigDecimal balance;
 }
