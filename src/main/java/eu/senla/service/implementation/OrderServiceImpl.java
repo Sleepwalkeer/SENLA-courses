@@ -72,26 +72,31 @@ public class OrderServiceImpl implements OrderService {
             accountService.incrementCustomerDiscount(order.getCustomer());
         }
 
-        orderRepository.save(order);
+        Order createdOrder = orderRepository.save(order);
         itemService.decrementQuantityEveryItem(order.getItems());
-        return modelMapper.map(order, ResponseOrderDto.class);
+        return modelMapper.map(createdOrder, ResponseOrderDto.class);
     }
 
     @Transactional
     public ResponseOrderDto update(Long id, UpdateOrderDto orderDto) {
-        if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
-            throw new BadRequestException("Start DateTime cannot be later than end DateTime");
-        }
+
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
+
+        if (orderDto.getEndDateTime().compareTo(order.getEndDateTime()) <= 0) {
+            throw new BadRequestException("EndDateTime cannot be earlier than before.You can only prolong your rental.");
+        }
+
+        BigDecimal oldTotalPrice = order.getTotalPrice();
+
         modelMapper.map(orderDto, order);
 
-        List<Long> itemIds = order.getItems().stream().map(Item::getId).toList();
-        List<Item> items = itemService.findItemsByIds(itemIds);
-        order.setItems(items);
         order.setCustomer(accountRepository.findById(order.getCustomer().getId()).get());
 
-        order.setTotalPrice(calculateTotalPrice(order));
+        BigDecimal newTotalPrice = calculateTotalPrice(order);
+        order.setTotalPrice(newTotalPrice);
+
+        accountService.withdrawBalance(order.getCustomer(), newTotalPrice.subtract(oldTotalPrice));
 
         Order updatedOrder = orderRepository.save(order);
         return modelMapper.map(updatedOrder, ResponseOrderDto.class);

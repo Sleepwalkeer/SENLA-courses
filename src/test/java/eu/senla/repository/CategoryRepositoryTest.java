@@ -1,26 +1,74 @@
 package eu.senla.repository;
 
-import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.ContextConfigurationTest;
+import eu.senla.PostgresTestContainer;
+import eu.senla.RentalApplication;
+import eu.senla.entity.Account;
 import eu.senla.entity.Category;
+import eu.senla.entity.Credentials;
+import eu.senla.entity.Role;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.util.Optional;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ContextConfigurationTest.class})
-@WebAppConfiguration
-public class CategoryRepositoryTest extends ContainersEnvironment {
+@SpringBootTest(
+        classes = {RentalApplication.class})
+@Testcontainers
+public class CategoryRepositoryTest {
+    @Container
+    public static PostgreSQLContainer container = PostgresTestContainer.getInstance()
+            .withUsername("Sleepwalker")
+            .withPassword("password")
+            .withDatabaseName("TestBd");
     @Autowired
     CategoryRepository categoryRepository;
+    @Autowired
+    AccountRepository accountRepository;
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.password", container::getPassword);
+        registry.add("spring.datasource.username", container::getUsername);
+    }
+
+    @PostConstruct
+    public void SaveDummyAuthorizationData() {
+        fillDummyData();
+    }
+
+
+    private void fillDummyData() {
+        if (accountRepository.findByEmail("RepoAllId@mail.ru").isEmpty()) {
+            Account admin = Account.builder()
+                    .firstName("RepoAllId")
+                    .secondName("RepoAllId")
+                    .phone("+37583232734")
+                    .email("RepoAllId@mail.ru")
+                    .discount(new BigDecimal(25))
+                    .balance(new BigDecimal(999999))
+                    .credentials(Credentials.builder()
+                            .username("RepoAllId")
+                            .password("RepoAllId")
+                            .role(Role.ADMIN)
+                            .build())
+                    .build();
+            accountRepository.save(admin);
+        }
+    }
 
     @Test
     public void findyByIdTest() {

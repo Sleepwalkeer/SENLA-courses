@@ -17,7 +17,6 @@ public class ResponseOrderDto {
 
     private Long id;
     private List<ItemDto> items;
-
     private LocalDateTime startDateTime;
     private LocalDateTime endDateTime;
     private BigDecimal totalPrice;

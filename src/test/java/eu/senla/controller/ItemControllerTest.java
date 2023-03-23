@@ -1,9 +1,7 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.ContextConfigurationTest;
-import eu.senla.configuration.SecurityConfigurationTest;
-import eu.senla.configuration.ServletConfigurationTest;
+import eu.senla.PostgresTestContainer;
+import eu.senla.RentalApplication;
 import eu.senla.entity.*;
 import eu.senla.repository.AccountRepository;
 import eu.senla.repository.CategoryRepository;
@@ -12,15 +10,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -30,21 +33,33 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
-@WebAppConfiguration
-public class ItemControllerTest extends ContainersEnvironment {
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+        classes = {RentalApplication.class})
+@AutoConfigureMockMvc
+@Testcontainers
+public class ItemControllerTest {
+    @Container
+    public static PostgreSQLContainer container = PostgresTestContainer.getInstance()
+            .withUsername("Sleepwalker")
+            .withPassword("password")
+            .withDatabaseName("TestBd");
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
     private AccountRepository accountRepository;
-
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Autowired
     private ItemRepository itemRepository;
     private MockMvc mockMvc;
 
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.password", container::getPassword);
+        registry.add("spring.datasource.username", container::getUsername);
+    }
 
     @BeforeEach
     public void setup() {

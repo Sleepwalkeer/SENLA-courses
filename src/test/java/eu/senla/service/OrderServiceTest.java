@@ -13,7 +13,6 @@ import eu.senla.exception.NotFoundException;
 import eu.senla.repository.AccountRepository;
 import eu.senla.repository.OrderRepository;
 import eu.senla.service.implementation.OrderServiceImpl;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,8 +31,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-
-@RequiredArgsConstructor
 public class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
@@ -154,7 +151,6 @@ public class OrderServiceTest {
     @Test
     public void updateTest() {
         List<Item> items = new ArrayList<>();
-        List<Long> itemIds = new ArrayList<>(List.of(1L, 2L, 3L));
 
         items.add(Item.builder().id(1L).name("test1").category(Category.builder().build())
                 .price(new BigDecimal(500)).discount(new BigDecimal(50)).build());
@@ -164,13 +160,12 @@ public class OrderServiceTest {
                 .price(new BigDecimal(300)).build());
 
         UpdateOrderDto updateOrderDto = UpdateOrderDto.builder()
-                .startDateTime(LocalDateTime.of(2020, 12, 3, 1, 2))
                 .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2)).build();
 
         Order order = Order.builder()
                 .customer(Account.builder().id(1L).build()).worker(Account.builder().id(1L).build())
                 .items(items).startDateTime(LocalDateTime.of(2020, 12, 3, 1, 4))
-                .endDateTime(LocalDateTime.of(2020, 12, 13, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 11, 13, 1, 2))
                 .totalPrice(new BigDecimal(12200)).build();
 
         Account account = Account.builder().discount(new BigDecimal(25)).build();
@@ -179,10 +174,8 @@ public class OrderServiceTest {
         when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(orderRepository.save(order)).thenReturn(order);
         when(modelMapper.map(updateOrderDto, Order.class)).thenReturn(order);
-        when(itemService.findItemsByIds(itemIds)).thenReturn(items);
         when(accountRepository.findById(order.getCustomer().getId())).thenReturn(accountOptional);
         doNothing().when(accountService).incrementCustomerDiscount(account);
-        doNothing().when(itemService).decrementQuantityEveryItem(items);
         when(modelMapper.map(updateOrderDto, ResponseOrderDto.class)).thenReturn(null);
 
         orderService.update(1L, updateOrderDto);
@@ -193,8 +186,6 @@ public class OrderServiceTest {
     @Test
     public void updateNonExistentOrderTest() {
         UpdateOrderDto orderDto = UpdateOrderDto.builder()
-                .customer(AccountIdDto.builder().id(1L).build())
-                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2020, 12, 14, 1, 2))
                 .build();
 

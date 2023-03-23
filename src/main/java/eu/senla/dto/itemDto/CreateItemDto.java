@@ -30,7 +30,7 @@ public class CreateItemDto {
     private Integer quantity = 0;
 
     @DecimalMin(value = "0", message = "discount cannot be negative")
-    @DecimalMax(value = "99.99", message = "discount cannot be 100%")
+    @DecimalMax(value = "99.99", message = "discount cannot be more than 99.99%")
     @Builder.Default
     private BigDecimal discount = BigDecimal.ZERO;
 }

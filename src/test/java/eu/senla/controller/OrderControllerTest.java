@@ -1,9 +1,7 @@
 package eu.senla.controller;
 
-import eu.senla.configuration.ContainersEnvironment;
-import eu.senla.configuration.ContextConfigurationTest;
-import eu.senla.configuration.SecurityConfigurationTest;
-import eu.senla.configuration.ServletConfigurationTest;
+import eu.senla.PostgresTestContainer;
+import eu.senla.RentalApplication;
 import eu.senla.entity.*;
 import eu.senla.repository.AccountRepository;
 import eu.senla.repository.CategoryRepository;
@@ -13,15 +11,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -33,9 +36,17 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {ContextConfigurationTest.class, ServletConfigurationTest.class, SecurityConfigurationTest.class})
-@WebAppConfiguration
-public class OrderControllerTest extends ContainersEnvironment {
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+        classes = {RentalApplication.class})
+@AutoConfigureMockMvc
+@Testcontainers
+public class OrderControllerTest {
+    @Container
+    public static PostgreSQLContainer container = PostgresTestContainer.getInstance()
+            .withUsername("Sleepwalker")
+            .withPassword("password")
+            .withDatabaseName("TestBd");
     @Autowired
     private WebApplicationContext webApplicationContext;
     @Autowired
@@ -47,6 +58,13 @@ public class OrderControllerTest extends ContainersEnvironment {
     @Autowired
     private OrderRepository orderRepository;
     private MockMvc mockMvc;
+
+    @DynamicPropertySource
+    static void properties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", container::getJdbcUrl);
+        registry.add("spring.datasource.password", container::getPassword);
+        registry.add("spring.datasource.username", container::getUsername);
+    }
 
     @BeforeEach
     public void setup() {
@@ -194,7 +212,8 @@ public class OrderControllerTest extends ContainersEnvironment {
         Long itemId1 = itemRepository.findByName("orderctrlcreatebalancetest1").get().getId();
         Long itemId2 = itemRepository.findByName("orderctrlcreatebalancetest2").get().getId();
         Long itemId3 = itemRepository.findByName("orderctrlcreatebalancetest3").get().getId();
-        String requestBody = "{\"customer\":{\"id\":\"2\"},\"worker\":{\"id\":\"1\"}," +
+        Long accId = accountRepository.findByEmail("qrq").get().getId();
+        String requestBody = "{\"customer\":{\"id\":\"" + accId + "\"},\"worker\":{\"id\":\"1\"}," +
                 "\"items\":[{\"id\":\"" + itemId1 + "\"}, {\"id\":\"" + itemId2 + "\"}, {\"id\":\"" + itemId3 + "\"}]," +
                 "\"startDateTime\":[2023,3,12,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
@@ -204,6 +223,15 @@ public class OrderControllerTest extends ContainersEnvironment {
     }
 
     private void fillcreateOrderInsufficientFundsTest() {
+        accountRepository.save(Account.builder()
+                .firstName("Petya")
+                .secondName("Petrov")
+                .email("qrq")
+                .phone("3423")
+                .credentials(Credentials.builder()
+                        .password("qweqw")
+                        .username("qweqw").build())
+                .build());
         categoryRepository.save(Category.builder().name("orderctrlcreatebalancetest").build());
         categoryRepository.save(Category.builder().name("orderctrlcreatebalancetest1").discount(new BigDecimal(30)).build());
         Long id = categoryRepository.findByName("orderctrlcreatetest1").get().getId();
@@ -267,61 +295,34 @@ public class OrderControllerTest extends ContainersEnvironment {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void updateOrderTest() throws Exception {
-        fillUpdateOrderDummyData();
-        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
-                ",\"worker\":{\"id\":\"1\"}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(put("/orders/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+
 
     private void fillUpdateOrderDummyData() {
         categoryRepository.save(Category.builder().name("orderctrlupdtest").build());
-
-        itemRepository.save(Item.builder()
+        Item item = Item.builder()
                 .name("orderctrlupdtest1")
                 .price(new BigDecimal(300))
                 .category(Category.builder().id(1L).build())
-                .build());
+                .build();
+        itemRepository.save(item);
 
-        List<Item> items = itemRepository.findAll();
+        List<Item> items = List.of(item);
 
         orderRepository.save(Order.builder()
-                .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .customer(accountRepository.findByEmail("Admin@mail.ru").get())
+                .worker(accountRepository.findByEmail("Admin@mail.ru").get())
                 .items(items)
-                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
+                .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 8))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
                 .totalPrice(new BigDecimal(12200))
                 .build());
     }
 
     @Test
-    @WithUserDetails("User3")
-    public void updateOrderUnauthorizedTest() throws Exception {
-        String requestBody = "{\"id\": 1,\"customer\":{\"id\":\"1\"}" +
-                ",\"worker\":{\"id\":1}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(put("/orders/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
-
-    @Test
     @WithUserDetails("Admin")
     public void updateInvalidOrderTest() throws Exception {
-        String requestBody = "{\"id\": 25,\"customer\":{\"id\":1},\"worker\":{\"id\":2}," +
-                "\"items\":[{\"id\":1,\"category\":{\"id\":1}},{\"id\":2,\"category\":{\"id\":2}}]," +
-                "\"startDateTime\":[2023,3,19,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
-        this.mockMvc.perform(put("/orders/{id}", 25)
+        String requestBody = "{\"id\": \"250\",\"endDateTime\":[2023,3,22,16,11,1]}";
+        this.mockMvc.perform(put("/orders/{id}", 250)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isNotFound());

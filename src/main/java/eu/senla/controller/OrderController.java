@@ -34,7 +34,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('write') or #orderDto.customer.id == authentication.principal.id")
+    @PreAuthorize("@orderAccessControlService.isOrderAccessibleByUser(#id, authentication.principal.id)")
     public ResponseOrderDto updateOrder(@PathVariable Long id, @Valid @RequestBody UpdateOrderDto orderDto) {
         return orderService.update(id, orderDto);
     }

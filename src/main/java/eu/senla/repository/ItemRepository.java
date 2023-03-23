@@ -47,8 +47,8 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     /**
      * Increases the quantity of the item with the specified ID by the specified quantity.
      *
-     * @param itemId    the ID of the item to replenish
-     * @param quantity  the quantity to add to the item's current quantity
+     * @param itemId   the ID of the item to replenish
+     * @param quantity the quantity to add to the item's current quantity
      */
     @Modifying
     @Query("UPDATE Item i SET i.quantity = i.quantity + :quantity WHERE i.id = :itemId")
@@ -57,8 +57,8 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     /**
      * Returns a page of items ordered by their popularity in descending order, and then by name in ascending order.
      *
-     * @param pageable  the pageable object specifying the page number and size
-     * @return          a page of item names and their corresponding popularity counts
+     * @param pageable the pageable object specifying the page number and size
+     * @return a page of item names and their corresponding popularity counts
      */
     @Query(value = "SELECT i.name, COUNT(oi.item_id) AS popularity " +
             "FROM order_item oi " +
