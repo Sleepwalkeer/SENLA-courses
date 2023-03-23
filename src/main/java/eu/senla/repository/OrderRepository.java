@@ -14,9 +14,22 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
 
+    /**
+     * Finds an Order entity by its identifier and eagerly fetches all its dependent entities.
+     *
+     * @param id the identifier of the Order entity to be retrieved.
+     * @return the Order entity with the specified identifier, along with all its eagerly fetched dependent entities.
+     */
     @EntityGraph(value = "graph.Order.allFields", type = EntityGraph.EntityGraphType.LOAD)
     Order findOrderById(Long id);
 
+    /**
+     * Retrieves a Page of Order made by the customer with the specified id.
+     *
+     * @param id the customer identifier to match.
+     * @param pageable  the pageable object specifying the page number and size
+     * @return a Page object containing the Order entities  made by the customer with the specified Ii.
+     */
     Page<Order> getAllByCustomer_Id(Long id, Pageable pageable);
 
 }

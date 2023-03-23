@@ -62,14 +62,14 @@ public interface AccountService {
 
     /**
      * Increases the discount percentage for a customer account by 1, if the
-     * account's current discount is less than 30.
+     * account's current discount is less than the threshold.
      *
      * @param account the account for which to increase the discount
      */
     void incrementCustomerDiscount(Account account);
 
     /**
-     * Retrieves a list of caccounts, paginated as specified, with optional filtering based on provided parameters.
+     * Retrieves a list of accounts, paginated as specified, with optional filtering based on provided parameters.
      *
      * @param pageNo       The page number to retrieve. Defaults to 0 if not provided.
      * @param pageSize     The number of orders to include per page. Defaults to 5 if not provided.
