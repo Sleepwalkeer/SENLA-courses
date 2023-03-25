@@ -1,3 +1,3 @@
 CREATE TABLE rent_order (
-     id serial primary key
+     id bigserial primary key
 );

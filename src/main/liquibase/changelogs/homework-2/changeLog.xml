@@ -2,11 +2,8 @@
 <databaseChangeLog
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
-      http://www.liquibase.org/xml/ns/pro 
-      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd"
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd"
         logicalFilePath="homework-2">
 
     <changeSet id="credentials-table" author="Vladislav Krot">
@@ -306,4 +303,45 @@
         </preConditions>
         <sqlFile encoding="utf8" path="./sql/31.credentials-add-role.sql" relativeToChangelogFile="true"/>
     </changeSet>
+
+    <changeSet id="account-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/32.account-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="category-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="category"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/33.category-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="item-discount" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="item"
+                              columnName="discount"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/34.item-add-discount.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="account-balance" author="Vladislav Krot">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="account"
+                              columnName="balance"/>
+            </not>
+        </preConditions>
+        <sqlFile encoding="utf8" path="./sql/35.account-add-balance.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog> 

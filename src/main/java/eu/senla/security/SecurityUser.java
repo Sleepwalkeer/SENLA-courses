@@ -1,11 +1,9 @@
 package eu.senla.security;
 
-import eu.senla.entities.Account;
-import eu.senla.entities.Credentials;
+import eu.senla.entity.Credentials;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -13,21 +11,27 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public class SecurityUser implements UserDetails {
-
+    private final Long id;
     private final String username;
     private final String password;
-
-
-    private final Integer id;
     private final List<SimpleGrantedAuthority> authorities;
 
+    public static UserDetails fromCredentials(Credentials credentials) {
+        return new SecurityUser(
+                credentials.getId(),
+                credentials.getUsername(),
+                credentials.getPassword(),
+                credentials.getRole().getAuthorities().stream().toList()
+        );
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-    public Integer getId() {
-        return id;
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -36,8 +40,8 @@ public class SecurityUser implements UserDetails {
     }
 
     @Override
-    public String getUsername() {
-        return username;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
     }
 
     @Override
@@ -58,14 +62,5 @@ public class SecurityUser implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    public static UserDetails fromCredentials(Credentials credentials){
-        return new SecurityUser(
-                credentials.getUsername(),
-                credentials.getPassword(),
-                credentials.getId(),
-                credentials.getRole().getAuthorities().stream().toList()
-        );
     }
 }

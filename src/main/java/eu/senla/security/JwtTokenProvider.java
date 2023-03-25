@@ -1,6 +1,7 @@
 package eu.senla.security;
 
-import eu.senla.exceptions.JwtAuthenticationException;
+import eu.senla.exception.JwtAuthenticationException;
+import eu.senla.service.JwtTokenBlacklistService;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -21,14 +22,13 @@ import java.util.Date;
 @RequiredArgsConstructor
 @PropertySource("classpath:application.properties")
 public class JwtTokenProvider {
-
     private final UserDetailsService userDetailsService;
+    private final JwtTokenBlacklistService jwtTokenBlacklistService;
 
     @Value("${jwt.header}")
     private String authorizationHeader;
     @Value("${jwt.secret}")
     private String secretKey;
-
     @Value("${jwt.expiration}")
     private Long validityInMillis;
 
@@ -38,10 +38,10 @@ public class JwtTokenProvider {
     }
 
 
-    public String createToken(String username, String role, Integer id) {
+    public String createToken(String username, String role, Long id) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("role", role);
-        claims.put("id",id);
+        claims.put("id", id);
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMillis);
 
@@ -56,23 +56,25 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return !claimsJws.getBody().getExpiration().before(new Date());
+            boolean isTokenExpired = claimsJws.getBody().getExpiration().before(new Date());
+            boolean isTokenBlacklisted = jwtTokenBlacklistService.isTokenBlacklisted(token);
+            return !isTokenBlacklisted && !isTokenExpired;
 
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is invalid or expired", HttpStatus.UNAUTHORIZED);
+            throw new JwtAuthenticationException("Jwt token is invalid or expired", HttpStatus.UNAUTHORIZED);
         }
     }
 
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(getUsername(token));
-        return  new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request){
-        return  request.getHeader(authorizationHeader);
+    public String resolveToken(HttpServletRequest request) {
+        return request.getHeader(authorizationHeader);
     }
 }

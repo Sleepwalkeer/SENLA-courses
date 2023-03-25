@@ -1,2 +1,2 @@
 ALTER TABLE account
-    ADD COLUMN phone varchar(15) UNIQUE NOT NULL;
+    ADD COLUMN phone varchar(20) UNIQUE NOT NULL;

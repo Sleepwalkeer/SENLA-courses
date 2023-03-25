@@ -5,8 +5,13 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <logger name="eu.senla" level="DEBUG"/>
-    <root level="INFO">
-        <appender-ref ref="STDOUT"/>
-    </root>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/rentalApp.log</file>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="eu.senla" level="info">
+        <appender-ref ref="FILE" />
+    </logger>
 </configuration>

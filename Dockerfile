@@ -1,2 +1,4 @@
-FROM tomcat
-COPY target/main-1.0-SNAPSHOT.war /usr/local/tomcat/webapps/main-1.0-SNAPSHOT.war
+FROM openjdk:17-jdk-alpine
+ARG JAR_FILE=target/*.jar
+COPY ./target/main-1.0.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]

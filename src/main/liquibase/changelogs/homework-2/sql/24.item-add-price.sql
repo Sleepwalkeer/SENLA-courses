@@ -1,2 +1,2 @@
 ALTER TABLE item
-ADD COLUMN price decimal NOT NULL;
+    ADD COLUMN price decimal check ( price > 0 );
