@@ -1,2 +1,0 @@
-ALTER TABLE item
-ADD COLUMN name varchar(50) UNIQUE NOT NULL;
