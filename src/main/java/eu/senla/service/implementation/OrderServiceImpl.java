@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order createdOrder = orderRepository.save(order);
-        itemService.decrementQuantityEveryItem(order.getItems());
+        //  itemService.decrementQuantityEveryItem(order.getItems());
         return modelMapper.map(createdOrder, ResponseOrderDto.class);
     }
 

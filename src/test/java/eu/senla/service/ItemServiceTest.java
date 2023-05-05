@@ -51,7 +51,7 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
+                //.quantity(3)
                 .build();
         CreateItemDto itemDto = CreateItemDto.builder().
                 category(CategoryIdDto.builder().id(1L).build())
@@ -106,7 +106,7 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
+                //.quantity(3)
                 .build();
 
         UpdateItemDto itemDto = UpdateItemDto.builder()
@@ -141,7 +141,7 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
+                //.quantity(3)
                 .build();
 
         UpdateItemDto itemDto = UpdateItemDto.builder()
@@ -191,7 +191,7 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
+                //.quantity(3)
                 .build();
 
         List<Item> items = new ArrayList<>();
@@ -210,91 +210,91 @@ public class ItemServiceTest {
         verify(itemRepository).findAll(paging);
     }
 
-    @Test
-    public void decrementQuantityEveryItemTest() {
-        Item item = Item.builder()
-                .id(1L)
-                .category(Category.builder().id(1L).build())
-                .name("JackHammer")
-                .price(new BigDecimal(5))
-                .quantity(3)
-                .build();
+//    @Test
+//    public void decrementQuantityEveryItemTest() {
+//        Item item = Item.builder()
+//                .id(1L)
+//                .category(Category.builder().id(1L).build())
+//                .name("JackHammer")
+//                .price(new BigDecimal(5))
+//                //.quantity(3)
+//                .build();
+//
+//        Item item1 = Item.builder()
+//                .id(2L)
+//                .category(Category.builder().id(1L).build())
+//                .name("JackHammer")
+//                .price(new BigDecimal(5))
+//                //.quantity(3)
+//                .build();
+//
+//        List<Item> items = new ArrayList<>(List.of(item, item1));
+//
+//        List<Long> itemIds = new ArrayList<>(List.of(1L, 2L));
+//       // doNothing().when(itemRepository).decrementQuantityForItems(itemIds);
+//      //  itemService.decrementQuantityEveryItem(items);
+//
+//        verify(itemRepository).decrementQuantityForItems(itemIds);
+//    }
 
-        Item item1 = Item.builder()
-                .id(2L)
-                .category(Category.builder().id(1L).build())
-                .name("JackHammer")
-                .price(new BigDecimal(5))
-                .quantity(3)
-                .build();
+//    @Test
+//    public void decrementQuantityEveryItemInvalidQuantityTest() {
+//        Item item = Item.builder()
+//                .id(1L)
+//                .category(Category.builder().id(1L).build())
+//                .name("JackHammer")
+//                .price(new BigDecimal(5))
+//                //.quantity(0)
+//                .build();
+//
+//        Item item1 = Item.builder()
+//                .id(2L)
+//                .category(Category.builder().id(1L).build())
+//                .name("JackHammer")
+//                .price(new BigDecimal(5))
+//                //.quantity(3)
+//                .build();
+//
+//        List<Item> items = new ArrayList<>(List.of(item, item1));
+//
+//        Assertions.assertThrows(ItemOutOfStockException.class, () -> itemService.decrementQuantityEveryItem(items));
+//    }
 
-        List<Item> items = new ArrayList<>(List.of(item, item1));
+//    @Test
+//    public void replenishItemTest() {
+//        when(itemRepository.existsById(1L)).thenReturn(true);
+//        Map<String, Integer> quantity = new HashMap<>();
+//        quantity.put("quantity", 20);
+//        itemService.replenishItem(1L, quantity);
+//        verify(itemRepository).replenishItem(1L, 20);
+//    }
 
-        List<Long> itemIds = new ArrayList<>(List.of(1L, 2L));
-        doNothing().when(itemRepository).decrementQuantityForItems(itemIds);
-        itemService.decrementQuantityEveryItem(items);
+//    @Test
+//    public void replenishNonexistentItemTest() {
+//        when(itemRepository.existsById(1L)).thenReturn(false);
+//        Map<String, Integer> quantity = new HashMap<>();
+//        quantity.put("quantity", 20);
+//        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
+//        verify(itemRepository, times(0)).replenishItem(1L, 20);
+//    }
 
-        verify(itemRepository).decrementQuantityForItems(itemIds);
-    }
+//    @Test
+//    public void replenishItemWithBadJsonTest() {
+//        when(itemRepository.existsById(1L)).thenReturn(true);
+//        Map<String, Integer> quantity = new HashMap<>();
+//        quantity.put("quantizy", 20);
+//        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
+//        verify(itemRepository, times(0)).replenishItem(1L, 20);
+//    }
 
-    @Test
-    public void decrementQuantityEveryItemInvalidQuantityTest() {
-        Item item = Item.builder()
-                .id(1L)
-                .category(Category.builder().id(1L).build())
-                .name("JackHammer")
-                .price(new BigDecimal(5))
-                .quantity(0)
-                .build();
-
-        Item item1 = Item.builder()
-                .id(2L)
-                .category(Category.builder().id(1L).build())
-                .name("JackHammer")
-                .price(new BigDecimal(5))
-                .quantity(3)
-                .build();
-
-        List<Item> items = new ArrayList<>(List.of(item, item1));
-
-        Assertions.assertThrows(ItemOutOfStockException.class, () -> itemService.decrementQuantityEveryItem(items));
-    }
-
-    @Test
-    public void replenishItemTest() {
-        when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 20);
-        itemService.replenishItem(1L, quantity);
-        verify(itemRepository).replenishItem(1L, 20);
-    }
-
-    @Test
-    public void replenishNonexistentItemTest() {
-        when(itemRepository.existsById(1L)).thenReturn(false);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 20);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 20);
-    }
-
-    @Test
-    public void replenishItemWithBadJsonTest() {
-        when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantizy", 20);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 20);
-    }
-
-    @Test
-    public void replenishItemWithInvalidQuantityTest() {
-        when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 0);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 0);
-    }
+//    @Test
+//    public void replenishItemWithInvalidQuantityTest() {
+//        when(itemRepository.existsById(1L)).thenReturn(true);
+//        Map<String, Integer> quantity = new HashMap<>();
+//        quantity.put("quantity", 0);
+//        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
+//        verify(itemRepository, times(0)).replenishItem(1L, 0);
+//    }
 
     @Test
     public void getItemsByPopularityTest() {

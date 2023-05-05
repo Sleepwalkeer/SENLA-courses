@@ -40,19 +40,19 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
      *
      * @param itemIds A list of item IDs to update.
      */
-    @Modifying
-    @Query("UPDATE Item i SET i.quantity = i.quantity - 1 WHERE i.id IN (:ids)")
-    void decrementQuantityForItems(@Param("ids") List<Long> itemIds);
-
-    /**
-     * Increases the quantity of the item with the specified ID by the specified quantity.
-     *
-     * @param itemId   the ID of the item to replenish
-     * @param quantity the quantity to add to the item's current quantity
-     */
-    @Modifying
-    @Query("UPDATE Item i SET i.quantity = i.quantity + :quantity WHERE i.id = :itemId")
-    void replenishItem(@Param("itemId") Long itemId, @Param("quantity") int quantity);
+//    @Modifying
+//    @Query("UPDATE Item i SET i.quantity = i.quantity - 1 WHERE i.id IN (:ids)")
+//    void decrementQuantityForItems(@Param("ids") List<Long> itemIds);
+//
+//    /**
+//     * Increases the quantity of the item with the specified ID by the specified quantity.
+//     *
+//     * @param itemId   the ID of the item to replenish
+//     * @param quantity the quantity to add to the item's current quantity
+//     */
+//    @Modifying
+//    @Query("UPDATE Item i SET i.quantity = i.quantity + :quantity WHERE i.id = :itemId")
+//    void replenishItem(@Param("itemId") Long itemId, @Param("quantity") int quantity);
 
     /**
      * Returns a page of items ordered by their popularity in descending order, and then by name in ascending order.

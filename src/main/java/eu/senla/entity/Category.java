@@ -26,6 +26,10 @@ public class Category {
     private String name;
 
     @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted = false;
+
+    @Builder.Default
     @Column(name = "discount")
     private BigDecimal discount = BigDecimal.ZERO;
 }

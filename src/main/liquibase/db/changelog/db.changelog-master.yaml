@@ -94,7 +94,6 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: discount >= 0 AND discount < 100
                             -   column:
                                     name: balance
                                     type: decimal
@@ -102,7 +101,12 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: balance >= 0
+                -   sql:
+                        -   dbms: postgresql
+                            endDelimiter: ';'
+                            splitStatements: true
+                            sql: "ALTER TABLE account ADD CONSTRAINT discount_check_constraint CHECK (discount >= 0 AND discount < 100),
+                                  ADD CONSTRAINT balance_check_constraint CHECK (balance >= 0);"
             rollback:
                 -   dropTable:
                     tableName: account
@@ -155,7 +159,6 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: total_price > 0
                 - addForeignKeyConstraint:
                       baseTableName: rent_order
                       baseColumnNames: customer_id
@@ -180,10 +183,15 @@ databaseChangeLog:
                         columns:
                             -   column:
                                     name: customer_id
+                -   sql:
+                             -   dbms: postgresql
+                                 endDelimiter: ';'
+                                 splitStatements: true
+                                 sql: "ALTER TABLE rent_order ADD CONSTRAINT total_price_check_constraint CHECK (total_price > 0);"
             rollback:
                 -   dropTable:
                     tableName: rent_order
-#____________________________________________________________________________
+
     -   changeSet:
             id: category-table
             author: Vladislav krot
@@ -215,14 +223,19 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: discount >= 0 AND discount < 100
                             -   column:
-                                    name: isDeleted
+                                    name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
                                         unique: false
                                         nullable: false
+
+                -   sql:
+                    -   dbms: postgresql
+                        endDelimiter: ';'
+                        splitStatements: true
+                        sql: "ALTER TABLE category ADD CONSTRAINT discount_check_constraint CHECK (discount >= 0 AND discount < 100);"
             rollback:
                 -   dropTable:
                     tableName: category
@@ -262,7 +275,6 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: price > 0
                             -   column:
                                     name: discount
                                     type: decimal
@@ -270,7 +282,6 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
-                                        checkConstraint: discount >= 0 AND discount < 100
 
                             -   column:
                                     name: is_available
@@ -280,7 +291,7 @@ databaseChangeLog:
                                         unique: false
                                         nullable: false
                             -   column:
-                                    name: isDeleted
+                                    name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
@@ -299,6 +310,12 @@ databaseChangeLog:
                         columns:
                             -   column:
                                     name: category_id
+                -   sql:
+                        -   dbms: postgresql
+                            endDelimiter: ';'
+                            splitStatements: true
+                            sql: "ALTER TABLE item ADD CONSTRAINT discount_check_constraint CHECK (discount >= 0 AND discount < 100),
+                                  ADD CONSTRAINT price_check_constraint CHECK (price > 0);"
             rollback:
                 -   dropTable:
                     tableName: item

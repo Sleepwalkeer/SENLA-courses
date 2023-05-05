@@ -329,35 +329,35 @@ public class ItemControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void replenishItemTest() throws Exception {
-        String requestBody = "{\"quantity\":\"1000\"}";
-        mockMvc.perform(put("/items/{id}/replenish", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void replenishItemTest() throws Exception {
+//        String requestBody = "{\"quantity\":\"1000\"}";
+//        mockMvc.perform(put("/items/{id}/replenish", 1)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isOk());
+//    }
 
-    @Test
-    @WithUserDetails("User2")
-    public void replenishItemUnauthorizedTest() throws Exception {
-        String requestBody = "{\"quantity\":\"1000\"}";
-        mockMvc.perform(put("/items/{id}/replenish", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
+//    @Test
+//    @WithUserDetails("User2")
+//    public void replenishItemUnauthorizedTest() throws Exception {
+//        String requestBody = "{\"quantity\":\"1000\"}";
+//        mockMvc.perform(put("/items/{id}/replenish", 1)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isForbidden());
+//    }
 
-    @Test
-    @WithUserDetails("Admin")
-    public void replenishItemInvalidQuantityTest() throws Exception {
-        String requestBody = "{\"quantity\":\"0\"}";
-        mockMvc.perform(put("/items/{id}/replenish", 1)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestBody))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
+//    @Test
+//    @WithUserDetails("Admin")
+//    public void replenishItemInvalidQuantityTest() throws Exception {
+//        String requestBody = "{\"quantity\":\"0\"}";
+//        mockMvc.perform(put("/items/{id}/replenish", 1)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(requestBody))
+//                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+//    }
 
     @Test
     @WithUserDetails("Admin")

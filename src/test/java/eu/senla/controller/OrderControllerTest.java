@@ -184,7 +184,7 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest1")
                 .price(new BigDecimal(500))
-                .quantity(10)
+                //.quantity(10)
                 .discount(new BigDecimal(50))
                 .category(Category.builder().id(1L).build())
                 .build());
@@ -192,14 +192,14 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest2")
                 .price(new BigDecimal(300))
-                .quantity(10)
+               // .quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
 
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest3")
                 .price(new BigDecimal(100))
-                .quantity(10)
+                //.quantity(10)
                 .category(Category.builder().id(id2).build())
                 .build());
     }
@@ -238,7 +238,7 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest1")
                 .price(new BigDecimal(500))
-                .quantity(10)
+                //.quantity(10)
                 .discount(new BigDecimal(50))
                 .category(Category.builder().id(1L).build())
                 .build());
@@ -246,14 +246,14 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest2")
                 .price(new BigDecimal(300))
-                .quantity(10)
+                //.quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
 
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest3")
                 .price(new BigDecimal(100))
-                .quantity(10)
+                //.quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
     }

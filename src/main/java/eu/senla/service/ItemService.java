@@ -60,13 +60,13 @@ public interface ItemService {
      */
     void deleteById(Long id) throws NotFoundException;
 
-    /**
-     * Decrements the quantity of every item in the provided list by 1.
-     *
-     * @param items The list of Item objects to decrement the quantity for.
-     */
-
-    void decrementQuantityEveryItem(List<Item> items);
+//    /**
+//     * Decrements the quantity of every item in the provided list by 1.
+//     *
+//     * @param items The list of Item objects to decrement the quantity for.
+//     */
+//
+//    void decrementQuantityEveryItem(List<Item> items);
 
     /**
      * Finds and returns a list of Item objects matching the provided list of item ids.
@@ -76,14 +76,14 @@ public interface ItemService {
      */
     List<Item> findItemsByIds(List<Long> itemIds);
 
-    /**
-     * Restocks an item with the given ID by the specified quantity.
-     *
-     * @param id       the ID of the item to be restocked
-     * @param quantity a map containing the quantity to be replenished, where the key is "quantity" and the value is an integer
-     * @throws BadRequestException if the quantity provided is negative.
-     */
-    void replenishItem(Long id, Map<String, Integer> quantity);
+//    /**
+//     * Restocks an item with the given ID by the specified quantity.
+//     *
+//     * @param id       the ID of the item to be restocked
+//     * @param quantity a map containing the quantity to be replenished, where the key is "quantity" and the value is an integer
+//     * @throws BadRequestException if the quantity provided is negative.
+//     */
+//    void replenishItem(Long id, Map<String, Integer> quantity);
 
     /**
      * Returns a page of items ordered by their popularity among all orders.

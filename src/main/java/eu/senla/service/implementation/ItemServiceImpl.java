@@ -78,39 +78,39 @@ public class ItemServiceImpl implements ItemService {
                 .map(item -> modelMapper.map(item, ResponseItemDto.class)).collect(Collectors.toList());
     }
 
-    @Transactional
-    public void decrementQuantityEveryItem(List<Item> items) {
-        List<Long> itemIds = new ArrayList<>();
-        for (Item item : items) {
-            if (item.getQuantity() < 1) {
-                throw new ItemOutOfStockException("Item " + item.getName() + " is out of stock :(");
-            }
-            itemIds.add(item.getId());
-        }
-        itemRepository.decrementQuantityForItems(itemIds);
-    }
-
+//    @Transactional
+//    public void decrementQuantityEveryItem(List<Item> items) {
+//        List<Long> itemIds = new ArrayList<>();
+//        for (Item item : items) {
+//            if (item.getQuantity() < 1) {
+//                throw new ItemOutOfStockException("Item " + item.getName() + " is out of stock :(");
+//            }
+//            itemIds.add(item.getId());
+//        }
+//        itemRepository.decrementQuantityForItems(itemIds);
+//    }
+//
     public List<Item> findItemsByIds(List<Long> itemIds) {
         return itemRepository.findByIdIn(itemIds);
     }
-
-
-    @Transactional
-    public void replenishItem(Long id, Map<String, Integer> quantity) {
-        if (itemRepository.existsById(id)) {
-            if (quantity.containsKey("quantity")) {
-                int amount = quantity.getOrDefault("quantity", 0);
-                if (amount <= 0) {
-                    throw new BadRequestException("The quantity to replenish must be greater than 0");
-                }
-                itemRepository.replenishItem(id, amount);
-            } else {
-                throw new BadRequestException("Invalid request body");
-            }
-        } else {
-            throw new BadRequestException("Item with the given ID does not exist");
-        }
-    }
+//
+//
+//    @Transactional
+//    public void replenishItem(Long id, Map<String, Integer> quantity) {
+//        if (itemRepository.existsById(id)) {
+//            if (quantity.containsKey("quantity")) {
+//                int amount = quantity.getOrDefault("quantity", 0);
+//                if (amount <= 0) {
+//                    throw new BadRequestException("The quantity to replenish must be greater than 0");
+//                }
+//                itemRepository.replenishItem(id, amount);
+//            } else {
+//                throw new BadRequestException("Invalid request body");
+//            }
+//        } else {
+//            throw new BadRequestException("Item with the given ID does not exist");
+//        }
+//    }
 
     public List<ItemPopularityDto> getItemsByPopularity(Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);

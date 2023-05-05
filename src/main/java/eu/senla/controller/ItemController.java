@@ -65,14 +65,14 @@ public class ItemController {
         return itemService.getItemsWithFilters(pageNo, pageSize, filters);
     }
 
-    @PutMapping("/{id}/replenish")
-    @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<String> replenishItem(
-            @PathVariable("id") Long itemId,
-            @RequestBody Map<String, Integer> replenishRequest) {
-        itemService.replenishItem(itemId, replenishRequest);
-        return ResponseEntity.ok().body("Item quantity has been successfully replenished.");
-    }
+//    @PutMapping("/{id}/replenish")
+//    @PreAuthorize("hasAuthority('write')")
+//    public ResponseEntity<String> replenishItem(
+//            @PathVariable("id") Long itemId,
+//            @RequestBody Map<String, Integer> replenishRequest) {
+//        itemService.replenishItem(itemId, replenishRequest);
+//        return ResponseEntity.ok().body("Item quantity has been successfully replenished.");
+//    }
 
     @GetMapping("/popularity")
     @PreAuthorize("hasAuthority('read')")
