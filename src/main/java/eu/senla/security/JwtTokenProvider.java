@@ -20,7 +20,7 @@ import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yaml")
 public class JwtTokenProvider {
     private final UserDetailsService userDetailsService;
     private final JwtTokenBlacklistService jwtTokenBlacklistService;

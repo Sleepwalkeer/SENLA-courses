@@ -1,0 +1,346 @@
+databaseChangeLog:
+    -   changeSet:
+            id: credentials-table
+            author: Vladislav Krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: credentials
+            changes:
+                -   createTable:
+                        tableName: credentials
+                        columns:
+                            -   column:
+                                    name: id
+                                    type: bigserial
+                                    constraints:
+                                        primaryKey: true
+                                        nullable: false
+                            -   column:
+                                    name: username
+                                    type: varchar(30)
+                                    constraints:
+                                        unique: true
+                                        nullable: false
+                            -   column:
+                                    name: password
+                                    type: varchar(255)
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: role
+                                    type: varchar(30)
+                                    defaultValue: 'USER'
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+            rollback:
+                -   dropTable:
+                        tableName: credentials
+
+    -   changeSet:
+            id: account-table
+            author: Vladislav Krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: account
+            changes:
+                -   createTable:
+                        tableName: account
+                        columns:
+                            -   column:
+                                    name: id
+                                    type: bigserial
+                                    constraints:
+                                        primaryKey: true
+                                        nullable: false
+                                        unique: true
+                                        foreignKey:
+                                            references: credentials(id)
+                                            onDelete: cascade
+                                            onUpdate: no action
+                            -   column:
+                                    name: first_name
+                                    type: varchar(25)
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: second_name
+                                    type: varchar(25)
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: phone
+                                    type: varchar(20)
+                                    constraints:
+                                        unique: true
+                                        nullable: false
+                            -   column:
+                                    name: email
+                                    type: varchar(64)
+                                    constraints:
+                                        unique: true
+                                        nullable: false
+                            -   column:
+                                    name: discount
+                                    type: decimal
+                                    defaultValue: 0
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: discount >= 0 AND discount < 100
+                            -   column:
+                                    name: balance
+                                    type: decimal
+                                    defaultValue: 0
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: balance >= 0
+            rollback:
+                -   dropTable:
+                    tableName: account
+
+    -   changeSet:
+            id: rent_order-table
+            author: Vladislav krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: rent_order
+            changes:
+                -   createTable:
+                        tableName: rent_order
+                        columns:
+                            -   column:
+                                    name: id
+                                    type: bigserial
+                                    constraints:
+                                        primaryKey: true
+                                        nullable: false
+                            -   column:
+                                    name: customer_id
+                                    type: bigint
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: worker_id
+                                    type: bigint
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: start_datetime
+                                    type: timestamp
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: end_datetime
+                                    type: timestamp
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: total_price
+                                    type: decimal
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: total_price > 0
+                - addForeignKeyConstraint:
+                      baseTableName: rent_order
+                      baseColumnNames: customer_id
+                      referencedTableName: account
+                      referencedColumnNames: id
+                      constraintName: fk_customer
+                -   addForeignKeyConstraint:
+                        baseTableName: rent_order
+                        baseColumnNames: worker_id
+                        referencedTableName: account
+                        referencedColumnNames: id
+                        constraintName: fk_worker
+                -   createIndex:
+                        indexName: index_worker_id
+                        tableName: rent_order
+                        columns:
+                            - column:
+                                  name: worker_id
+                -   createIndex:
+                        indexName: index_customer_id
+                        tableName: rent_order
+                        columns:
+                            -   column:
+                                    name: customer_id
+            rollback:
+                -   dropTable:
+                    tableName: rent_order
+#____________________________________________________________________________
+    -   changeSet:
+            id: category-table
+            author: Vladislav krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: category
+            changes:
+                -   createTable:
+                        tableName: category
+                        columns:
+                            -   column:
+                                    name: id
+                                    type: bigserial
+                                    constraints:
+                                        primaryKey: true
+                                        nullable: false
+                            -   column:
+                                    name: name
+                                    type: varchar(50)
+                                    constraints:
+                                        unique: true
+                                        nullable: false
+                            -   column:
+                                    name: discount
+                                    type: decimal
+                                    defaultValue: 0
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: discount >= 0 AND discount < 100
+                            -   column:
+                                    name: isDeleted
+                                    type: boolean
+                                    defaultValueBoolean: false
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+            rollback:
+                -   dropTable:
+                    tableName: category
+
+    -   changeSet:
+            id: item-table
+            author: Vladislav krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: item
+            changes:
+                -   createTable:
+                        tableName: item
+                        columns:
+                            -   column:
+                                    name: id
+                                    type: bigserial
+                                    constraints:
+                                        primaryKey: true
+                                        nullable: false
+                            -   column:
+                                    name: category_id
+                                    type: bigint
+                                    constraints:
+                                        nullable: false
+                            -   column:
+                                    name: name
+                                    type: varchar(50)
+                                    constraints:
+                                        unique: true
+                                        nullable: false
+                            -   column:
+                                    name: price
+                                    type: decimal
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: price > 0
+                            -   column:
+                                    name: discount
+                                    type: decimal
+                                    defaultValue: 0
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                                        checkConstraint: discount >= 0 AND discount < 100
+
+                            -   column:
+                                    name: is_available
+                                    type: boolean
+                                    defaultValueBoolean: true
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: isDeleted
+                                    type: boolean
+                                    defaultValueBoolean: false
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                -   addForeignKeyConstraint:
+                        baseTableName: item
+                        baseColumnNames: category_id
+                        referencedTableName: category
+                        referencedColumnNames: id
+                        constraintName: fk_category_id
+                        onUpdate: cascade
+                -   createIndex:
+                        indexName: index_category_id
+                        tableName: item
+                        columns:
+                            -   column:
+                                    name: category_id
+            rollback:
+                -   dropTable:
+                    tableName: item
+
+    -   changeSet:
+            id: order_item-table
+            author: Vladislav Krot
+            preConditions:
+                -   onFail: MARK_RAN
+                -   not:
+                        -   tableExists:
+                                tableName: order_item
+            changes:
+                -   createTable:
+                        tableName: order_item
+                        columns:
+                            -   column:
+                                    name: order_id
+                                    type: bigint
+                            -   column:
+                                    name: item_id
+                                    type: bigint
+                        primaryKey:
+                            columnNames:
+                                - order_id
+                                - item_id
+                -   addForeignKeyConstraint:
+                        baseTableName: order_item
+                        baseColumnNames: order_id
+                        referencedTableName: rent_order
+                        referencedColumnNames: id
+                        constraintName: fk_order_id
+                        onDelete: cascade
+                        onUpdate: cascade
+                -   addForeignKeyConstraint:
+                        baseTableName: order_item
+                        baseColumnNames: item_id
+                        referencedTableName: item
+                        referencedColumnNames: id
+                        constraintName: fk_item_id
+                        onDelete: cascade
+                        onUpdate: cascade
+            rollback:
+                -   dropTable:
+                    tableName: order_item
