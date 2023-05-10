@@ -27,21 +27,18 @@ databaseChangeLog:
                                     name: password
                                     type: varchar(255)
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: role
                                     type: varchar(30)
                                     defaultValue: 'USER'
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
-                                        unique: false
                                         nullable: false
             rollback:
                 -   dropTable:
@@ -74,13 +71,11 @@ databaseChangeLog:
                                     name: first_name
                                     type: varchar(25)
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: second_name
                                     type: varchar(25)
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: phone
@@ -99,21 +94,18 @@ databaseChangeLog:
                                     type: decimal
                                     defaultValue: 0
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: balance
                                     type: decimal
                                     defaultValue: 0
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
-                                        unique: false
                                         nullable: false
                 -   sql:
                         -   dbms: postgresql
@@ -147,38 +139,32 @@ databaseChangeLog:
                                     name: customer_id
                                     type: bigint
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: worker_id
                                     type: bigint
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: start_datetime
                                     type: timestamp
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: end_datetime
                                     type: timestamp
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: total_price
                                     type: decimal
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
-                                        unique: false
                                         nullable: false
                 - addForeignKeyConstraint:
                       baseTableName: rent_order
@@ -242,14 +228,12 @@ databaseChangeLog:
                                     type: decimal
                                     defaultValue: 0
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
-                                        unique: false
                                         nullable: false
 
                 -   sql:
@@ -294,14 +278,12 @@ databaseChangeLog:
                                     name: price
                                     type: decimal
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: discount
                                     type: decimal
                                     defaultValue: 0
                                     constraints:
-                                        unique: false
                                         nullable: false
 
                             -   column:
@@ -309,14 +291,12 @@ databaseChangeLog:
                                     type: boolean
                                     defaultValueBoolean: true
                                     constraints:
-                                        unique: false
                                         nullable: false
                             -   column:
                                     name: is_deleted
                                     type: boolean
                                     defaultValueBoolean: false
                                     constraints:
-                                        unique: false
                                         nullable: false
                 -   addForeignKeyConstraint:
                         baseTableName: item

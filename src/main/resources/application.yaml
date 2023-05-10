@@ -15,7 +15,7 @@ spring:
         password: password
         driver-class-name: org.postgresql.Driver
         username: postgres
-        url: jdbc:postgresql://localhost:5442/postgres
+        url: jdbc:postgresql://localhost:5441/postgres
 password:
     strength: '12'
 customer_increment_discount_threshold: '30'
