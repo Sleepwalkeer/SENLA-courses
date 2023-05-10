@@ -71,7 +71,6 @@ public class CredentialsServiceTest {
         CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
-        when(credentialsRepository.existsById(1L)).thenReturn(true);
         when(credentialsRepository.findById(1L)).thenReturn(Optional.of(credentials));
 
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
@@ -79,13 +78,28 @@ public class CredentialsServiceTest {
 
         credentialsService.update(1L, credentialsDto);
 
-        verify(credentialsRepository).existsById(1L);
+        verify(credentialsRepository).findById(1L);
         verify(credentialsRepository).save(credentials);
     }
 
     @Test
     public void updateNonexistentCredentialsTest() {
         Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
+        CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
+
+        when(credentialsRepository.save(credentials)).thenReturn(credentials);
+        when(credentialsRepository.existsById(1L)).thenReturn(false);
+
+        when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
+        when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
+
+        verify(credentialsRepository, times(0)).save(credentials);
+        Assertions.assertThrows(NotFoundException.class, () -> credentialsService.update(1L, credentialsDto));
+    }
+
+    @Test
+    public void updateDeletedCredentialsTest() {
+        Credentials credentials = Credentials.builder().id(1L).password("RentalApplication").username("RentalApplication").deleted(true).build();
         CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);

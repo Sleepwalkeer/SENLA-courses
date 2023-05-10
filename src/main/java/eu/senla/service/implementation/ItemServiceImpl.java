@@ -51,13 +51,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ResponseItemDto update(Long id, UpdateItemDto itemDto) {
-        if (itemRepository.existsById(id) && !itemRepository.findById(id).get().getDeleted()) {
-            Item item = modelMapper.map(itemDto, Item.class);
-            Item updatedItem = itemRepository.save(item);
-            return modelMapper.map(updatedItem, ResponseItemDto.class);
-        } else {
-            throw new NotFoundException("No item with ID " + id + " was found");
-        }
+        itemRepository.findById(id)
+                .filter(it-> !it.getDeleted())
+                .orElseThrow(() -> new NotFoundException("No item with ID " + id + " was found"));
+        Item item = modelMapper.map(itemDto, Item.class);
+        Item updatedItem = itemRepository.save(item);
+        return modelMapper.map(updatedItem, ResponseItemDto.class);
     }
 
     @Transactional

@@ -83,13 +83,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public ResponseOrderDto update(Long id, UpdateOrderDto orderDto) {
-
-        Order order = orderRepository.findById(id).orElseThrow(() ->
-                new NotFoundException("No order with ID " + id + " was found"));
-        if (order.getDeleted()){
-            throw new NotFoundException("No order with ID " + id + " was found");
-        }
-
+        Order order = orderRepository.findById(id)
+                .filter(ord -> !ord.getDeleted())
+                .orElseThrow(() -> new NotFoundException("No order with ID " + id + " was found"));
         if (!orderDto.getEndDateTime().isAfter(order.getEndDateTime())) {
             throw new BadRequestException("EndDateTime cannot be earlier than before.You can only prolong your rental.");
         }

@@ -600,3 +600,416 @@
 13:55:49.195 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
 13:55:49.206 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
 13:55:49.214 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:05.655 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:05.656 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:43:14.111 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 8.642 seconds (process running for 11.979)
+16:43:14.367 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:14.368 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:43:15.084 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.732 seconds (process running for 12.952)
+16:43:15.405 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+16:43:15.486 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:43:15.510 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:15.606 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:15.629 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:15.686 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+16:43:15.860 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:15.860 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:43:16.626 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.778 seconds (process running for 14.495)
+16:43:16.654 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:16.821 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:16.965 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+16:43:16.984 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:17.001 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:43:17.018 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+16:43:17.050 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+16:43:17.062 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:17.186 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+16:43:17.207 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:17.208 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:43:17.728 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.533 seconds (process running for 15.596)
+16:43:17.909 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:17.910 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:43:18.320 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.421 seconds (process running for 16.188)
+16:43:18.360 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:43:18.441 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:18.454 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:18.837 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+16:43:18.848 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:18.861 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+16:43:18.871 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:18.911 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:18.912 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:43:19.272 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.367 seconds (process running for 17.141)
+16:43:19.287 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+16:43:19.317 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.330 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.353 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.363 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+16:43:19.380 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:43:19.478 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:19.478 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:43:19.884 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.414 seconds (process running for 17.753)
+16:43:19.904 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.952 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.974 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:19.984 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:43:20.025 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:20.025 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:43:20.421 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.404 seconds (process running for 18.29)
+16:43:20.552 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 83906 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:43:20.552 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:43:20.877 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.332 seconds (process running for 18.746)
+16:44:39.764 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:39.765 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:44:43.409 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 3.799 seconds (process running for 6.999)
+16:44:43.683 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:43.683 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:44:44.438 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.768 seconds (process running for 8.029)
+16:44:44.781 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+16:44:44.880 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:44:44.908 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:45.025 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:45.054 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:45.120 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+16:44:45.292 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:45.292 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:44:46.053 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.78 seconds (process running for 9.644)
+16:44:46.077 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:46.209 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:46.350 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+16:44:46.370 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:46.390 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:44:46.410 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+16:44:46.448 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+16:44:46.461 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:46.558 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+16:44:46.573 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:46.573 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:44:47.078 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.514 seconds (process running for 10.669)
+16:44:47.255 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:47.255 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:44:47.685 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.441 seconds (process running for 11.275)
+16:44:47.729 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:44:47.829 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:47.843 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.211 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+16:44:48.221 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.234 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+16:44:48.243 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.283 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:48.283 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:44:48.649 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.375 seconds (process running for 12.24)
+16:44:48.662 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+16:44:48.691 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.704 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.729 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:48.741 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+16:44:48.764 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:44:48.872 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:48.873 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:44:49.260 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.397 seconds (process running for 12.85)
+16:44:49.278 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:49.327 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:49.349 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:49.360 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:44:49.402 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:49.402 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:44:49.793 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.398 seconds (process running for 13.383)
+16:44:49.908 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 84747 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:44:49.908 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:44:50.279 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.377 seconds (process running for 13.87)
+16:45:31.873 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:31.874 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:45:35.495 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 3.785 seconds (process running for 6.983)
+16:45:35.755 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:35.755 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:45:36.450 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.717 seconds (process running for 7.938)
+16:45:36.796 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+16:45:36.890 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:45:36.915 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:37.010 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:37.034 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:37.096 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+16:45:37.310 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:37.311 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:45:37.985 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.693 seconds (process running for 9.473)
+16:45:38.006 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:38.136 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:38.242 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+16:45:38.255 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:38.266 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:45:38.279 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+16:45:38.306 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+16:45:38.317 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:38.400 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+16:45:38.417 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:38.417 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:45:38.930 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.524 seconds (process running for 10.418)
+16:45:39.080 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:39.080 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:45:39.535 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.463 seconds (process running for 11.024)
+16:45:39.598 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:45:39.710 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:39.725 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.108 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+16:45:40.119 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.130 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+16:45:40.139 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.167 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:40.167 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:45:40.538 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.379 seconds (process running for 12.026)
+16:45:40.550 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+16:45:40.578 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.589 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.611 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:40.620 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+16:45:40.637 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:45:40.734 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:40.735 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:45:41.092 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.364 seconds (process running for 12.58)
+16:45:41.108 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:41.155 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:41.179 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:41.190 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:45:41.229 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:41.229 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:45:41.612 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.389 seconds (process running for 13.1)
+16:45:41.727 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 85556 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:45:41.727 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:45:42.060 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.339 seconds (process running for 13.548)
+16:57:09.125 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:09.127 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:57:13.159 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 4.217 seconds (process running for 7.435)
+16:57:13.409 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:13.410 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:57:14.145 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.749 seconds (process running for 8.421)
+16:57:14.449 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+16:57:14.574 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:57:14.596 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:14.683 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:14.703 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:14.746 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+16:57:14.938 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:14.939 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:57:15.668 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.742 seconds (process running for 9.944)
+16:57:15.690 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:15.822 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:15.960 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+16:57:15.980 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:15.997 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:57:16.012 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+16:57:16.042 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+16:57:16.054 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:16.147 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+16:57:16.162 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:16.163 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:57:16.724 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.572 seconds (process running for 11.0)
+16:57:16.893 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:16.893 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:57:17.348 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.464 seconds (process running for 11.624)
+16:57:17.398 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:57:17.500 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:17.512 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:17.881 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+16:57:17.894 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:17.904 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+16:57:17.914 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:17.946 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:17.946 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:57:18.347 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.41 seconds (process running for 12.623)
+16:57:18.364 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+16:57:18.397 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:18.408 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:18.431 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:18.441 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+16:57:18.461 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:57:18.569 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:18.570 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:57:18.943 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.38 seconds (process running for 13.219)
+16:57:18.965 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:19.014 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:19.039 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:19.051 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:57:19.098 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:19.098 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:57:19.467 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.376 seconds (process running for 13.743)
+16:57:19.597 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 87882 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:57:19.597 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:57:19.948 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.358 seconds (process running for 14.224)
+16:59:32.624 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:32.626 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:59:36.588 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 4.118 seconds (process running for 7.33)
+16:59:36.841 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:36.842 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:59:37.534 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.714 seconds (process running for 8.276)
+16:59:37.827 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+16:59:37.926 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:59:37.948 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:38.048 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:38.069 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:38.112 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+16:59:38.296 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:38.296 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:59:39.015 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.732 seconds (process running for 9.757)
+16:59:39.039 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:39.167 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:39.291 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+16:59:39.304 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:39.317 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:59:39.332 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+16:59:39.362 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+16:59:39.374 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:39.468 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+16:59:39.485 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:39.485 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:59:39.994 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.52 seconds (process running for 10.736)
+16:59:40.180 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:40.181 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:59:40.626 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.456 seconds (process running for 11.368)
+16:59:40.667 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:59:40.767 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:40.779 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.156 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+16:59:41.169 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.181 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+16:59:41.190 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.227 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:41.227 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:59:41.620 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.401 seconds (process running for 12.363)
+16:59:41.637 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+16:59:41.677 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.688 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.711 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:41.720 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+16:59:41.738 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+16:59:41.840 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:41.840 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+16:59:42.233 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.4 seconds (process running for 12.975)
+16:59:42.254 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:42.303 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:42.324 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:42.334 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+16:59:42.375 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:42.375 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:59:42.766 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.398 seconds (process running for 13.509)
+16:59:42.890 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 88975 (started by user in /home/user/IdeaProjects/SENLA-courses)
+16:59:42.890 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+16:59:43.258 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.375 seconds (process running for 14.001)
+17:01:27.271 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:27.272 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:01:31.082 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 3.983 seconds (process running for 7.14)
+17:01:31.396 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:31.396 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:01:32.178 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.798 seconds (process running for 8.236)
+17:01:32.500 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+17:01:32.599 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:01:32.620 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:32.715 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:32.737 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:32.779 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+17:01:32.974 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:32.974 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:01:33.789 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.831 seconds (process running for 9.847)
+17:01:33.817 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:33.964 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:34.117 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+17:01:34.135 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:34.152 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:01:34.168 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+17:01:34.202 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+17:01:34.214 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:34.303 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+17:01:34.318 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:34.318 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:01:34.856 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.547 seconds (process running for 10.913)
+17:01:35.028 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:35.028 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:01:35.453 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.435 seconds (process running for 11.51)
+17:01:35.493 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:01:35.583 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:35.596 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:35.969 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+17:01:35.981 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:35.993 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+17:01:36.003 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:36.032 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:36.033 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:01:36.414 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.389 seconds (process running for 12.472)
+17:01:36.428 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+17:01:36.456 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:36.468 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:36.490 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:36.500 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+17:01:36.517 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:01:36.616 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:36.616 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:01:37.026 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.417 seconds (process running for 13.083)
+17:01:37.047 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:37.098 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:37.120 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:37.132 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:01:37.174 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:37.174 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:01:37.547 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.38 seconds (process running for 13.605)
+17:01:37.672 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 89950 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:01:37.672 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:01:38.026 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.36 seconds (process running for 14.083)
+17:04:53.381 [main] INFO  e.s.r.CategoryRepositoryTest - Starting CategoryRepositoryTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:04:53.382 [main] INFO  e.s.r.CategoryRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:04:57.030 [main] INFO  e.s.r.CategoryRepositoryTest - Started CategoryRepositoryTest in 3.812 seconds (process running for 6.924)
+17:04:57.280 [main] INFO  e.s.c.CategoryControllerTest - Starting CategoryControllerTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:04:57.280 [main] INFO  e.s.c.CategoryControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:04:58.006 [main] INFO  e.s.c.CategoryControllerTest - Started CategoryControllerTest in 0.743 seconds (process running for 7.9)
+17:04:58.296 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 7000 was found
+17:04:58.395 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:04:58.418 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:58.507 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:58.529 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:58.570 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No category with ID 500000 was found
+17:04:58.761 [main] INFO  e.s.controller.OrderControllerTest - Starting OrderControllerTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:04:58.761 [main] INFO  e.s.controller.OrderControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:04:59.440 [main] INFO  e.s.controller.OrderControllerTest - Started OrderControllerTest in 0.693 seconds (process running for 9.334)
+17:04:59.469 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:59.628 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:59.785 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with ID 250 was found
+17:04:59.803 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:59.820 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:04:59.836 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No order with  ID 500000 was found
+17:04:59.865 [main] ERROR e.s.exception.RestExceptionHandler - InsufficientFundsException.Insufficient funds. The account does not have enough funds to process this order.
+17:04:59.879 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:04:59.970 [main] ERROR e.s.exception.RestExceptionHandler - Bad Request Exception Start DateTime cannot be later than end DateTime
+17:04:59.984 [main] INFO  e.s.repository.AccountRepositoryTest - Starting AccountRepositoryTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:04:59.985 [main] INFO  e.s.repository.AccountRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:05:00.555 [main] INFO  e.s.repository.AccountRepositoryTest - Started AccountRepositoryTest in 0.579 seconds (process running for 10.449)
+17:05:00.709 [main] INFO  e.s.controller.AccountControllerTest - Starting AccountControllerTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:05:00.709 [main] INFO  e.s.controller.AccountControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:05:01.146 [main] INFO  e.s.controller.AccountControllerTest - Started AccountControllerTest in 0.446 seconds (process running for 11.041)
+17:05:01.187 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:05:01.277 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:01.291 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:01.669 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 500000 was found
+17:05:01.684 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:01.698 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No account with ID 1000000 was found
+17:05:01.707 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:01.739 [main] INFO  e.s.controller.ItemControllerTest - Starting ItemControllerTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:05:01.740 [main] INFO  e.s.controller.ItemControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:05:02.092 [main] INFO  e.s.controller.ItemControllerTest - Started ItemControllerTest in 0.361 seconds (process running for 11.987)
+17:05:02.105 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 500000 was found
+17:05:02.133 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.143 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.166 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.177 [main] ERROR e.s.exception.RestExceptionHandler - Not Found Exception No item with ID 1000 was found
+17:05:02.193 [main] ERROR e.s.exception.RestExceptionHandler - Invalid filter key exception Invalid filter key: firstNamee
+17:05:02.303 [main] INFO  e.s.c.CredentialsControllerTest - Starting CredentialsControllerTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:05:02.303 [main] INFO  e.s.c.CredentialsControllerTest - No active profile set, falling back to 1 default profile: "default"
+17:05:02.686 [main] INFO  e.s.c.CredentialsControllerTest - Started CredentialsControllerTest in 0.391 seconds (process running for 12.58)
+17:05:02.704 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.747 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.768 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.779 [main] ERROR e.s.exception.RestExceptionHandler - AccessDeniedException occured. Access Denied
+17:05:02.820 [main] INFO  e.s.repository.OrderRepositoryTest - Starting OrderRepositoryTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:05:02.820 [main] INFO  e.s.repository.OrderRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:05:03.208 [main] INFO  e.s.repository.OrderRepositoryTest - Started OrderRepositoryTest in 0.395 seconds (process running for 13.103)
+17:05:03.328 [main] INFO  e.s.repository.ItemRepositoryTest - Starting ItemRepositoryTest using Java 17.0.6 with PID 90900 (started by user in /home/user/IdeaProjects/SENLA-courses)
+17:05:03.329 [main] INFO  e.s.repository.ItemRepositoryTest - No active profile set, falling back to 1 default profile: "default"
+17:05:03.692 [main] INFO  e.s.repository.ItemRepositoryTest - Started ItemRepositoryTest in 0.372 seconds (process running for 13.586)

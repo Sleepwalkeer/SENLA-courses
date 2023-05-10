@@ -121,7 +121,6 @@ public class ItemServiceTest {
                 .build();
 
         when(itemRepository.save(item)).thenReturn(item);
-        when(itemRepository.existsById(1L)).thenReturn(true);
         when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
 
         when(modelMapper.map(item, ResponseItemDto.class)).thenReturn(responseItemDto);
@@ -129,7 +128,7 @@ public class ItemServiceTest {
 
         ResponseItemDto itemDtoRetrieved = itemService.update(1L, itemDto);
 
-        verify(itemRepository).existsById(1L);
+        verify(itemRepository).findById(1L);
         verify(itemRepository).save(item);
         Assertions.assertNotNull(itemDtoRetrieved);
     }
@@ -149,11 +148,35 @@ public class ItemServiceTest {
                 .price(new BigDecimal(5))
                 .build();
 
-        when(itemRepository.existsById(1L)).thenReturn(false);
+        when(itemRepository.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
         assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
-        verify(itemRepository).existsById(1L);
+        verify(itemRepository).findById(1L);
+        verify(itemRepository, times(0)).save(item);
+    }
+
+    @Test
+    public void updateDeletedItemTest() {
+        Item item = Item.builder()
+                .id(1L)
+                .category(Category.builder().id(1L).build())
+                .name("JackHammer")
+                .price(new BigDecimal(5))
+                .deleted(true)
+                .build();
+
+        UpdateItemDto itemDto = UpdateItemDto.builder()
+                .category(CategoryIdDto.builder().id(1L).build())
+                .name("JackHammer")
+                .price(new BigDecimal(5))
+                .build();
+
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
+
+        assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
+        verify(itemRepository).findById(1L);
         verify(itemRepository, times(0)).save(item);
     }
 
