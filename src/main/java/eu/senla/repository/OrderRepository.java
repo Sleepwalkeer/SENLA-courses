@@ -3,9 +3,8 @@ package eu.senla.repository;
 import eu.senla.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -25,6 +24,15 @@ public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecific
      */
     @EntityGraph(value = "graph.Order.allFields", type = EntityGraph.EntityGraphType.LOAD)
     Order findOrderById(Long id);
+
+    /**
+     * Sets the "is_deleted" flag to true for the order with the specified ID.
+     *
+     * @param orderId the ID of the order to delete
+     */
+    @Modifying
+    @Query("UPDATE Order o SET o.deleted = true WHERE o.id = :orderId")
+    void deleteById(@Param("orderId") Long orderId);
 
 
     /**

@@ -22,6 +22,9 @@ public class CredentialsServiceImpl implements CredentialsService {
     public ResponseCredentialsDto getById(Long id) {
         Credentials credentials = credentialsRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No credentials with ID " + id + " were found"));
+        if(credentials.getDeleted()){
+            throw new NotFoundException("No credentials with ID " + id + " were found");
+        }
         return modelMapper.map(credentials, ResponseCredentialsDto.class);
     }
 
@@ -33,7 +36,7 @@ public class CredentialsServiceImpl implements CredentialsService {
 
     @Transactional
     public void update(Long id, CredentialsDto credentialsDto) {
-        if (credentialsRepository.existsById(id)) {
+        if (credentialsRepository.existsById(id) && !credentialsRepository.findById(id).get().getDeleted()) {
             Credentials credentials = modelMapper.map(credentialsDto, Credentials.class);
             credentialsRepository.save(credentials);
         } else {

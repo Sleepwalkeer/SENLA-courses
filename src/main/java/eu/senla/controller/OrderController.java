@@ -40,7 +40,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('write') or @orderAccessControlService.isOrderAccessibleByUser(#id, authentication.principal.id)")
+    @PreAuthorize("hasAuthority('write')")
     public void deleteOrderById(@PathVariable Long id) {
         orderService.deleteById(id);
     }

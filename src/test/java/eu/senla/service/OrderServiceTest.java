@@ -104,7 +104,6 @@ public class OrderServiceTest {
         when(itemService.findItemsByIds(itemIds)).thenReturn(items);
         when(accountRepository.findById(order.getCustomer().getId())).thenReturn(accountOptional);
         doNothing().when(accountService).incrementCustomerDiscount(account);
-       // doNothing().when(itemService).decrementQuantityEveryItem(items);
         when(modelMapper.map(createOrderDto, ResponseOrderDto.class)).thenReturn(null);
 
         orderService.create(createOrderDto);

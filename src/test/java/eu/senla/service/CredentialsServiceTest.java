@@ -72,6 +72,8 @@ public class CredentialsServiceTest {
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
         when(credentialsRepository.existsById(1L)).thenReturn(true);
+        when(credentialsRepository.findById(1L)).thenReturn(Optional.of(credentials));
+
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 
@@ -87,7 +89,8 @@ public class CredentialsServiceTest {
         CredentialsDto credentialsDto = CredentialsDto.builder().id(1L).password("RentalApplication").username("RentalApplication").build();
 
         when(credentialsRepository.save(credentials)).thenReturn(credentials);
-        when(credentialsRepository.findById(1L)).thenReturn(Optional.empty());
+        when(credentialsRepository.existsById(1L)).thenReturn(false);
+
         when(modelMapper.map(credentials, CredentialsDto.class)).thenReturn(credentialsDto);
         when(modelMapper.map(credentialsDto, Credentials.class)).thenReturn(credentials);
 

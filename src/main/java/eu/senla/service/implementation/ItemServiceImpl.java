@@ -1,9 +1,6 @@
 package eu.senla.service.implementation;
 
-import eu.senla.dto.itemDto.CreateItemDto;
-import eu.senla.dto.itemDto.ItemPopularityDto;
-import eu.senla.dto.itemDto.ResponseItemDto;
-import eu.senla.dto.itemDto.UpdateItemDto;
+import eu.senla.dto.itemDto.*;
 import eu.senla.entity.Item;
 import eu.senla.exception.BadRequestException;
 import eu.senla.exception.ItemOutOfStockException;
@@ -39,6 +36,9 @@ public class ItemServiceImpl implements ItemService {
     public ResponseItemDto getById(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No item with ID " + id + " was found"));
+        if (item.getDeleted()){
+            throw new NotFoundException("No item with ID " + id + " was found");
+        }
         return modelMapper.map(item, ResponseItemDto.class);
     }
 
@@ -51,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     public ResponseItemDto update(Long id, UpdateItemDto itemDto) {
-        if (itemRepository.existsById(id)) {
+        if (itemRepository.existsById(id) && !itemRepository.findById(id).get().getDeleted()) {
             Item item = modelMapper.map(itemDto, Item.class);
             Item updatedItem = itemRepository.save(item);
             return modelMapper.map(updatedItem, ResponseItemDto.class);
@@ -78,39 +78,33 @@ public class ItemServiceImpl implements ItemService {
                 .map(item -> modelMapper.map(item, ResponseItemDto.class)).collect(Collectors.toList());
     }
 
-//    @Transactional
-//    public void decrementQuantityEveryItem(List<Item> items) {
-//        List<Long> itemIds = new ArrayList<>();
-//        for (Item item : items) {
-//            if (item.getQuantity() < 1) {
-//                throw new ItemOutOfStockException("Item " + item.getName() + " is out of stock :(");
-//            }
-//            itemIds.add(item.getId());
-//        }
-//        itemRepository.decrementQuantityForItems(itemIds);
-//    }
-//
+    @Transactional
+    public void verifyAvailability(List<Item> items) {
+        List<ItemDto> unavailableItems = new ArrayList<>();
+        for (Item item : items) {
+            if (!item.getAvailable()) {
+                unavailableItems.add(modelMapper.map(item, ItemDto.class));
+            }
+        }
+        if (!unavailableItems.isEmpty()) {
+            throw new ItemOutOfStockException("The following items " + unavailableItems + " are out of stock." +
+                    "Please, remove them from the order.");
+        }
+    }
+
     public List<Item> findItemsByIds(List<Long> itemIds) {
         return itemRepository.findByIdIn(itemIds);
     }
-//
-//
-//    @Transactional
-//    public void replenishItem(Long id, Map<String, Integer> quantity) {
-//        if (itemRepository.existsById(id)) {
-//            if (quantity.containsKey("quantity")) {
-//                int amount = quantity.getOrDefault("quantity", 0);
-//                if (amount <= 0) {
-//                    throw new BadRequestException("The quantity to replenish must be greater than 0");
-//                }
-//                itemRepository.replenishItem(id, amount);
-//            } else {
-//                throw new BadRequestException("Invalid request body");
-//            }
-//        } else {
-//            throw new BadRequestException("Item with the given ID does not exist");
-//        }
-//    }
+
+
+    @Transactional
+    public void restockItem(Long id) {
+        if (itemRepository.existsById(id)) {
+            itemRepository.restockItem(id);
+        } else {
+            throw new BadRequestException("Item with the given ID does not exist");
+        }
+    }
 
     public List<ItemPopularityDto> getItemsByPopularity(Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo, pageSize);

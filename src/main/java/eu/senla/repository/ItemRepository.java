@@ -36,23 +36,23 @@ public interface ItemRepository extends JpaRepository<Item, Long>, JpaSpecificat
     List<Item> findByIdIn(List<Long> itemIds);
 
     /**
-     * Decrements the quantity of items with the given IDs by 1.
+     * Sets the "is_deleted" flag to true for the item with the specified ID.
      *
-     * @param itemIds A list of item IDs to update.
+     * @param itemId the ID of the item to delete
      */
-//    @Modifying
-//    @Query("UPDATE Item i SET i.quantity = i.quantity - 1 WHERE i.id IN (:ids)")
-//    void decrementQuantityForItems(@Param("ids") List<Long> itemIds);
-//
-//    /**
-//     * Increases the quantity of the item with the specified ID by the specified quantity.
-//     *
-//     * @param itemId   the ID of the item to replenish
-//     * @param quantity the quantity to add to the item's current quantity
-//     */
-//    @Modifying
-//    @Query("UPDATE Item i SET i.quantity = i.quantity + :quantity WHERE i.id = :itemId")
-//    void replenishItem(@Param("itemId") Long itemId, @Param("quantity") int quantity);
+    @Modifying
+    @Query("UPDATE Item i SET i.deleted = true WHERE i.id = :itemId")
+    void deleteById(@Param("itemId") Long itemId);
+
+    /**
+     * Sets the availability of the item with the specified ID to true.
+     * Does nothing if the item was already available.
+     *
+     * @param itemId the ID of the item to replenish
+     */
+    @Modifying
+    @Query("UPDATE Item i SET i.available = true WHERE i.id = :itemId")
+    void restockItem(@Param("itemId") Long itemId);
 
     /**
      * Returns a page of items ordered by their popularity in descending order, and then by name in ascending order.

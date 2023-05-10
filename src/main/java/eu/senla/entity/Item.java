@@ -33,11 +33,11 @@ public class Item {
 
     @Builder.Default
     @Column(name = "is_available", nullable = false)
-    private Boolean isAvailable = true;
+    private Boolean available = true;
 
     @Builder.Default
     @Column(name = "is_deleted", nullable = false)
-    private Boolean isDeleted = false;
+    private Boolean deleted = false;
 
     @Builder.Default
     @Column(name = "discount")

@@ -61,4 +61,7 @@ public class Order {
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
+    @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean deleted = false;
 }

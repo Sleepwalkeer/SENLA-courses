@@ -46,6 +46,5 @@ public class AccountDto {
 
     @DecimalMin(value = "0", message = "balance cannot be negative")
     @Builder.Default
-    @Column(name = "balance")
     private BigDecimal balance = BigDecimal.ZERO;
 }

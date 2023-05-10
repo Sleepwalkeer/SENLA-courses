@@ -49,18 +49,22 @@ public class OrderServiceImpl implements OrderService {
     public ResponseOrderDto getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
+        if (order.getDeleted()){
+            throw new NotFoundException("No order with ID " + id + " was found");
+        }
         return modelMapper.map(order, ResponseOrderDto.class);
     }
 
     @Transactional
     public ResponseOrderDto create(CreateOrderDto orderDto) {
-        if (orderDto.getStartDateTime().compareTo(orderDto.getEndDateTime()) >= 0) {
+        if (!orderDto.getStartDateTime().isBefore(orderDto.getEndDateTime())) {
             throw new BadRequestException("Start DateTime cannot be later than end DateTime");
         }
         Order order = modelMapper.map(orderDto, Order.class);
 
         List<Long> itemIds = order.getItems().stream().map(Item::getId).toList();
         List<Item> items = itemService.findItemsByIds(itemIds);
+        itemService.verifyAvailability(items);
         order.setItems(items);
         order.setCustomer(accountRepository.findById(order.getCustomer().getId()).get());
 
@@ -73,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         Order createdOrder = orderRepository.save(order);
-        //  itemService.decrementQuantityEveryItem(order.getItems());
+        itemService.verifyAvailability(items);
         return modelMapper.map(createdOrder, ResponseOrderDto.class);
     }
 
@@ -82,8 +86,11 @@ public class OrderServiceImpl implements OrderService {
 
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
+        if (order.getDeleted()){
+            throw new NotFoundException("No order with ID " + id + " was found");
+        }
 
-        if (orderDto.getEndDateTime().compareTo(order.getEndDateTime()) <= 0) {
+        if (!orderDto.getEndDateTime().isAfter(order.getEndDateTime())) {
             throw new BadRequestException("EndDateTime cannot be earlier than before.You can only prolong your rental.");
         }
 

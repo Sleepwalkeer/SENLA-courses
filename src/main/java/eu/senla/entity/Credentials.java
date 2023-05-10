@@ -29,4 +29,8 @@ public class Credentials {
     @Builder.Default
     private Role role = Role.USER;
 
+    @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean deleted = false;
+
 }

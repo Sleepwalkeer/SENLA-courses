@@ -33,6 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseCategoryDto getById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
+        if (category.getDeleted()){
+            throw new NotFoundException("No category with ID " + id + " was found");
+        }
         return modelMapper.map(category, ResponseCategoryDto.class);
     }
 
@@ -45,7 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public ResponseCategoryDto update(Long id, CategoryDto categoryDto) {
-        if (categoryRepository.existsById(id)) {
+        if (categoryRepository.existsById(id) && !categoryRepository.findById(id).get().getDeleted()) {
             Category category = modelMapper.map(categoryDto, Category.class);
             Category updatedCategory = categoryRepository.save(category);
             return modelMapper.map(updatedCategory, ResponseCategoryDto.class);

@@ -74,6 +74,8 @@ public class CategoryServiceTest {
 
         when(categoryRepository.save(category)).thenReturn(category);
         when(categoryRepository.existsById(1L)).thenReturn(true);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 

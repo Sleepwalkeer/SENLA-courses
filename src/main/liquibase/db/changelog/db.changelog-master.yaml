@@ -36,6 +36,13 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
+                            -   column:
+                                    name: is_deleted
+                                    type: boolean
+                                    defaultValueBoolean: false
+                                    constraints:
+                                        unique: false
+                                        nullable: false
             rollback:
                 -   dropTable:
                         tableName: credentials
@@ -101,6 +108,13 @@ databaseChangeLog:
                                     constraints:
                                         unique: false
                                         nullable: false
+                            -   column:
+                                    name: is_deleted
+                                    type: boolean
+                                    defaultValueBoolean: false
+                                    constraints:
+                                        unique: false
+                                        nullable: false
                 -   sql:
                         -   dbms: postgresql
                             endDelimiter: ';'
@@ -156,6 +170,13 @@ databaseChangeLog:
                             -   column:
                                     name: total_price
                                     type: decimal
+                                    constraints:
+                                        unique: false
+                                        nullable: false
+                            -   column:
+                                    name: is_deleted
+                                    type: boolean
+                                    defaultValueBoolean: false
                                     constraints:
                                         unique: false
                                         nullable: false

@@ -137,6 +137,8 @@ public class AccountServiceTest {
 
         when(accountRepository.save(account)).thenReturn(account);
         when(accountRepository.existsById(1L)).thenReturn(true);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+
         when(modelMapper.map(account, ResponseAccountDto.class)).thenReturn(responseAccountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 

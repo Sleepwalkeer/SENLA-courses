@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -116,7 +117,6 @@ public class ItemRepositoryTest {
         Item jackhammer = Item.builder()
                 .name("updItemDao")
                 .price(new BigDecimal(750))
-                //.quantity(8)
                 .category(Category.builder()
                         .id(1L)
                         .build())
@@ -129,7 +129,7 @@ public class ItemRepositoryTest {
         fillDeleteItemByIdDummyData();
         Long id = itemRepository.findByName("itemDelById15").get().getId();
         itemRepository.deleteById(id);
-        Assertions.assertFalse(itemRepository.findById(id).isPresent());
+        Assertions.assertTrue(itemRepository.findById(id).get().getDeleted());
     }
 
     private void fillDeleteItemByIdDummyData() {
@@ -141,7 +141,6 @@ public class ItemRepositoryTest {
         Item item = Item.builder()
                 .name("itemDelById15")
                 .price(new BigDecimal(345032))
-                //.quantity(232)
                 .category(Category.builder()
                         .id(1L)
                         .build())
@@ -153,7 +152,6 @@ public class ItemRepositoryTest {
     public void createInvalidTest() {
         Item item = Item.builder()
                 .price(new BigDecimal(3450))
-                //.quantity(2)
                 .build();
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> itemRepository.save(item));
     }
@@ -177,7 +175,6 @@ public class ItemRepositoryTest {
         Item item = Item.builder()
                 .name("LazyAssoc")
                 .price(new BigDecimal(3450))
-                //.quantity(232)
                 .category(Category.builder()
                         .id(1L)
                         .build())
@@ -206,7 +203,6 @@ public class ItemRepositoryTest {
         Item item = Item.builder()
                 .name("findByIdIn")
                 .price(new BigDecimal(3450))
-                //.quantity(232)
                 .category(Category.builder()
                         .id(1L)
                         .build())
@@ -216,7 +212,6 @@ public class ItemRepositoryTest {
         Item item2 = Item.builder()
                 .name("findByIdIn2")
                 .price(new BigDecimal(3450))
-                //.quantity(232)
                 .category(Category.builder()
                         .id(1L)
                         .build())
@@ -224,65 +219,4 @@ public class ItemRepositoryTest {
         itemRepository.save(item2);
     }
 
-//    @Test
-//    @Transactional
-//    public void decrementQuantityForItemsInvalidTest() {
-//        decrementQuantityForItemsInvalidTestDummyData();
-//        Item item1 = itemRepository.findByName("decQuan1invld").get();
-//        Item item2 = itemRepository.findByName("decQuan2invld").get();
-//
-//        List<Long> ids = List.of(item1.getId(), item2.getId());
-//        Assertions.assertThrows(DataIntegrityViolationException.class, () -> itemRepository.decrementQuantityForItems(ids));
-//    }
-
-//    private void decrementQuantityForItemsInvalidTestDummyData() {
-//        Category category = Category.builder()
-//                .name("decQuaninvld")
-//                .build();
-//        categoryRepository.save(category);
-//
-//        Item item = Item.builder()
-//                .name("decQuan1invld")
-//                .price(new BigDecimal(3450))
-//                .category(Category.builder()
-//                        .id(1L)
-//                        .build())
-//                .build();
-//        itemRepository.save(item);
-//
-//        Item item2 = Item.builder()
-//                .name("decQuan2invld")
-//                .price(new BigDecimal(3450))
-//                .category(Category.builder()
-//                        .id(1L)
-//                        .build())
-//                .build();
-//        itemRepository.save(item2);
-//    }
-
-//    @Test
-//    @Transactional
-//    public void replenishItemInvalidTest() {
-//        replenishItemInvalidTestDummyData();
-//        Item item = itemRepository.findByName("replenishIteminvld").get();
-//
-//        Assertions.assertThrows(DataIntegrityViolationException.class,
-//                () -> itemRepository.replenishItem(item.getId(), -5));
-//    }
-
-    private void replenishItemInvalidTestDummyData() {
-        Category category = Category.builder()
-                .name("replenishIteminvld")
-                .build();
-        categoryRepository.save(category);
-
-        Item item = Item.builder()
-                .name("replenishIteminvld")
-                .price(new BigDecimal(3450))
-                .category(Category.builder()
-                        .id(1L)
-                        .build())
-                .build();
-        itemRepository.save(item);
-    }
 }
