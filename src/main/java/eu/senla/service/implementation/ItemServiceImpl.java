@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No item with ID " + id + " was found"));
         if (item.getDeleted()){
-            throw new NotFoundException("No item with ID " + id + " was found");
+            throw new NotFoundException("The item with ID " + id + "has been deleted");
         }
         return modelMapper.map(item, ResponseItemDto.class);
     }

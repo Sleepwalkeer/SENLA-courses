@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
         if (order.getDeleted()){
-            throw new NotFoundException("No order with ID " + id + " was found");
+            throw new NotFoundException("The order with ID " + id + "has been deleted");
         }
         return modelMapper.map(order, ResponseOrderDto.class);
     }

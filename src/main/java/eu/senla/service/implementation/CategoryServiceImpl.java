@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
         if (category.getDeleted()){
-            throw new NotFoundException("No category with ID " + id + " was found");
+            throw new NotFoundException("The category with ID " + id + "has been deleted");
         }
         return modelMapper.map(category, ResponseCategoryDto.class);
     }

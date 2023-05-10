@@ -37,7 +37,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Credentials credentials = credentialsRepository.findByUsername(request.getUsername()).
                 orElseThrow(() -> new UsernameNotFoundException("User doesn't exist"));
         if (credentials.getDeleted()){
-            throw new UsernameNotFoundException("User doesn't exist");
+            throw new UsernameNotFoundException("Authorization Failed. Your account has been deleted");
         }
         String token = jwtTokenProvider.createToken(request.getUsername(), credentials.getRole().name(), credentials.getId());
         Map<Object, Object> response = new HashMap<>();

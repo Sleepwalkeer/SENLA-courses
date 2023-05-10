@@ -44,7 +44,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
         if (account.getDeleted()){
-            throw new NotFoundException("No account with ID " + id + " was found");
+            throw new NotFoundException("The account with ID " + id + "has been deleted");
         }
         return modelMapper.map(account, ResponseAccountDto.class);
     }

@@ -23,7 +23,7 @@ public class CredentialsServiceImpl implements CredentialsService {
         Credentials credentials = credentialsRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No credentials with ID " + id + " were found"));
         if(credentials.getDeleted()){
-            throw new NotFoundException("No credentials with ID " + id + " were found");
+            throw new NotFoundException("The credentials with ID " + id + "has been deleted");
         }
         return modelMapper.map(credentials, ResponseCredentialsDto.class);
     }
