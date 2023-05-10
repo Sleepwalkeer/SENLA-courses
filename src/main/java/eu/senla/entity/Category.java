@@ -25,9 +25,8 @@ public class Category {
     @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
 
-    @Builder.Default
-    @Column(name = "is_deleted", nullable = false)
-    private Boolean deleted = false;
+    @Column(name = "is_deleted")
+    private boolean deleted;
 
     @Builder.Default
     @Column(name = "discount")

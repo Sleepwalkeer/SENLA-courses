@@ -129,7 +129,7 @@ public class ItemRepositoryTest {
         fillDeleteItemByIdDummyData();
         Long id = itemRepository.findByName("itemDelById15").get().getId();
         itemRepository.deleteById(id);
-        Assertions.assertTrue(itemRepository.findById(id).get().getDeleted());
+        Assertions.assertTrue(itemRepository.findById(id).get().isDeleted());
     }
 
     private void fillDeleteItemByIdDummyData() {

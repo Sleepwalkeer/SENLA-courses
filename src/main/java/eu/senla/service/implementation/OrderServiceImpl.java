@@ -49,7 +49,7 @@ public class OrderServiceImpl implements OrderService {
     public ResponseOrderDto getById(Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No order with ID " + id + " was found"));
-        if (order.getDeleted()){
+        if (order.isDeleted()){
             throw new NotFoundException("The order with ID " + id + "has been deleted");
         }
         return modelMapper.map(order, ResponseOrderDto.class);
@@ -84,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public ResponseOrderDto update(Long id, UpdateOrderDto orderDto) {
         Order order = orderRepository.findById(id)
-                .filter(ord -> !ord.getDeleted())
+                .filter(ord -> !ord.isDeleted())
                 .orElseThrow(() -> new NotFoundException("No order with ID " + id + " was found"));
         if (!orderDto.getEndDateTime().isAfter(order.getEndDateTime())) {
             throw new BadRequestException("EndDateTime cannot be earlier than before.You can only prolong your rental.");

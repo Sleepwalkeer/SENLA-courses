@@ -36,7 +36,7 @@ public class ItemServiceImpl implements ItemService {
     public ResponseItemDto getById(Long id) {
         Item item = itemRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No item with ID " + id + " was found"));
-        if (item.getDeleted()){
+        if (item.isDeleted()){
             throw new NotFoundException("The item with ID " + id + "has been deleted");
         }
         return modelMapper.map(item, ResponseItemDto.class);
@@ -52,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public ResponseItemDto update(Long id, UpdateItemDto itemDto) {
         itemRepository.findById(id)
-                .filter(it-> !it.getDeleted())
+                .filter(it-> !it.isDeleted())
                 .orElseThrow(() -> new NotFoundException("No item with ID " + id + " was found"));
         Item item = modelMapper.map(itemDto, Item.class);
         Item updatedItem = itemRepository.save(item);
@@ -81,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
     public void verifyAvailability(List<Item> items) {
         List<ItemDto> unavailableItems = new ArrayList<>();
         for (Item item : items) {
-            if (!item.getAvailable()) {
+            if (!item.isAvailable()) {
                 unavailableItems.add(modelMapper.map(item, ItemDto.class));
             }
         }

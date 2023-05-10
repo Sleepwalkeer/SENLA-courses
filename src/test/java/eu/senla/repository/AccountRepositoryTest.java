@@ -152,7 +152,7 @@ public class AccountRepositoryTest {
         fillDeleteByIdDummyData();
         Long deleteId = accountRepository.findByEmail("testDaoAcc").get().getId();
         accountRepository.deleteById(deleteId);
-        Assertions.assertTrue(accountRepository.findById(deleteId).get().getDeleted());
+        Assertions.assertTrue(accountRepository.findById(deleteId).get().isDeleted());
     }
 
     private void fillDeleteByIdDummyData() {
