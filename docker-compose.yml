@@ -6,8 +6,10 @@ services:
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: password
+        volumes:
+            - testVolume:/var/lib/postgresql/data
         ports:
-            - "5440:5432"
+            - "5441:5432"
 
     myapp:
         image: app.jar
@@ -20,3 +22,7 @@ services:
             - "8080:8080"
         depends_on:
             - SenlaDB
+
+volumes:
+    testVolume:
+        external: true
