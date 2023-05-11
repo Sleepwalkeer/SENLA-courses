@@ -67,10 +67,9 @@ public class ItemController {
 
     @PutMapping("/{id}/restock")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<String> restockItem(
+    public void restockItem(
             @PathVariable("id") Long itemId) {
         itemService.restockItem(itemId);
-        return ResponseEntity.ok().body("The specified item has been restocked.");
     }
 
     @GetMapping("/popularity")
