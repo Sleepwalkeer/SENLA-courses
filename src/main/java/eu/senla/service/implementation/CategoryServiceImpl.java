@@ -67,7 +67,6 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-
     public List<ResponseCategoryDto> getCategoriesWithFilters(Integer pageNo, Integer pageSize, Map<String, String> filterParams) {
         Page<Category> categoryPage;
         Pageable paging = PageRequest.of(pageNo, pageSize);
