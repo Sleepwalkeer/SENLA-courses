@@ -104,7 +104,6 @@ public class OrderServiceTest {
         when(itemService.findItemsByIds(itemIds)).thenReturn(items);
         when(accountRepository.findById(order.getCustomer().getId())).thenReturn(accountOptional);
         doNothing().when(accountService).incrementCustomerDiscount(account);
-        doNothing().when(itemService).decrementQuantityEveryItem(items);
         when(modelMapper.map(createOrderDto, ResponseOrderDto.class)).thenReturn(null);
 
         orderService.create(createOrderDto);
@@ -162,7 +161,7 @@ public class OrderServiceTest {
         UpdateOrderDto updateOrderDto = UpdateOrderDto.builder()
                 .endDateTime(LocalDateTime.of(2020, 12, 12, 1, 2)).build();
 
-        Order order = Order.builder()
+        Order order = Order.builder().id(1L)
                 .customer(Account.builder().id(1L).build()).worker(Account.builder().id(1L).build())
                 .items(items).startDateTime(LocalDateTime.of(2020, 12, 3, 1, 4))
                 .endDateTime(LocalDateTime.of(2020, 11, 13, 1, 2))
@@ -197,6 +196,30 @@ public class OrderServiceTest {
 
         when(orderRepository.save(order)).thenReturn(order);
         when(orderRepository.findById(1L)).thenReturn(Optional.empty());
+        when(modelMapper.map(order, UpdateOrderDto.class)).thenReturn(orderDto);
+        when(modelMapper.map(orderDto, Order.class)).thenReturn(order);
+
+        Assertions.assertThrows(NotFoundException.class, () -> orderService.update(1L, orderDto));
+        verify(orderRepository).findById(1L);
+        verify(orderRepository, times(0)).save(order);
+    }
+
+    @Test
+    public void updateDeletedOrderTest() {
+        Order order = Order.builder()
+                .customer(Account.builder().id(1L).build())
+                .startDateTime(LocalDateTime.of(2020, 12, 12, 1, 2))
+                .endDateTime(LocalDateTime.of(2020, 12, 14, 1, 2))
+                .deleted(true)
+                .build();
+
+        UpdateOrderDto orderDto = UpdateOrderDto.builder()
+                .endDateTime(LocalDateTime.of(2020, 12, 14, 1, 2))
+                .build();
+
+
+        when(orderRepository.save(order)).thenReturn(order);
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
         when(modelMapper.map(order, UpdateOrderDto.class)).thenReturn(orderDto);
         when(modelMapper.map(orderDto, Order.class)).thenReturn(order);
 

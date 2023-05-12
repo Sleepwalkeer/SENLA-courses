@@ -88,7 +88,6 @@ public class OrderRepositoryTest {
             Item jackhammer = Item.builder()
                     .name("Excavator2")
                     .price(new BigDecimal(750))
-                    .quantity(8)
                     .category(categoryRepository.findByName("orderDao").get())
                     .build();
             itemRepository.save(jackhammer);

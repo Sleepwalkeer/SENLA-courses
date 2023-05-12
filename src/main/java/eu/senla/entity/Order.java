@@ -61,4 +61,6 @@ public class Order {
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
+    @Column(name = "is_deleted")
+    private boolean deleted;
 }

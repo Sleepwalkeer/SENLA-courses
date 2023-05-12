@@ -26,6 +26,15 @@ public interface AccountRepository extends JpaRepository<Account, Long>, JpaSpec
     Optional<Account> findByEmail(String email);
 
     /**
+     * Sets the "is_deleted" flag to true for the account with the specified ID.
+     *
+     * @param accountId the ID of the account to delete
+     */
+    @Modifying
+    @Query("UPDATE Account a SET a.deleted = true WHERE a.id = :accountId")
+    void deleteById(@Param("accountId") Long accountId);
+
+    /**
      * Updates the discount value of the account with the specified ID.
      *
      * @param accountId the ID of the account to update

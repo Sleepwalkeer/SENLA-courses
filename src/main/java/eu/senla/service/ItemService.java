@@ -5,8 +5,7 @@ import eu.senla.dto.itemDto.ItemPopularityDto;
 import eu.senla.dto.itemDto.ResponseItemDto;
 import eu.senla.dto.itemDto.UpdateItemDto;
 import eu.senla.entity.Item;
-import eu.senla.exception.BadRequestException;
-import eu.senla.exception.NotFoundException;
+import eu.senla.exception.*;
 
 import java.util.List;
 import java.util.Map;
@@ -61,12 +60,14 @@ public interface ItemService {
     void deleteById(Long id) throws NotFoundException;
 
     /**
-     * Decrements the quantity of every item in the provided list by 1.
+     * Checks whether all items in the given lists are available. Does nothing if every item is available
+     * throws an exception if one or more items are not available.
      *
-     * @param items The list of Item objects to decrement the quantity for.
+     * @param items The list of Item objects to check availability for.
+     * @throws ItemOutOfStockException If one or more items are not available.
      */
 
-    void decrementQuantityEveryItem(List<Item> items);
+    void verifyAvailability(List<Item> items);
 
     /**
      * Finds and returns a list of Item objects matching the provided list of item ids.
@@ -77,13 +78,12 @@ public interface ItemService {
     List<Item> findItemsByIds(List<Long> itemIds);
 
     /**
-     * Restocks an item with the given ID by the specified quantity.
+     * Restocks an item with the given ID.
      *
-     * @param id       the ID of the item to be restocked
-     * @param quantity a map containing the quantity to be replenished, where the key is "quantity" and the value is an integer
-     * @throws BadRequestException if the quantity provided is negative.
+     * @param id the ID of the item to be restocked.
+     * @throws BadRequestException if the item with the provided id doesn't exist.
      */
-    void replenishItem(Long id, Map<String, Integer> quantity);
+    void restockItem(Long id);
 
     /**
      * Returns a page of items ordered by their popularity among all orders.

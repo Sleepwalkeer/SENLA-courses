@@ -142,7 +142,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -184,7 +184,6 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest1")
                 .price(new BigDecimal(500))
-                .quantity(10)
                 .discount(new BigDecimal(50))
                 .category(Category.builder().id(1L).build())
                 .build());
@@ -192,14 +191,12 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest2")
                 .price(new BigDecimal(300))
-                .quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
 
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatetest3")
                 .price(new BigDecimal(100))
-                .quantity(10)
                 .category(Category.builder().id(id2).build())
                 .build());
     }
@@ -213,7 +210,7 @@ public class OrderControllerTest {
         Long itemId2 = itemRepository.findByName("orderctrlcreatebalancetest2").get().getId();
         Long itemId3 = itemRepository.findByName("orderctrlcreatebalancetest3").get().getId();
         Long accId = accountRepository.findByEmail("qrq").get().getId();
-        String requestBody = "{\"customer\":{\"id\":\"" + accId + "\"},\"worker\":{\"id\":\"1\"}," +
+        String requestBody = "{\"customer\":{\"id\":\"" + accId + "\"},\"worker\":{\"id\":\"" + accId + "\"}," +
                 "\"items\":[{\"id\":\"" + itemId1 + "\"}, {\"id\":\"" + itemId2 + "\"}, {\"id\":\"" + itemId3 + "\"}]," +
                 "\"startDateTime\":[2023,3,12,16,11,1],\"endDateTime\":[2023,3,22,16,11,1]}";
         this.mockMvc.perform(post("/orders")
@@ -238,7 +235,6 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest1")
                 .price(new BigDecimal(500))
-                .quantity(10)
                 .discount(new BigDecimal(50))
                 .category(Category.builder().id(1L).build())
                 .build());
@@ -246,14 +242,12 @@ public class OrderControllerTest {
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest2")
                 .price(new BigDecimal(300))
-                .quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
 
         itemRepository.save(Item.builder()
                 .name("orderctrlcreatebalancetest3")
                 .price(new BigDecimal(100))
-                .quantity(10)
                 .category(Category.builder().id(id).build())
                 .build());
     }
@@ -294,7 +288,6 @@ public class OrderControllerTest {
                         .content(requestBody))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
 
 
     private void fillUpdateOrderDummyData() {
@@ -349,7 +342,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -358,7 +351,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -367,7 +360,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -376,7 +369,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -428,7 +421,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2023, 12, 12, 1, 2))
@@ -459,7 +452,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -468,7 +461,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))
@@ -477,7 +470,7 @@ public class OrderControllerTest {
 
         orderRepository.save(Order.builder()
                 .customer(Account.builder().id(1L).build())
-                .worker(Account.builder().id(2L).build())
+                .worker(Account.builder().id(1L).build())
                 .items(items)
                 .startDateTime(LocalDateTime.of(2019, 12, 12, 1, 2))
                 .endDateTime(LocalDateTime.of(2022, 12, 12, 1, 2))

@@ -1,0 +1,28 @@
+version: '2.17.3'
+
+services:
+    SenlaDB:
+        image: postgres
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+        volumes:
+            - testVolume:/var/lib/postgresql/data
+        ports:
+            - "5441:5432"
+
+    myapp:
+        image: app.jar
+        environment:
+            DB_HOST: SenlaDB
+            DB_NAME: postgres
+            DB_USER: postgres
+            DB_PASSWORD: password
+        ports:
+            - "8080:8080"
+        depends_on:
+            - SenlaDB
+
+volumes:
+    testVolume:
+        external: true

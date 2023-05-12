@@ -32,8 +32,11 @@ public class Item {
     private BigDecimal price;
 
     @Builder.Default
-    @Column(name = "quantity", nullable = false)
-    private Integer quantity = 0;
+    @Column(name = "is_available")
+    private boolean available = true;
+
+    @Column(name = "is_deleted")
+    private boolean deleted;
 
     @Builder.Default
     @Column(name = "discount")

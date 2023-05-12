@@ -1,0 +1,22 @@
+jwt:
+    header: authorization
+    secret: cantankerous
+    expiration: '6000000'
+spring:
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                hbm2ddl:
+                    auto: validate
+                format_sql: 'true'
+                show_sql: 'true'
+    datasource:
+        password: password
+        driver-class-name: org.postgresql.Driver
+        username: postgres
+        url: jdbc:postgresql://SenlaDB:5432/postgres
+password:
+    strength: '12'
+customer_increment_discount_threshold: '30'
+order_total_threshold: '5000'

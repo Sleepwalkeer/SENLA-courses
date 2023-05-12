@@ -25,9 +25,6 @@ public class CreateItemDto {
     @NotNull(message = "Item price must be specified")
     private BigDecimal price;
 
-    @Min(value = 0, message = "quantity cannot be less than 0")
-    @Builder.Default
-    private Integer quantity = 0;
 
     @DecimalMin(value = "0", message = "discount cannot be negative")
     @DecimalMax(value = "99.99", message = "discount cannot be more than 99.99%")

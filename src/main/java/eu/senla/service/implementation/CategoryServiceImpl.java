@@ -1,8 +1,10 @@
 package eu.senla.service.implementation;
 
+import eu.senla.dto.accountDto.ResponseAccountDto;
 import eu.senla.dto.categoryDto.CategoryDto;
 import eu.senla.dto.categoryDto.CreateCategoryDto;
 import eu.senla.dto.categoryDto.ResponseCategoryDto;
+import eu.senla.entity.Account;
 import eu.senla.entity.Category;
 import eu.senla.exception.NotFoundException;
 import eu.senla.repository.CategoryRepository;
@@ -33,6 +35,9 @@ public class CategoryServiceImpl implements CategoryService {
     public ResponseCategoryDto getById(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No category with ID " + id + " was found"));
+        if (category.isDeleted()) {
+            throw new NotFoundException("The category with ID " + id + "has been deleted");
+        }
         return modelMapper.map(category, ResponseCategoryDto.class);
     }
 
@@ -45,13 +50,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     public ResponseCategoryDto update(Long id, CategoryDto categoryDto) {
-        if (categoryRepository.existsById(id)) {
-            Category category = modelMapper.map(categoryDto, Category.class);
-            Category updatedCategory = categoryRepository.save(category);
-            return modelMapper.map(updatedCategory, ResponseCategoryDto.class);
-        } else {
-            throw new NotFoundException("No category with ID " + id + " was found");
-        }
+        categoryRepository.findById(id)
+                .filter(cat -> !cat.isDeleted())
+                .orElseThrow(() -> new NotFoundException("No category with ID " + id + " was found"));
+        Category category = modelMapper.map(categoryDto, Category.class);
+        Category updatedCategory = categoryRepository.save(category);
+        return modelMapper.map(updatedCategory, ResponseCategoryDto.class);
     }
 
     @Transactional

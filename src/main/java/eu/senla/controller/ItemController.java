@@ -65,13 +65,11 @@ public class ItemController {
         return itemService.getItemsWithFilters(pageNo, pageSize, filters);
     }
 
-    @PutMapping("/{id}/replenish")
+    @PutMapping("/{id}/restock")
     @PreAuthorize("hasAuthority('write')")
-    public ResponseEntity<String> replenishItem(
-            @PathVariable("id") Long itemId,
-            @RequestBody Map<String, Integer> replenishRequest) {
-        itemService.replenishItem(itemId, replenishRequest);
-        return ResponseEntity.ok().body("Item quantity has been successfully replenished.");
+    public void restockItem(
+            @PathVariable("id") Long itemId) {
+        itemService.restockItem(itemId);
     }
 
     @GetMapping("/popularity")

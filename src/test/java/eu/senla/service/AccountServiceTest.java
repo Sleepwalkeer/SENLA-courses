@@ -136,15 +136,43 @@ public class AccountServiceTest {
                 .build();
 
         when(accountRepository.save(account)).thenReturn(account);
-        when(accountRepository.existsById(1L)).thenReturn(true);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+
         when(modelMapper.map(account, ResponseAccountDto.class)).thenReturn(responseAccountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
         ResponseAccountDto accountDtoRetrieved = accountService.update(1L, accountDto);
 
         Assertions.assertNotNull(accountDtoRetrieved);
-        verify(accountRepository).existsById(1L);
+        verify(accountRepository).findById(1L);
         verify(accountRepository).save(account);
+    }
+
+    @Test
+    public void updateDeletedAccountTest(){
+        Account account = Account.builder()
+                .id(1L)
+                .email("blablaDel@gmail.com")
+                .phone("+375331234122")
+                .firstName("Billy")
+                .secondName("Starks")
+                .deleted(true)
+                .build();
+
+        UpdateAccountDto accountDto = UpdateAccountDto.builder()
+                .id(1L)
+                .email("blablDela@gmail.com")
+                .phone("+375331234122")
+                .firstName("Billy")
+                .secondName("Starks")
+                .build();
+
+        when(accountRepository.save(account)).thenReturn(account);
+        when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
+        when(modelMapper.map(account, UpdateAccountDto.class)).thenReturn(accountDto);
+        when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
+
+        Assertions.assertThrows(NotFoundException.class, () -> accountService.update(1L, accountDto));
     }
 
     @Test
@@ -166,12 +194,11 @@ public class AccountServiceTest {
                 .build();
 
         when(accountRepository.save(account)).thenReturn(account);
-        when(accountRepository.existsById(1L)).thenReturn(false);
+        when(accountRepository.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(account, UpdateAccountDto.class)).thenReturn(accountDto);
         when(modelMapper.map(accountDto, Account.class)).thenReturn(account);
 
         Assertions.assertThrows(NotFoundException.class, () -> accountService.update(1L, accountDto));
-        verify(accountRepository).existsById(1L);
     }
 
 

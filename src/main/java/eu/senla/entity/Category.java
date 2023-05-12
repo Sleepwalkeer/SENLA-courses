@@ -25,6 +25,9 @@ public class Category {
     @Column(name = "name", length = 50, nullable = false, unique = true)
     private String name;
 
+    @Column(name = "is_deleted")
+    private boolean deleted;
+
     @Builder.Default
     @Column(name = "discount")
     private BigDecimal discount = BigDecimal.ZERO;

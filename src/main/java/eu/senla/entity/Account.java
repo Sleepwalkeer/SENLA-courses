@@ -46,4 +46,6 @@ public class Account {
     @Column(name = "balance")
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @Column(name = "is_deleted")
+    private boolean deleted;
 }

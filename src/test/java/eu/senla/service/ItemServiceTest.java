@@ -26,6 +26,8 @@ import org.springframework.data.domain.*;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -51,13 +53,11 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
         CreateItemDto itemDto = CreateItemDto.builder().
                 category(CategoryIdDto.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
         when(itemRepository.save(item)).thenReturn(item);
@@ -95,7 +95,7 @@ public class ItemServiceTest {
     public void getByNonexistentIdTest() {
         when(itemRepository.findById(1L)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.getById(1L));
+        assertThrows(NotFoundException.class, () -> itemService.getById(1L));
         verify(itemRepository).findById(1L);
     }
 
@@ -106,14 +106,12 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
         UpdateItemDto itemDto = UpdateItemDto.builder()
                 .category(CategoryIdDto.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
         ResponseItemDto responseItemDto = ResponseItemDto.builder()
@@ -123,13 +121,14 @@ public class ItemServiceTest {
                 .build();
 
         when(itemRepository.save(item)).thenReturn(item);
-        when(itemRepository.existsById(1L)).thenReturn(true);
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+
         when(modelMapper.map(item, ResponseItemDto.class)).thenReturn(responseItemDto);
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
         ResponseItemDto itemDtoRetrieved = itemService.update(1L, itemDto);
 
-        verify(itemRepository).existsById(1L);
+        verify(itemRepository).findById(1L);
         verify(itemRepository).save(item);
         Assertions.assertNotNull(itemDtoRetrieved);
     }
@@ -141,21 +140,43 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
         UpdateItemDto itemDto = UpdateItemDto.builder()
                 .category(CategoryIdDto.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
-        when(itemRepository.existsById(1L)).thenReturn(false);
+        when(itemRepository.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
 
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
-        verify(itemRepository).existsById(1L);
+        assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
+        verify(itemRepository).findById(1L);
+        verify(itemRepository, times(0)).save(item);
+    }
+
+    @Test
+    public void updateDeletedItemTest() {
+        Item item = Item.builder()
+                .id(1L)
+                .category(Category.builder().id(1L).build())
+                .name("JackHammer")
+                .price(new BigDecimal(5))
+                .deleted(true)
+                .build();
+
+        UpdateItemDto itemDto = UpdateItemDto.builder()
+                .category(CategoryIdDto.builder().id(1L).build())
+                .name("JackHammer")
+                .price(new BigDecimal(5))
+                .build();
+
+        when(itemRepository.findById(1L)).thenReturn(Optional.of(item));
+        when(modelMapper.map(itemDto, Item.class)).thenReturn(item);
+
+        assertThrows(NotFoundException.class, () -> itemService.update(1L, itemDto));
+        verify(itemRepository).findById(1L);
         verify(itemRepository, times(0)).save(item);
     }
 
@@ -171,7 +192,7 @@ public class ItemServiceTest {
     public void deleteByNonexistentIdTest() {
         doNothing().when(itemRepository).deleteById(1L);
         when(itemRepository.existsById(1L)).thenReturn(false);
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.deleteById(1L));
+        assertThrows(NotFoundException.class, () -> itemService.deleteById(1L));
         verify(itemRepository, times(0)).deleteById(1L);
     }
 
@@ -191,7 +212,6 @@ public class ItemServiceTest {
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
         List<Item> items = new ArrayList<>();
@@ -211,90 +231,79 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void decrementQuantityEveryItemTest() {
+    public void verifyAvailabilityWhenUnavailableTest() {
         Item item = Item.builder()
                 .id(1L)
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(3)
+                .available(false)
                 .build();
 
         Item item1 = Item.builder()
                 .id(2L)
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
+                .available(true)
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
-        List<Item> items = new ArrayList<>(List.of(item, item1));
+        Item item2 = Item.builder()
+                .id(3L)
+                .category(Category.builder().id(1L).build())
+                .name("Tractor")
+                .available(false)
+                .price(new BigDecimal(3))
+                .build();
 
-        List<Long> itemIds = new ArrayList<>(List.of(1L, 2L));
-        doNothing().when(itemRepository).decrementQuantityForItems(itemIds);
-        itemService.decrementQuantityEveryItem(items);
-
-        verify(itemRepository).decrementQuantityForItems(itemIds);
+        List<Item> items = new ArrayList<>(List.of(item, item1, item2));
+        assertThrows(ItemOutOfStockException.class, () -> itemService.verifyAvailability(items));
     }
 
     @Test
-    public void decrementQuantityEveryItemInvalidQuantityTest() {
+    public void verifyAvailabilityWhenAvailableTest() {
         Item item = Item.builder()
                 .id(1L)
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
                 .price(new BigDecimal(5))
-                .quantity(0)
+                .available(true)
                 .build();
 
         Item item1 = Item.builder()
                 .id(2L)
                 .category(Category.builder().id(1L).build())
                 .name("JackHammer")
+                .available(true)
                 .price(new BigDecimal(5))
-                .quantity(3)
                 .build();
 
-        List<Item> items = new ArrayList<>(List.of(item, item1));
+        Item item2 = Item.builder()
+                .id(3L)
+                .category(Category.builder().id(1L).build())
+                .name("Tractor")
+                .available(true)
+                .price(new BigDecimal(3))
+                .build();
 
-        Assertions.assertThrows(ItemOutOfStockException.class, () -> itemService.decrementQuantityEveryItem(items));
+        List<Item> items = new ArrayList<>(List.of(item, item1, item2));
+        assertDoesNotThrow(() -> itemService.verifyAvailability(items));
     }
 
     @Test
-    public void replenishItemTest() {
+    public void restockItemTest() {
         when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 20);
-        itemService.replenishItem(1L, quantity);
-        verify(itemRepository).replenishItem(1L, 20);
+        itemService.restockItem(1L);
+        verify(itemRepository).restockItem(1L);
     }
 
     @Test
     public void replenishNonexistentItemTest() {
         when(itemRepository.existsById(1L)).thenReturn(false);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 20);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 20);
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.restockItem(1L));
+        verify(itemRepository, times(0)).restockItem(1L);
     }
 
-    @Test
-    public void replenishItemWithBadJsonTest() {
-        when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantizy", 20);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 20);
-    }
-
-    @Test
-    public void replenishItemWithInvalidQuantityTest() {
-        when(itemRepository.existsById(1L)).thenReturn(true);
-        Map<String, Integer> quantity = new HashMap<>();
-        quantity.put("quantity", 0);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.replenishItem(1L, quantity));
-        verify(itemRepository, times(0)).replenishItem(1L, 0);
-    }
 
     @Test
     public void getItemsByPopularityTest() {

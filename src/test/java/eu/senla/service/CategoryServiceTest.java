@@ -73,28 +73,43 @@ public class CategoryServiceTest {
         CategoryDto categoryDto = CategoryDto.builder().name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.existsById(1L)).thenReturn(true);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
         categoryService.update(1L, categoryDto);
 
-        verify(categoryRepository).existsById(1L);
+        verify(categoryRepository).findById(1L);
         verify(categoryRepository).save(category);
     }
 
+    @Test
+    public void updateDeletedCategoryTest() {
+        Category category = Category.builder().id(1L).name("Construction tools").deleted(true).build();
+        CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
+
+        when(categoryRepository.save(category)).thenReturn(category);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
+        when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
+
+        Assertions.assertThrows(NotFoundException.class, () -> categoryService.update(1L, categoryDto));
+        verify(categoryRepository).findById(1L);
+        verify(categoryRepository, times(0)).save(category);
+    }
     @Test
     public void updateNonexistentCategoryTest() {
         Category category = Category.builder().id(1L).name("Construction tools").build();
         CategoryDto categoryDto = CategoryDto.builder().id(1L).name("Construction tools").build();
 
         when(categoryRepository.save(category)).thenReturn(category);
-        when(categoryRepository.existsById(1L)).thenReturn(false);
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
         when(modelMapper.map(category, CategoryDto.class)).thenReturn(categoryDto);
         when(modelMapper.map(categoryDto, Category.class)).thenReturn(category);
 
         Assertions.assertThrows(NotFoundException.class, () -> categoryService.update(1L, categoryDto));
-        verify(categoryRepository).existsById(1L);
+        verify(categoryRepository).findById(1L);
         verify(categoryRepository, times(0)).save(category);
     }
 

@@ -43,6 +43,9 @@ public class AccountServiceImpl implements AccountService {
     public ResponseAccountDto getById(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() ->
                 new NotFoundException("No account with ID " + id + " was found"));
+        if (account.isDeleted()) {
+            throw new NotFoundException("The account with ID " + id + "has been deleted");
+        }
         return modelMapper.map(account, ResponseAccountDto.class);
     }
 
@@ -57,13 +60,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Transactional
     public ResponseAccountDto update(Long id, UpdateAccountDto accountDto) {
-        if (accountRepository.existsById(id)) {
-            Account account = modelMapper.map(accountDto, Account.class);
-            Account updatedAccount = accountRepository.save(account);
-            return modelMapper.map(updatedAccount, ResponseAccountDto.class);
-        } else {
-            throw new NotFoundException("No account with ID " + id + " was found");
-        }
+        accountRepository.findById(id)
+                .filter(acc -> !acc.isDeleted())
+                .orElseThrow(() -> new NotFoundException("No account with ID " + id + " was found"));
+        Account account = modelMapper.map(accountDto, Account.class);
+        Account updatedAccount = accountRepository.save(account);
+        return modelMapper.map(updatedAccount, ResponseAccountDto.class);
     }
 
     @Transactional
